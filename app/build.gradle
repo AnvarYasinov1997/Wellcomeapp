@@ -1,0 +1,89 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'maven'
+
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.0"
+    defaultConfig {
+        applicationId "com.mistreckless.support.wellcomeapp"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+    }
+    packagingOptions{
+        exclude 'plugin.xml'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    testImplementation 'junit:junit:4.12'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.android.support:design:26.0.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.subinkrishna:circularimageview:1.2.2'
+
+    implementation 'com.jakewharton:butterknife:8.8.0'
+    kapt 'com.jakewharton:butterknife-compiler:8.8.0'
+
+    implementation 'com.google.dagger:dagger:2.11'
+    implementation 'com.google.dagger:dagger-android:2.11'
+    implementation 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
+    kapt 'com.google.dagger:dagger-android-processor:2.11'
+    kapt 'com.google.dagger:dagger-compiler:2.11'
+
+
+    implementation 'com.google.android.gms:play-services-auth:10.2.1'
+    implementation 'com.patloew.rxlocation:rxlocation:1.0.3'
+    implementation 'com.google.firebase:firebase-auth:10.2.1'
+    implementation 'com.google.firebase:firebase-database:10.2.1'
+    implementation 'com.google.firebase:firebase-storage:10.2.1'
+
+
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle:2.1.0'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-components:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.1.0'
+    implementation 'com.trello.rxlifecycle2:rxlifecycle-kotlin:2.1.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0'
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+    implementation 'com.mxn.soul:flowingdrawer-core:2.0.0'
+    implementation 'com.nineoldandroids:library:2.4.0'
+
+    compile project(path: ':binaryprefs')
+}
+
+kapt {
+    generateStubs = true
+}
+apply plugin: 'com.google.gms.google-services'
