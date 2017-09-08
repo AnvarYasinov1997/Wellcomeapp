@@ -19,7 +19,7 @@ interface MainInteractor {
     fun signUpWithGoogle(result: GoogleSignInResult): Single<RegistryUserState>
 }
 
-class MainInteractorImpl(val userRepository: UserRepository) : MainInteractor {
+class MainInteractorImpl(private val userRepository: UserRepository) : MainInteractor {
 
     override fun isUserAuthenticated(): Boolean = !userRepository.getUserReference().isEmpty()
 

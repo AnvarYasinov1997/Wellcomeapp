@@ -24,6 +24,8 @@ data class UserData(var id: String,
                     var fullName: String?,
                     var displayedName: String,
                     var photoUrl: String?) : Persistable {
+    constructor() : this("","","","","","","")
+
     override fun writeExternal(out: DataOutput?) {
         out?.writeString(id)
         out?.writeString(ref)

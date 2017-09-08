@@ -5,6 +5,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.drawer.Drawer
+import com.mistreckless.support.wellcomeapp.ui.screen.drawer.DrawerModule
+import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -27,9 +29,13 @@ abstract class MainActivityFragmentProvider {
     @PerFragment
     abstract fun provideWallFactory() : Wall
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = arrayOf(DrawerModule::class))
     @PerFragment
     abstract fun provideDrawer() : Drawer
+
+    @ContributesAndroidInjector
+    @PerFragment
+    abstract fun provideProfile() : Profile
 }
 
 @Module

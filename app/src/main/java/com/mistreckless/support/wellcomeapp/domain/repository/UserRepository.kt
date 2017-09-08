@@ -13,11 +13,9 @@ import com.google.firebase.storage.FirebaseStorage
 import com.mistreckless.support.wellcomeapp.domain.CacheData
 import com.mistreckless.support.wellcomeapp.domain.entity.RatingData
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
-import com.mistreckless.support.wellcomeapp.helper.rxfirebase.setValue
-import com.mistreckless.support.wellcomeapp.helper.rxfirebase.signInWithCredential
-import com.mistreckless.support.wellcomeapp.helper.rxfirebase.singleQuery
-import com.mistreckless.support.wellcomeapp.helper.rxfirebase.uploadFileViaStream
+import com.mistreckless.support.wellcomeapp.helper.rxfirebase.*
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import java.io.File
@@ -28,15 +26,21 @@ import java.io.FileInputStream
  */
 interface UserRepository {
     fun getUserReference(): String
+    fun getRatingReference(): String
     fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser>
     fun isUserAlreadyRegistered(uid: String): Single<Boolean>
-    fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl : String): Completable
+    fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl: String): Completable
     fun findPhoto(data: Uri): Single<String>
     fun uploadPhotoIfNeeded(): Single<String>
+    fun observeUserValueEvent(userRef: String): Observable<UserData>
+    fun observeRatingValueEvent(ratingRef: String): Observable<RatingData>
+    fun cacheUserData(userData: UserData)
+    fun cacheRatingData(ratingData: RatingData)
 }
 
 class UserRepositoryImpl(private val cacheData: CacheData, private val context: Context) : UserRepository {
     override fun getUserReference(): String = cacheData.getString(CacheData.USER_REF)
+    override fun getRatingReference(): String = cacheData.getString(CacheData.RATING_REF)
 
     override fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser> {
         val instance = FirebaseAuth.getInstance()
@@ -86,7 +90,19 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
                 .subscribeOn(Schedulers.io())
     }
 
-    private fun cacheUserData(userData: UserData) {
+    override fun observeUserValueEvent(userRef: String): Observable<UserData> {
+        val fullUserRef = FirebaseDatabase.getInstance().getReference("users").child(userRef)
+        return observeValueEvent(fullUserRef, UserData::class.java)
+                .subscribeOn(Schedulers.io())
+    }
+
+    override fun observeRatingValueEvent(ratingRef: String): Observable<RatingData> {
+        val fullRatingRef = FirebaseDatabase.getInstance().getReference("ratings").child(ratingRef)
+        return observeValueEvent(fullRatingRef, RatingData::class.java)
+                .subscribeOn(Schedulers.io())
+    }
+
+    override fun cacheUserData(userData: UserData) {
         cacheData.cacheString(CacheData.USER_REF, userData.ref)
         cacheData.cacheString(CacheData.USER_ID, userData.id)
         cacheData.cacheString(CacheData.USER_CITY, userData.cityName)
@@ -96,5 +112,9 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
         val photoUrl = userData.photoUrl
         if (photoUrl != null && photoUrl.isNotEmpty())
             cacheData.cacheString(CacheData.USER_PHOTO, photoUrl)
+    }
+
+    override fun cacheRatingData(ratingData: RatingData) {
+
     }
 }

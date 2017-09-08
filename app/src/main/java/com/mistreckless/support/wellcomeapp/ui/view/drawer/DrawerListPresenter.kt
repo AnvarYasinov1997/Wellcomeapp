@@ -10,10 +10,14 @@ import javax.inject.Inject
  */
 class DrawerListPresenter @Inject constructor() : BaseViewHolderPresenter<ListView,MainActivityRouter,ListItem>() {
     override fun onViewBinded(model: ListItem) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        getView()?.initUi(model)
     }
 
     override fun onViewUnbinded() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+    }
+
+    fun test() {
+        getRouter()?.navigateToCamera()
     }
 }

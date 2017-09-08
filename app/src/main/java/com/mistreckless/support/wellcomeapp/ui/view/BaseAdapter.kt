@@ -18,5 +18,6 @@ abstract class BaseAdapter<M : Any> : RecyclerView.Adapter<BaseViewHolder<*,*>>(
         super.onViewRecycled(holder)
         holder?.onViewRecycled()
     }
+
 }
 

@@ -4,10 +4,7 @@ import android.content.Context
 import com.google.android.gms.location.LocationRequest
 import com.ironz.binaryprefs.BinaryPreferencesBuilder
 import com.ironz.binaryprefs.Preferences
-import com.mistreckless.support.wellcomeapp.domain.interactor.MainInteractor
-import com.mistreckless.support.wellcomeapp.domain.interactor.MainInteractorImpl
-import com.mistreckless.support.wellcomeapp.domain.interactor.RegistryInteractor
-import com.mistreckless.support.wellcomeapp.domain.interactor.RegistryInteractorImpl
+import com.mistreckless.support.wellcomeapp.domain.interactor.*
 import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepositoryImpl
 import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
@@ -63,6 +60,14 @@ class InteractorModule {
     @Singleton
     @Provides
     fun provideRegistryInteractor(userRepository: UserRepository, locationRepository : LocationRepository) : RegistryInteractor = RegistryInteractorImpl(userRepository, locationRepository)
+
+    @Singleton
+    @Provides
+    fun provideDataInteractor(userRepository: UserRepository) : DataInteractor = DataInteractorImpl(userRepository)
+
+    @Singleton
+    @Provides
+    fun provideProfileInteractor(dataInteractor: DataInteractor,userRepository: UserRepository) : ProfileInteractor = ProfileInteractorImpl(dataInteractor, userRepository)
 }
 
 @Singleton

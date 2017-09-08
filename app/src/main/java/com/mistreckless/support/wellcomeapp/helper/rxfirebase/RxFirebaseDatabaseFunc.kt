@@ -5,6 +5,7 @@ package com.mistreckless.support.wellcomeapp.helper.rxfirebase
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.Query
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -15,3 +16,5 @@ import io.reactivex.Single
 inline fun <T> setValue(ref: DatabaseReference, value: T): Completable = Completable.create(RxSetValue(ref, value))
 
 inline fun <T>singleQuery(query: Query, clazz: Class<T>) : Single<T> = Single.create(RxSingleQuery(query,clazz))
+
+inline fun <T> observeValueEvent(ref: DatabaseReference, clazz: Class<T>) : Observable<T> = Observable.create(RxObserveValueEvent(ref, clazz))

@@ -9,7 +9,9 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
+import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
 import com.mistreckless.support.wellcomeapp.ui.screen.drawer.Drawer
+import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer
@@ -33,14 +35,20 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView, Ma
             setSupportActionBar(toolbar)
             supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            if (menuLayout.visibility == View.GONE){
-                menuLayout.visibility=View.VISIBLE
+            if (menuLayout.visibility == View.GONE) {
+                menuLayout.visibility = View.VISIBLE
                 supportFragmentManager.beginTransaction()
-                        .replace(R.id.menu_container,Drawer())
+                        .replace(R.id.menu_container, Drawer())
                         .commit()
-
             }
         }
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isMenuVisible)
+            drawerLayout.closeMenu()
+        else
+            super.onBackPressed()
     }
 
     override fun onDestroy() {
@@ -56,9 +64,21 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView, Ma
     }
 
     override fun navigateToWall() {
+        drawerLayout.closeMenu()
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, Wall(), Wall.TAG)
                 .commitNow()
+    }
+
+    override fun navigateToProfile() {
+        drawerLayout.closeMenu()
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.container, Profile(), Profile.TAG)
+                .commitNow()
+    }
+
+    override fun navigateToCamera() {
+        startActivity(Intent(this,CameraActivity::class.java))
     }
 
     override fun navigateToGoogleAuthDialog(googleApiClient: GoogleApiClient) {
@@ -78,4 +98,6 @@ interface MainActivityRouter {
     fun navigateToRegistry(newUserState: NewUserState)
     fun navigateToGoogleAuthDialog(googleApiClient: GoogleApiClient)
     fun navigateToWall()
+    fun navigateToProfile()
+    fun navigateToCamera()
 }
