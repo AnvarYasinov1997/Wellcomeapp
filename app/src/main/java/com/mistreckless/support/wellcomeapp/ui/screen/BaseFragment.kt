@@ -60,7 +60,7 @@ abstract class BaseFragment<P : BasePresenter<*, *>> : RxFragment() {
         presenter.attachView(this)
         presenter.attachRouter(getRouter())
 
-        (activity as BaseActivity<*>).setToolbar(getCurrentToolbar(), isAddedToBackStack())
+        (activity as BaseActivity<*,*>).setToolbar(getCurrentToolbar(), isAddedToBackStack())
 
         if (restoredBundle !=null)
             presenter.onViewRestored(restoredBundle!!)

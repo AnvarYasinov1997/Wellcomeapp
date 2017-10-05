@@ -27,8 +27,7 @@ class ListViewHolder(override var presenter: DrawerListPresenter, parent : ViewG
         Picasso.with(itemView.context).load(model.resId).into(imgIcon)
     }
     @OnClick(R.id.root_view)
-    fun test(){
-        presenter.test()
+    fun onViewClicked(){
     }
 
 }

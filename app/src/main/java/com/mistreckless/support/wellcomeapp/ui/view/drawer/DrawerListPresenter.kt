@@ -16,8 +16,4 @@ class DrawerListPresenter @Inject constructor() : BaseViewHolderPresenter<ListVi
     override fun onViewUnbinded() {
 
     }
-
-    fun test() {
-        getRouter()?.navigateToCamera()
-    }
 }

@@ -13,4 +13,8 @@ import javax.inject.Inject
 class WallPresenter @Inject constructor(): BasePresenter<WallView, MainActivity>() {
     override fun onFirstViewAttached() {
     }
+
+    fun fubClicked() {
+        getRouter()?.navigateToCamera()
+    }
 }

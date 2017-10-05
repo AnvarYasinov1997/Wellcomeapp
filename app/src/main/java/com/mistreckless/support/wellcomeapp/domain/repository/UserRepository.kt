@@ -13,7 +13,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.mistreckless.support.wellcomeapp.domain.CacheData
 import com.mistreckless.support.wellcomeapp.domain.entity.RatingData
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
-import com.mistreckless.support.wellcomeapp.helper.rxfirebase.*
+import com.mistreckless.support.wellcomeapp.util.rxfirebase.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -117,4 +117,5 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     override fun cacheRatingData(ratingData: RatingData) {
 
     }
+
 }

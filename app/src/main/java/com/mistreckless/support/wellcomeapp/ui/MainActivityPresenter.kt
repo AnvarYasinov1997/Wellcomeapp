@@ -16,8 +16,7 @@ import javax.inject.Inject
 /**
  * Created by @mistreckless on 30.07.2017. !
  */
-@PerActivity
-class MainActivityPresenter @Inject constructor(val mainInteractor: MainInteractor, val googleApiClient: Lazy<GoogleApiClient>) : BasePresenter<MainActivityView, MainActivityRouter>() {
+class MainActivityPresenter (val mainInteractor: MainInteractor, val googleApiClient: Lazy<GoogleApiClient>) : BasePresenter<MainActivityView, MainActivityRouter>() {
 
     override fun onFirstViewAttached() {
         if (mainInteractor.isUserAuthenticated()) {
@@ -48,4 +47,21 @@ class MainActivityPresenter @Inject constructor(val mainInteractor: MainInteract
 //        }
     }
 
+    companion object {
+        const val TAG = "MainActivityPresenter"
+    }
+
 }
+
+class MainActivityPresenterProviderFactory @Inject constructor(val mainInteractor: MainInteractor, val googleApiClient: Lazy<GoogleApiClient>) : BasePresenterProviderFactory<MainActivityPresenter> {
+    override fun get(): MainActivityPresenter {
+        if (presenterHolder.contains(MainActivityPresenter.TAG))
+            return presenterHolder[MainActivityPresenter.TAG] as MainActivityPresenter
+        else {
+            val presenter = MainActivityPresenter(mainInteractor, googleApiClient)
+            presenterHolder.put(MainActivityPresenter.TAG, presenter)
+            return presenter
+        }
+    }
+}
+

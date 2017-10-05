@@ -9,7 +9,7 @@ apply plugin: 'maven'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.mistreckless.support.wellcomeapp"
         minSdkVersion 21
@@ -32,6 +32,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -57,11 +61,12 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.11'
 
 
-    implementation 'com.google.android.gms:play-services-auth:10.2.1'
-    implementation 'com.patloew.rxlocation:rxlocation:1.0.3'
-    implementation 'com.google.firebase:firebase-auth:10.2.1'
-    implementation 'com.google.firebase:firebase-database:10.2.1'
-    implementation 'com.google.firebase:firebase-storage:10.2.1'
+    implementation 'com.google.android.gms:play-services-auth:11.4.2'
+    implementation 'com.google.firebase:firebase-auth:11.4.2'
+    implementation 'com.google.firebase:firebase-database:11.4.2'
+    implementation 'com.google.firebase:firebase-storage:11.4.2'
+    implementation 'com.google.android.gms:play-services-location:11.4.2'
+    implementation 'com.google.firebase:firebase-firestore:11.4.2'
 
 
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'

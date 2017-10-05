@@ -33,5 +33,10 @@ abstract class BasePresenter<V, R> {
     abstract fun onFirstViewAttached()
 
     fun onViewRestored(saveInstanceState: Bundle) {}
-
 }
+
+interface BasePresenterProviderFactory<out T : BasePresenter<*,*>>{
+    fun get() : T
+}
+
+val presenterHolder: MutableMap<String, BasePresenter<*, *>> = HashMap()

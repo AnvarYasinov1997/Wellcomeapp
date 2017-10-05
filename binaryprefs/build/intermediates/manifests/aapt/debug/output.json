@@ -1,1 +1,1 @@
-[{"outputType":{"type":"AAPT_FRIENDLY_MERGED_MANIFESTS"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":1},"outputFile":{"path":"E:\\AndroidStudioProjects\\Wellcomeapp\\binaryprefs\\build\\intermediates\\manifests\\aapt\\debug\\AndroidManifest.xml"},"properties":{"packageId":"com.ironz.binaryprefs","split":""}}]
+[{"outputType":{"type":"AAPT_FRIENDLY_MERGED_MANIFESTS"},"apkInfo":{"type":"MAIN","splits":[],"versionCode":1},"path":"AndroidManifest.xml","properties":{"packageId":"com.ironz.binaryprefs","split":""}}]

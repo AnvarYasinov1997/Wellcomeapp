@@ -5,7 +5,7 @@ import android.location.Address
 import android.location.Location
 import android.support.annotation.RequiresPermission
 import com.mistreckless.support.wellcomeapp.domain.CacheData
-import com.patloew.rxlocation.RxLocation
+import com.mistreckless.support.wellcomeapp.util.rxlocation.RxLocation
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 

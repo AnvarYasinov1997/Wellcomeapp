@@ -3,8 +3,10 @@
     package="com.mistreckless.support.wellcomeapp">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
 
     <application
         android:name=".app.App"
@@ -22,6 +24,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.screen.camera.CameraActivity"/>
+
+        <activity
+            android:name=".util.rxlocation.LocationSettingsActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

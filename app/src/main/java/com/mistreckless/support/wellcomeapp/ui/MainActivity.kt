@@ -14,11 +14,12 @@ import com.mistreckless.support.wellcomeapp.ui.screen.drawer.Drawer
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
+import com.mxn.soul.flowingdrawer_core.ElasticDrawer
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer
 import com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
 
 @Layout(id = R.layout.activity_main)
-class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView, MainActivityRouter {
+class MainActivity : BaseActivity<MainActivityPresenter,MainActivityPresenterProviderFactory>(), MainActivityView, MainActivityRouter {
     @BindView(R.id.drawer_layout)
     lateinit var drawerLayout: FlowingDrawer
     @BindView(R.id.menu_layout)
@@ -29,24 +30,33 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView, Ma
         presenter.authResult(requestCode, resultCode, data)
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint("RestrictedApi", "PrivateResource")
     override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean) {
-        if (toolbar != null) {
-            setSupportActionBar(toolbar)
-            supportActionBar?.setDefaultDisplayHomeAsUpEnabled(true)
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            if (menuLayout.visibility == View.GONE) {
-                menuLayout.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction()
-                        .replace(R.id.menu_container, Drawer())
-                        .commit()
+        setSupportActionBar(toolbar)
+        when (isAddedToBackStack) {
+            true -> {
+                toolbar?.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+                toolbar?.setNavigationOnClickListener { onBackPressed() }
+                drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_NONE)
+            }
+            false -> {
+                toolbar?.setNavigationIcon(R.drawable.ic_menu_white_24dp)
+                toolbar?.setNavigationOnClickListener { drawerLayout.openMenu(true) }
+                drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_FULLSCREEN)
+                if (menuLayout.visibility == View.GONE) {
+                    menuLayout.visibility = View.VISIBLE
+                    supportFragmentManager.beginTransaction()
+                            .replace(R.id.menu_container, Drawer())
+                            .commit()
+                }
             }
         }
+
     }
 
     override fun onBackPressed() {
         if (drawerLayout.isMenuVisible)
-            drawerLayout.closeMenu()
+            drawerLayout.closeMenu(true)
         else
             super.onBackPressed()
     }
@@ -78,7 +88,7 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView, Ma
     }
 
     override fun navigateToCamera() {
-        startActivity(Intent(this,CameraActivity::class.java))
+        startActivity(Intent(this, CameraActivity::class.java))
     }
 
     override fun navigateToGoogleAuthDialog(googleApiClient: GoogleApiClient) {

@@ -26,11 +26,13 @@ interface BaseActivityView {
     fun <T> bindUntilEvent(event: ActivityEvent): LifecycleTransformer<T>
 }
 
-abstract class BaseActivity<P : BasePresenter<*, *>> : RxAppCompatActivity(), HasSupportFragmentInjector {
+abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProviderFactory<P>> : RxAppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentDispatcher: DispatchingAndroidInjector<Fragment>
     @Inject
-    lateinit var presenter: P
+    lateinit var presenterProviderFactory : F
+
+    val presenter by lazy { presenterProviderFactory.get() }
 
     var unbinder: Unbinder? = null
 

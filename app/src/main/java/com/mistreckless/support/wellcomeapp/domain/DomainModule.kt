@@ -9,7 +9,7 @@ import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepositoryImpl
 import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
 import com.mistreckless.support.wellcomeapp.domain.repository.UserRepositoryImpl
-import com.patloew.rxlocation.RxLocation
+import com.mistreckless.support.wellcomeapp.util.rxlocation.RxLocation
 import dagger.Module
 import dagger.Provides
 import javax.inject.Named
