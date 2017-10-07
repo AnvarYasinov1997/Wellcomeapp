@@ -7,19 +7,16 @@ import android.util.Log
 import com.jakewharton.rxbinding2.InitialValueObservable
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.domain.interactor.RegistryInteractor
-import com.mistreckless.support.wellcomeapp.ui.BasePresenter
-import com.mistreckless.support.wellcomeapp.ui.MainActivityRouter
-import com.mistreckless.support.wellcomeapp.ui.PerFragment
+import com.mistreckless.support.wellcomeapp.ui.*
 import com.tbruyelle.rxpermissions2.RxPermissions
-import dagger.Lazy
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Created by @mistreckless on 31.07.2017. !
  */
-@PerFragment
-class RegistryPresenter @Inject constructor(private val rxPermissions: Lazy<RxPermissions>, private val registryInteractor: RegistryInteractor) : BasePresenter<RegistryView, MainActivityRouter>() {
+class RegistryPresenter (private val rxPermissions: Provider<RxPermissions>, private val registryInteractor: RegistryInteractor) : BasePresenter<RegistryView, MainActivityRouter>() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
@@ -66,4 +63,22 @@ class RegistryPresenter @Inject constructor(private val rxPermissions: Lazy<RxPe
                         Log.e(Registry.TAG, it.message)
                     })
     }
+
+    companion object {
+        const val TAG="RegistryPresenter"
+    }
+}
+
+@PerFragment
+class RegistryPresenterProviderFactory @Inject constructor(private val rxPermissions: Provider<RxPermissions>, private val registryInteractor: RegistryInteractor) : BasePresenterProviderFactory<RegistryPresenter>{
+    override fun get(): RegistryPresenter {
+        if (presenterHolder.contains(RegistryPresenter.TAG))
+            return presenterHolder[RegistryPresenter.TAG] as RegistryPresenter
+        else{
+            val presenter = RegistryPresenter(rxPermissions, registryInteractor)
+            presenterHolder.put(RegistryPresenter.TAG,presenter)
+            return presenter
+        }
+    }
+
 }

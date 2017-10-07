@@ -16,7 +16,7 @@ import javax.inject.Inject
  */
 
 @Layout(R.layout.fragment_drawer)
-class Drawer : BaseFragment<DrawerPresenter>(), DrawerView {
+class Drawer : BaseFragment<DrawerPresenter, DrawerPresenterProviderFactory>(), DrawerView {
 
     @Inject
     lateinit var adapter: DrawerAdapter

@@ -10,6 +10,7 @@ import butterknife.ButterKnife
 import butterknife.Unbinder
 import com.mistreckless.support.wellcomeapp.ui.BaseActivity
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
+import com.mistreckless.support.wellcomeapp.ui.BasePresenterProviderFactory
 import com.mistreckless.support.wellcomeapp.ui.MainActivityRouter
 import com.trello.rxlifecycle2.LifecycleTransformer
 import com.trello.rxlifecycle2.android.FragmentEvent
@@ -28,20 +29,21 @@ interface BaseFragmentView {
     fun <T> bindUntilEvent(event: FragmentEvent): LifecycleTransformer<T>
 }
 
-abstract class BaseFragment<P : BasePresenter<*, *>> : RxFragment() {
+abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProviderFactory<P>> : RxFragment() {
     @Inject
-    lateinit var presenter: P
+    lateinit var presenterFactory : F
+    val presenter : P by lazy { presenterFactory.get() }
 
     var unbinder: Unbinder? = null
     var restoredBundle : Bundle?=null
 
     override fun onAttach(context: Context?) {
+        AndroidSupportInjection.inject(this)
         super.onAttach(context)
         retainInstance = true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidSupportInjection.inject(this)
         restoredBundle = savedInstanceState
         super.onCreate(savedInstanceState)
         presenter.attachRouter(getRouter())

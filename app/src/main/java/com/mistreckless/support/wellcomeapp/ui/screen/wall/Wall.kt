@@ -15,7 +15,7 @@ import com.mistreckless.support.wellcomeapp.ui.screen.Layout
  */
 
 @Layout(R.layout.fragment_wall)
-class Wall : BaseFragment<WallPresenter>(), WallView{
+class Wall : BaseFragment<WallPresenter, WallPresenterProviderFactory>(), WallView{
 
     @BindView(R.id.toolbar)
     lateinit var toolbar: Toolbar

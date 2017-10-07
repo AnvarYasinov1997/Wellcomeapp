@@ -22,7 +22,7 @@ import java.io.File
  * Created by @mistreckless on 31.07.2017. !
  */
 @Layout(id = R.layout.fragment_registry)
-class Registry : BaseFragment<RegistryPresenter>(), RegistryView {
+class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactory>(), RegistryView {
     @BindView(R.id.txt_header)
     lateinit var txtHeader: TextView
     @BindView(R.id.txt_name)

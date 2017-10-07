@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso
  * Created by @mistreckless on 02.09.2017. !
  */
 @Layout(id = R.layout.fragment_profile)
-class Profile : BaseFragment<ProfilePresenter>(), ProfileView {
+class Profile : BaseFragment<ProfilePresenter, ProfilePresenterProviderFactory>(), ProfileView {
     @BindView(R.id.img_user)
     lateinit var imgUser: ImageView
     @BindView(R.id.view_pager)

@@ -10,7 +10,7 @@ import com.mistreckless.support.wellcomeapp.ui.screen.Layout
  * Created by @mistreckless on 10.09.2017. !
  */
 @Layout(id = R.layout.fragment_preview)
-class Preview : BaseFragment<PreviewPresenter>(),PreviewView{
+class Preview : BaseFragment<PreviewPresenter,PreviewPresenterProviderFactory>(),PreviewView{
     override fun getCurrentToolbar(): Toolbar? {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
