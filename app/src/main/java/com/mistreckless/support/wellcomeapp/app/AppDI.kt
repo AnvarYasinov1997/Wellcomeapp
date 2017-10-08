@@ -11,6 +11,7 @@ import com.mistreckless.support.wellcomeapp.ui.MainActivityModule
 import com.mistreckless.support.wellcomeapp.ui.PerActivity
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityFragmentProvider
+import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -40,7 +41,7 @@ abstract class ActivityBuilder {
     abstract fun bindMainActivity(): MainActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = arrayOf(CameraActivityFragmentProvider::class))
+    @ContributesAndroidInjector(modules = arrayOf(CameraActivityFragmentProvider::class,CameraModule::class))
     abstract fun bindCameraActivity() : CameraActivity
 }
 

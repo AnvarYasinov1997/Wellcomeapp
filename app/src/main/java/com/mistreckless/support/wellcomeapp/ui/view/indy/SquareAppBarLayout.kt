@@ -3,15 +3,14 @@ package com.mistreckless.support.wellcomeapp.ui.view.indy
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.support.design.widget.AppBarLayout
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.widget.FrameLayout
 
 /**
- * Created by @mistreckless on 03.09.2017. !
+ * Created by @mistreckless on 08.10.2017. !
  */
-class SquareFrameLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0, defRes : Int =0) : FrameLayout(context, attrs, defStyle,defRes) {
-
+class SquareAppBarLayout @JvmOverloads constructor(context : Context, attrs : AttributeSet?=null) : AppBarLayout(context,attrs) {
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         @SuppressLint("DrawAllocation")

@@ -5,10 +5,7 @@ import com.google.android.gms.location.LocationRequest
 import com.ironz.binaryprefs.BinaryPreferencesBuilder
 import com.ironz.binaryprefs.Preferences
 import com.mistreckless.support.wellcomeapp.domain.interactor.*
-import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepositoryImpl
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepositoryImpl
+import com.mistreckless.support.wellcomeapp.domain.repository.*
 import com.mistreckless.support.wellcomeapp.util.rxlocation.RxLocation
 import dagger.Module
 import dagger.Provides
@@ -68,6 +65,11 @@ class InteractorModule {
     @Singleton
     @Provides
     fun provideProfileInteractor(dataInteractor: DataInteractor,userRepository: UserRepository) : ProfileInteractor = ProfileInteractorImpl(dataInteractor, userRepository)
+
+    @Singleton
+    @Provides
+    fun provideShareInteractor(userRepository: UserRepository,locationRepository: LocationRepository,postRepository: PostRepository) : ShareInteractor = ShareInteractorImpl(userRepository, locationRepository, postRepository)
+
 }
 
 @Singleton
@@ -82,4 +84,8 @@ class RepositoryModule {
     @Provides
     fun provideLocationRepository(rxLocation: RxLocation, cacheData: CacheData) : LocationRepository
             = LocationRepositoryImpl(rxLocation,cacheData)
+
+    @Singleton
+    @Provides
+    fun providePostRepository() : PostRepository = PostRepositoryImpl()
 }

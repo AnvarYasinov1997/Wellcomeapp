@@ -65,7 +65,9 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
         (activity as BaseActivity<*,*>).setToolbar(getCurrentToolbar(), isAddedToBackStack())
 
         if (restoredBundle !=null)
-            presenter.onViewRestored(restoredBundle!!)
+            presenter.onViewRestoredWhenSystemKillAppOrActivity(restoredBundle!!)
+        else if(savedInstanceState!=null)
+            presenter.onViewRestored(savedInstanceState)
         else presenter.onFirstViewAttached()
     }
 
@@ -76,8 +78,8 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
 
     override fun onDestroyView() {
         presenter.detachView()
-        unbinder?.unbind()
         super.onDestroyView()
+        unbinder?.unbind()
     }
 
     override fun onDestroy() {
@@ -85,7 +87,7 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
         super.onDestroy()
     }
 
-    protected fun getRouter(): Any = activity as MainActivityRouter
+    protected open fun getRouter(): Any = activity as MainActivityRouter
     protected fun isAddedToBackStack() = false
 
     abstract fun getCurrentToolbar(): Toolbar?

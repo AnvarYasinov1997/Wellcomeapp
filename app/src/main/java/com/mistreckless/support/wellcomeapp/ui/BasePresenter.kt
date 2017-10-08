@@ -1,6 +1,7 @@
 package com.mistreckless.support.wellcomeapp.ui
 
 import android.os.Bundle
+import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by @mistreckless on 30.07.2017. !
@@ -9,6 +10,7 @@ import android.os.Bundle
 abstract class BasePresenter<V, R> {
     private var router: R? = null
     private var view: V? = null
+    protected val viewChangesDisposables by lazy { CompositeDisposable() }
 
     fun attachRouter(router: Any) {
         this.router = router as R
@@ -25,6 +27,7 @@ abstract class BasePresenter<V, R> {
     }
 
     fun detachView() {
+        onViewDetached()
         this.view = null
     }
 
@@ -32,7 +35,13 @@ abstract class BasePresenter<V, R> {
 
     abstract fun onFirstViewAttached()
 
-    fun onViewRestored(saveInstanceState: Bundle) {}
+    open fun onViewDetached(){
+        viewChangesDisposables.clear()
+    }
+
+    open fun onViewRestored(saveInstanceState: Bundle) {}
+
+    open fun onViewRestoredWhenSystemKillAppOrActivity(saveInstanceState: Bundle){}
 }
 
 interface BasePresenterProviderFactory<out T : BasePresenter<*,*>>{

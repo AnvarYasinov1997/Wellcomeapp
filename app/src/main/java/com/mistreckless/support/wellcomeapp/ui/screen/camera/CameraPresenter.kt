@@ -2,7 +2,6 @@ package com.mistreckless.support.wellcomeapp.ui.screen.camera
 
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.BasePresenterProviderFactory
-import com.mistreckless.support.wellcomeapp.ui.PerActivity
 import com.mistreckless.support.wellcomeapp.ui.presenterHolder
 import javax.inject.Inject
 
@@ -11,6 +10,7 @@ import javax.inject.Inject
  */
 class CameraPresenter : BasePresenter<CameraActivityView, CameraActivityRouter>() {
     override fun onFirstViewAttached() {
+        getRouter()?.navigateToPreview()
     }
 
     companion object {

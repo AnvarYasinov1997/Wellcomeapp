@@ -17,13 +17,20 @@ interface LocationRepository {
 
     fun getCurrentCity(): Single<String>
 
-    fun getCurrentAddress(): Single<String>
+    fun getCurrentAddress(): Single<Address>
 }
 
 class LocationRepositoryImpl (private val rxLocation: RxLocation,
                                                  private val cacheData: CacheData ) : LocationRepository {
-    override fun getCurrentAddress(): Single<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
+
+    @SuppressLint("SupportAnnotationUsage", "MissingPermission")
+    @RequiresPermission(allOf = arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION))
+    override fun getCurrentAddress(): Single<Address> {
+        return rxLocation.location().lastLocation()
+                .toSingle()
+                .flatMap { getAddressFromLocation(it) }
+                .subscribeOn(Schedulers.io())
     }
 
     @SuppressLint("SupportAnnotationUsage", "MissingPermission")
