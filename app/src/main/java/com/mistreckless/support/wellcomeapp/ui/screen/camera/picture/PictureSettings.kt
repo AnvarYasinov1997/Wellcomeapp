@@ -31,7 +31,7 @@ class PictureSettings : BaseFragment<PictureSettingsPresenter,PictureSettingPres
 
     override fun initUi() {
         CameraUtils.decodeBitmap(bytes,{
-            imgPicture.setImageBitmap(it)
+        //    imgPicture.setImageBitmap(it)
         })
     }
 

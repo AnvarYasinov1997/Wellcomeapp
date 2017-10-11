@@ -64,16 +64,19 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
 
         (activity as BaseActivity<*,*>).setToolbar(getCurrentToolbar(), isAddedToBackStack())
 
-        if (restoredBundle !=null)
-            presenter.onViewRestoredWhenSystemKillAppOrActivity(restoredBundle!!)
-        else if(savedInstanceState!=null)
-            presenter.onViewRestored(savedInstanceState)
-        else presenter.onFirstViewAttached()
+        if (restoredBundle !=null) presenter.onViewRestoredWhenSystemKillAppOrActivity()
+        else if(savedInstanceState==null) presenter.onFirstViewAttached()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         presenter.attachRouter(getRouter())
         super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        presenter.onViewRestored(savedInstanceState ?: Bundle())
+
     }
 
     override fun onDestroyView() {

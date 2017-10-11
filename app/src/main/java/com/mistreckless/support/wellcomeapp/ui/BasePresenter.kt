@@ -41,7 +41,7 @@ abstract class BasePresenter<V, R> {
 
     open fun onViewRestored(saveInstanceState: Bundle) {}
 
-    open fun onViewRestoredWhenSystemKillAppOrActivity(saveInstanceState: Bundle){}
+    open fun onViewRestoredWhenSystemKillAppOrActivity(){}
 }
 
 interface BasePresenterProviderFactory<out T : BasePresenter<*,*>>{

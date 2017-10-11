@@ -2,12 +2,12 @@ package com.mistreckless.support.wellcomeapp.ui.screen.camera.share
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
 import android.support.v7.widget.Toolbar
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.View
 import android.widget.*
 import butterknife.BindView
@@ -17,6 +17,8 @@ import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityRouter
+import com.mistreckless.support.wellcomeapp.ui.view.camera.AgePickerDialog
+import com.mistreckless.support.wellcomeapp.ui.view.camera.TimePickerDialog
 import com.mistreckless.support.wellcomeapp.ui.view.indy.toObservable
 import com.otaliastudios.cameraview.CameraUtils
 
@@ -65,24 +67,7 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
     }
 
     override fun showNumberPicker() {
-        val numberPicker = NumberPicker(context)
-        numberPicker.apply {
-            minValue=0
-            maxValue=40
-            value=18
-        }
-        AlertDialog.Builder(context)
-                .setView(numberPicker)
-                .setPositiveButton("Ok",{d,_->
-                    presenter.agePicked(numberPicker.value)
-                    d.dismiss()
-                })
-                .setNegativeButton("Cancel",{d,_ ->
-                    d.dismiss()
-                    cbAge.isChecked=false
-                })
-                .setCancelable(false)
-                .show()
+        AgePickerDialog.newInstance({presenter.agePicked(it)},{cbAge.isChecked=false}).show(childFragmentManager,"agePicker")
     }
 
     override fun showAge(ageLine: String) {
@@ -96,7 +81,10 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
 
     @OnClick(R.id.btn_share)
     fun onShareClick(){
-        val dialog = Progres
+        TimePickerDialog.newInstance({h,m->presenter.timePicked(h,m)}).show(childFragmentManager,"timePicker")
+    }
+    fun log(h : Int, m : Int){
+        Log.e("time", "h $h m $m")
     }
 
     private fun initAppBar() {

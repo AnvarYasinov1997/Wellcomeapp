@@ -20,7 +20,6 @@ import javax.inject.Provider
  */
 
 class SharePresenter(private val shareInteractor: ShareInteractor, private val rxPermission: Provider<RxPermissions>) : BasePresenter<ShareView, CameraActivityRouter>() {
-    private var isAgePicked =false //Note: need to refactor this
 
     override fun onFirstViewAttached() {
         getView()?.apply {
@@ -48,18 +47,18 @@ class SharePresenter(private val shareInteractor: ShareInteractor, private val r
     fun controlAge(observable: Observable<Boolean>) {
         viewChangesDisposables.add(observable
                 .subscribe { checked ->
-                    if (!isAgePicked){
-                        if (checked) getView()?.showNumberPicker()
-                        else getView()?.hideAge()
-                    }else{
-                        if (!checked) isAgePicked=false
-                    }
+                    if (checked) getView()?.showNumberPicker()
+                    else getView()?.hideAge()
                 })
     }
 
     fun agePicked(age: Int) {
-        isAgePicked=true
         getView()?.showAge(age.toString() + "+")
+    }
+
+    fun timePicked(h: Int, m: Int) {
+        val currentTime = System.currentTimeMillis()
+        val pickedTime = calculateTime(h,m)
     }
 
     private fun findAddress() {
@@ -72,21 +71,26 @@ class SharePresenter(private val shareInteractor: ShareInteractor, private val r
                 })
     }
 
+    private fun calculateTime(h:Int,m : Int) : Int{
+
+    }
+
     companion object {
         const val TAG = "SharePresenter"
     }
+
 }
 
 @PerFragment
 class SharePresenterProviderFactory @Inject constructor(private val shareInteractor: ShareInteractor,
                                                         private val rxPermission: Provider<RxPermissions>) : BasePresenterProviderFactory<SharePresenter> {
     override fun get(): SharePresenter {
-        if (presenterHolder.contains(SharePresenter.TAG))
-            return presenterHolder[SharePresenter.TAG] as SharePresenter
+        return if (presenterHolder.contains(SharePresenter.TAG))
+            presenterHolder[SharePresenter.TAG] as SharePresenter
         else {
             val presenter = SharePresenter(shareInteractor, rxPermission)
             presenterHolder.put(SharePresenter.TAG, presenter)
-            return presenter
+            presenter
         }
     }
 

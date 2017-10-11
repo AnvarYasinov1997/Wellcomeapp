@@ -49,7 +49,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     }
 
     override fun isUserAlreadyRegistered(uid: String): Single<Boolean> {
-        return singleQuery(FirebaseDatabase.getInstance().getReference("users").orderByChild("id"), UserData::class.java)
+        return singleQuery(FirebaseDatabase.getInstance().getReference("users").orderByChild("id").equalTo(uid), UserData::class.java)
                 .doOnSuccess { cacheUserData(it) }
                 .map { true }
                 .onErrorReturn { false }
