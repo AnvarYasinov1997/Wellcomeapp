@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.support.v7.widget.Toolbar
 import android.view.View
-import butterknife.BindView
 import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
@@ -15,15 +14,10 @@ import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.mxn.soul.flowingdrawer_core.ElasticDrawer
-import com.mxn.soul.flowingdrawer_core.FlowingDrawer
-import com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
+import kotlinx.android.synthetic.main.activity_main.*
 
 @Layout(id = R.layout.activity_main)
 class MainActivity : BaseActivity<MainActivityPresenter,MainActivityPresenterProviderFactory>(), MainActivityView, MainActivityRouter {
-    @BindView(R.id.drawer_layout)
-    lateinit var drawerLayout: FlowingDrawer
-    @BindView(R.id.menu_layout)
-    lateinit var menuLayout: FlowingMenuLayout
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -46,7 +40,7 @@ class MainActivity : BaseActivity<MainActivityPresenter,MainActivityPresenterPro
                 if (menuLayout.visibility == View.GONE) {
                     menuLayout.visibility = View.VISIBLE
                     supportFragmentManager.beginTransaction()
-                            .replace(R.id.menu_container, Drawer())
+                            .replace(R.id.menuContainer, Drawer())
                             .commit()
                 }
             }

@@ -3,11 +3,6 @@ package com.mistreckless.support.wellcomeapp.ui.screen.registry
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.OnClick
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
@@ -15,7 +10,7 @@ import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import com.squareup.picasso.Picasso
-import com.subinkrishna.widget.CircularImageView
+import kotlinx.android.synthetic.main.fragment_registry.*
 import java.io.File
 
 /**
@@ -23,16 +18,6 @@ import java.io.File
  */
 @Layout(id = R.layout.fragment_registry)
 class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactory>(), RegistryView {
-    @BindView(R.id.txt_header)
-    lateinit var txtHeader: TextView
-    @BindView(R.id.txt_name)
-    lateinit var txtName: TextView
-    @BindView(R.id.edt_name)
-    lateinit var edtName: EditText
-    @BindView(R.id.btn_finish)
-    lateinit var btnFinish: Button
-    @BindView(R.id.img_user)
-    lateinit var imgUser: CircularImageView
 
     override fun getCurrentToolbar() = null
 
@@ -48,6 +33,8 @@ class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactor
     override fun initUi() {
         val user = arguments.getSerializable("user_state") as NewUserState
         edtName.hint = user.fullName
+        btnFinish.setOnClickListener { if (it.isEnabled) presenter.finishClicked(txtName.text.toString(), arguments.getSerializable("user_state") as NewUserState) }
+        imgUser.setOnClickListener { presenter.photoClicked() }
     }
 
     override fun showCity(city: String) {
@@ -71,15 +58,6 @@ class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactor
         Picasso.with(context).load(File(path)).placeholder(R.drawable.common_google_signin_btn_icon_light).into(imgUser)
     }
 
-    @OnClick(R.id.btn_finish)
-    fun onFinishClick(view: Button) {
-        if (view.isEnabled) presenter.finishClicked(txtName.text.toString(), arguments.getSerializable("user_state") as NewUserState)
-    }
-
-    @OnClick(R.id.img_user)
-    fun onPhotoClick() {
-        presenter.photoClicked()
-    }
 
     companion object {
         const val TAG = "Auth"

@@ -3,8 +3,6 @@ package com.mistreckless.support.wellcomeapp.ui
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.Toolbar
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import com.trello.rxlifecycle2.LifecycleTransformer
 import com.trello.rxlifecycle2.android.ActivityEvent
@@ -34,7 +32,6 @@ abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProvider
 
     val presenter by lazy { presenterProviderFactory.get() }
 
-    var unbinder: Unbinder? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -53,14 +50,12 @@ abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProvider
         if (cls.isAnnotationPresent(Layout::class.java)) {
             val annotation = cls.getAnnotation(Layout::class.java)
             setContentView(annotation.id)
-            unbinder = ButterKnife.bind(this)
         }
     }
 
     override fun onDestroy() {
         presenter.detachRouter()
         presenter.detachView()
-        unbinder?.unbind()
         super.onDestroy()
     }
 

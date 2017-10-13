@@ -10,7 +10,7 @@
         android:text="Welcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_header"
+        android:id="@+id/txtHeader"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_marginTop="16dp"
@@ -21,30 +21,30 @@
         android:text="Vasya"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_name"
+        android:id="@+id/txtName"
         android:textSize="36sp"
         android:textStyle="normal|italic"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/txt_header"
-        app:layout_constraintEnd_toEndOf="@+id/txt_header"
+        app:layout_constraintTop_toBottomOf="@+id/txtHeader"
+        app:layout_constraintEnd_toEndOf="@+id/txtHeader"
         android:layout_marginEnd="8dp"
-        app:layout_constraintStart_toStartOf="@+id/txt_header"
+        app:layout_constraintStart_toStartOf="@+id/txtHeader"
         android:layout_marginStart="8dp" />
     <com.subinkrishna.widget.CircularImageView
         android:layout_width="200dp"
         android:layout_height="200dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/img_user"
+        android:id="@+id/imgUser"
         android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/txt_name" />
+        app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <Button
         android:text="Finish"
         android:enabled="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_finish"
+        android:id="@+id/btnFinish"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         style="@android:style/Widget.Button"
@@ -52,17 +52,17 @@
         android:layout_marginBottom="36dp" />
 
     <EditText
-        android:id="@+id/edt_name"
+        android:id="@+id/edtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/btn_finish"
+        app:layout_constraintBottom_toTopOf="@+id/btnFinish"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_user" />
+        app:layout_constraintTop_toBottomOf="@+id/imgUser" />
 
 </android.support.constraint.ConstraintLayout>

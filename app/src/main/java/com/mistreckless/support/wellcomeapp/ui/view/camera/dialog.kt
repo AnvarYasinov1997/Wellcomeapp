@@ -1,14 +1,11 @@
 package com.mistreckless.support.wellcomeapp.ui.view.camera
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.app.TimePickerDialog
-import android.icu.util.BuddhistCalendar
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.widget.NumberPicker
-import io.reactivex.Single
 import java.io.Serializable
 
 /**

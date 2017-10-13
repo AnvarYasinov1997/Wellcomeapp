@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 class WallPresenter : BasePresenter<WallView, MainActivity>() {
     override fun onFirstViewAttached() {
+        getView()?.initUi()
     }
 
     fun fubClicked() {

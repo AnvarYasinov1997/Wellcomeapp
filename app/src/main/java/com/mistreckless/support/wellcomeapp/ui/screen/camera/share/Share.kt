@@ -3,15 +3,9 @@ package com.mistreckless.support.wellcomeapp.ui.screen.camera.share
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
 import android.support.design.widget.CoordinatorLayout
-import android.support.v7.widget.Toolbar
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.View
-import android.widget.*
-import butterknife.BindView
-import butterknife.OnClick
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
@@ -21,6 +15,7 @@ import com.mistreckless.support.wellcomeapp.ui.view.camera.AgePickerDialog
 import com.mistreckless.support.wellcomeapp.ui.view.camera.TimePickerDialog
 import com.mistreckless.support.wellcomeapp.ui.view.indy.toObservable
 import com.otaliastudios.cameraview.CameraUtils
+import kotlinx.android.synthetic.main.fragment_share.*
 
 
 /**
@@ -28,31 +23,15 @@ import com.otaliastudios.cameraview.CameraUtils
  */
 @Layout(id = R.layout.fragment_share)
 class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), ShareView {
-    @BindView(R.id.toolbar)
-    lateinit var toolbar: Toolbar
-    @BindView(R.id.img_picture)
-    lateinit var imgPicture: ImageView
-    @BindView(R.id.appbar)
-    lateinit var appbarLayout: AppBarLayout
-    @BindView(R.id.txt_address)
-    lateinit var txtAddress: TextView
-    @BindView(R.id.address_progress_bar)
-    lateinit var pbAddress: ProgressBar
-    @BindView(R.id.cb_age)
-    lateinit var cbAge : CheckBox
-    @BindView(R.id.cb_dress)
-    lateinit var cbDress : CheckBox
-    @BindView(R.id.txt_age)
-    lateinit var txtAge : TextView
-    @BindView(R.id.edt_desc)
-    lateinit var edtDesc : EditText
+
 
     override fun getCurrentToolbar() = toolbar
     override fun getRouter() = activity as CameraActivityRouter
 
-    override fun initUi() {
-        initAppBar()
+    override fun initUi(bytes: ByteArray) {
+        initAppBar(bytes)
         presenter.controlAge(cbAge.toObservable())
+        txtTillTime.setOnClickListener { TimePickerDialog.newInstance({h,m->presenter.timePicked(h,m)}).show(childFragmentManager,"timePicker") }
     }
 
     override fun showAddress(line: String) {
@@ -79,22 +58,26 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
         txtAge.visibility=View.GONE
     }
 
-    @OnClick(R.id.btn_share)
-    fun onShareClick(){
-        TimePickerDialog.newInstance({h,m->presenter.timePicked(h,m)}).show(childFragmentManager,"timePicker")
-    }
-    fun log(h : Int, m : Int){
-        Log.e("time", "h $h m $m")
+    override fun showFromTime(fromTime: String) {
+        txtFromTime.text=fromTime
     }
 
-    private fun initAppBar() {
+    override fun showTillTime(tillTime: String) {
+        txtTillTime.text=tillTime
+    }
+
+    override fun setBtnShareEnabled(isEnabled: Boolean) {
+        btnShare.isEnabled=isEnabled
+    }
+
+    private fun initAppBar(bytes: ByteArray) {
         @SuppressLint("DrawAllocation")
         val displayMetrics = DisplayMetrics()
         (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
         val height = displayMetrics.heightPixels
         val width = displayMetrics.widthPixels
         val size = if (width > height) height else width
-        val lp = appbarLayout.layoutParams as CoordinatorLayout.LayoutParams
+        val lp = appbar.layoutParams as CoordinatorLayout.LayoutParams
         lp.height = size
         lp.width = size
 
@@ -122,23 +105,18 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
         const val DRESS_KEY="dress"
         const val PICTURE_PATH_KEY="picture_path"
         const val TIME_SNAPSHOT_KEY="time_snapshot"
-
-
-        lateinit var bytes: ByteArray
-
-        fun newInstance(bytes: ByteArray): Share {
-            this.bytes = bytes
-            return Share()
-        }
     }
 }
 
 
 interface ShareView : BaseFragmentView {
-    fun initUi()
+    fun initUi(bytes : ByteArray)
     fun showAddress(line: String)
     fun showAddressProgressBar()
     fun showNumberPicker()
     fun showAge(ageLine: String)
     fun hideAge()
+    fun showTillTime(tillTime: String)
+    fun showFromTime(fromTime : String)
+    fun setBtnShareEnabled(isEnabled : Boolean)
 }

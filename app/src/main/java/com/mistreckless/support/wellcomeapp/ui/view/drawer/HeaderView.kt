@@ -1,16 +1,16 @@
 package com.mistreckless.support.wellcomeapp.ui.view.drawer
 
+import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import butterknife.BindView
-import butterknife.OnClick
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
 import com.mistreckless.support.wellcomeapp.ui.MainActivity
 import com.mistreckless.support.wellcomeapp.ui.model.HeaderItem
 import com.mistreckless.support.wellcomeapp.ui.view.BaseViewHolder
 import com.squareup.picasso.Picasso
-import com.subinkrishna.widget.CircularImageView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.view_drawer_header.*
+
 
 
 /**
@@ -20,15 +20,10 @@ import com.subinkrishna.widget.CircularImageView
 class HeaderViewHolder(override var presenter: DrawerHeaderPresenter, parent: ViewGroup?, mainActivity: MainActivity)
     : BaseViewHolder<HeaderItem, DrawerHeaderPresenter>(mainActivity, parent, R.layout.view_drawer_header), HeaderView {
 
-    @BindView(R.id.txt_name)
-    lateinit var txtName: TextView
-    @BindView(R.id.txt_rating)
-    lateinit var txtRating: TextView
-    @BindView(R.id.img_user)
-    lateinit var imgUser: CircularImageView
-
-    @OnClick(R.id.root_view)
-    fun onHeaderClick()= presenter.headerClicked()
+    override fun onViewBinded(item: Any) {
+        super.onViewBinded(item)
+        rootView.setOnClickListener { presenter.headerClicked() }
+    }
 
     override fun updateUser(userData: UserData) {
         txtName.text = userData.displayedName

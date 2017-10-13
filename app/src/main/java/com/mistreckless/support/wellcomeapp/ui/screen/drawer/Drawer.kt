@@ -1,14 +1,13 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.drawer
 
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import butterknife.BindView
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.model.DrawerItem
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import com.mistreckless.support.wellcomeapp.ui.view.drawer.DrawerAdapter
+import kotlinx.android.synthetic.main.fragment_drawer.*
 import javax.inject.Inject
 
 /**
@@ -20,9 +19,6 @@ class Drawer : BaseFragment<DrawerPresenter, DrawerPresenterProviderFactory>(), 
 
     @Inject
     lateinit var adapter: DrawerAdapter
-
-    @BindView(R.id.recycler_view)
-    lateinit var recyclerView: RecyclerView
 
     override fun getCurrentToolbar() = null
 

@@ -6,8 +6,6 @@ import android.support.v7.widget.Toolbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import butterknife.ButterKnife
-import butterknife.Unbinder
 import com.mistreckless.support.wellcomeapp.ui.BaseActivity
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.BasePresenterProviderFactory
@@ -34,7 +32,6 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
     lateinit var presenterFactory : F
     val presenter : P by lazy { presenterFactory.get() }
 
-    var unbinder: Unbinder? = null
     var restoredBundle : Bundle?=null
 
     override fun onAttach(context: Context?) {
@@ -53,9 +50,7 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
         val cls = javaClass
         if (!cls.isAnnotationPresent(Layout::class.java)) return null
         val annotation = cls.getAnnotation(Layout::class.java)
-        val view = inflater!!.inflate(annotation.id, container, false)
-        unbinder = ButterKnife.bind(this, view)
-        return view
+        return inflater!!.inflate(annotation.id, container, false)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -82,7 +77,6 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
     override fun onDestroyView() {
         presenter.detachView()
         super.onDestroyView()
-        unbinder?.unbind()
     }
 
     override fun onDestroy() {

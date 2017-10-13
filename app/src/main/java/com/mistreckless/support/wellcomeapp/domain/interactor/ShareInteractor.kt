@@ -11,6 +11,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  */
 interface ShareInteractor {
     fun findMyLocation(): Single<String>
+    fun putPhotoBytes(bytes: ByteArray)
+    fun getPhotoBytes(): ByteArray
 
 }
 
@@ -18,10 +20,18 @@ interface ShareInteractor {
 class ShareInteractorImpl(private val userRepository: UserRepository,
                           private val locationRepository: LocationRepository,
                           private val postRepository: PostRepository) : ShareInteractor {
+    lateinit var bytes: ByteArray
+
     override fun findMyLocation(): Single<String> {
         return locationRepository.getCurrentAddress()
-                .map { if (it.thoroughfare != null && it.thoroughfare.isNotEmpty()) it.thoroughfare + " "+it.subThoroughfare else it.locality }
+                .map { if (it.thoroughfare != null && it.thoroughfare.isNotEmpty()) it.thoroughfare + " " + it.subThoroughfare else it.locality }
                 .observeOn(AndroidSchedulers.mainThread())
     }
+
+    override fun putPhotoBytes(bytes: ByteArray) {
+        this.bytes = bytes
+    }
+
+    override fun getPhotoBytes() = bytes
 
 }

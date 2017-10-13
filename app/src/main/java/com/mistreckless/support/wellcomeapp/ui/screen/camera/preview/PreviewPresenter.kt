@@ -1,6 +1,7 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.camera.preview
 
 import android.os.Bundle
+import com.mistreckless.support.wellcomeapp.domain.interactor.ShareInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.BasePresenterProviderFactory
 import com.mistreckless.support.wellcomeapp.ui.presenterHolder
@@ -10,7 +11,7 @@ import javax.inject.Inject
 /**
  * Created by @mistreckless on 10.09.2017. !
  */
-class PreviewPresenter : BasePresenter<PreviewView, CameraActivityRouter>() {
+class PreviewPresenter(private val shareInteractor: ShareInteractor) : BasePresenter<PreviewView, CameraActivityRouter>() {
     override fun onFirstViewAttached() {
         getView()?.initUi()
     }
@@ -25,19 +26,21 @@ class PreviewPresenter : BasePresenter<PreviewView, CameraActivityRouter>() {
     }
 
     fun pictureTaken(bytes: ByteArray?) {
-        if (bytes != null)
-            getRouter()?.navigateToPictureSettings(bytes)
+        if (bytes != null){
+            shareInteractor.putPhotoBytes(bytes)
+            getRouter()?.navigateToPictureSettings()
+        }
     }
 }
 
-class PreviewPresenterProviderFactory @Inject constructor() : BasePresenterProviderFactory<PreviewPresenter> {
+class PreviewPresenterProviderFactory @Inject constructor(private val shareInteractor: ShareInteractor) : BasePresenterProviderFactory<PreviewPresenter> {
     override fun get(): PreviewPresenter {
-        if (presenterHolder.containsKey(PreviewPresenter.TAG))
-            return presenterHolder[PreviewPresenter.TAG] as PreviewPresenter
+        return if (presenterHolder.containsKey(PreviewPresenter.TAG))
+            presenterHolder[PreviewPresenter.TAG] as PreviewPresenter
         else {
-            val presenter = PreviewPresenter()
+            val presenter = PreviewPresenter(shareInteractor)
             presenterHolder.put(PreviewPresenter.TAG, presenter)
-            return presenter
+            presenter
         }
     }
 

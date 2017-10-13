@@ -2,33 +2,33 @@
 <com.mxn.soul.flowingdrawer_core.FlowingDrawer xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:clipToPadding="false"
-    app:edPosition="1"
-    app:edMenuSize="260dp"
     app:edMenuBackground="#dddddd"
-    android:id="@+id/drawer_layout"
+    app:edMenuSize="260dp"
+    app:edPosition="1"
     tools:context="com.mistreckless.support.wellcomeapp.ui.MainActivity">
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-    
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.mxn.soul.flowingdrawer_core.FlowingMenuLayout
-        android:visibility="gone"
-        android:id="@+id/menu_layout"
+        android:id="@+id/menuLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <FrameLayout
-            android:id="@+id/menu_container"
+            android:id="@+id/menuContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

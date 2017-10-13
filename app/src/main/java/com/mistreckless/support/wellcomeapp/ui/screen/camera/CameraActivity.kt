@@ -25,16 +25,16 @@ class CameraActivity : BaseActivity<CameraPresenter,CameraPresenterProviderFacto
                 .commit()
     }
 
-    override fun navigateToPictureSettings(bytes: ByteArray) {
+    override fun navigateToPictureSettings() {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.container,PictureSettings.newInstance(bytes))
+                .replace(R.id.container,PictureSettings())
                 .addToBackStack(null)
                 .commit()
     }
 
-    override fun navigateToShare(bytes: ByteArray) {
+    override fun navigateToShare() {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.container,Share.newInstance(bytes))
+                .replace(R.id.container,Share())
                 .addToBackStack(null)
                 .commit()
     }
@@ -44,6 +44,6 @@ interface CameraActivityView : BaseActivityView
 
 interface CameraActivityRouter {
     fun navigateToPreview()
-    fun navigateToPictureSettings(bytes : ByteArray)
-    fun navigateToShare(bytes: ByteArray)
+    fun navigateToPictureSettings()
+    fun navigateToShare()
 }
