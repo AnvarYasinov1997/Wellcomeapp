@@ -86,7 +86,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
         val photoPath = cacheData.getString(CacheData.USER_PHOTO)
         if (photoPath.isEmpty()) return Single.just(photoPath)
         val storageRef = FirebaseStorage.getInstance().reference.child(cacheData.getString(CacheData.USER_CITY)).child(Uri.parse(photoPath).lastPathSegment)
-        return uploadFileViaStream(storageRef, FileInputStream(File(photoPath)))
+        return storageRef.uploadFileViaStream(FileInputStream(File(photoPath)))
                 .subscribeOn(Schedulers.io())
     }
 

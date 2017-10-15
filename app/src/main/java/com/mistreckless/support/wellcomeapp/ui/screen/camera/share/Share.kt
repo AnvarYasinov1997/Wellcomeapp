@@ -32,6 +32,7 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
         initAppBar(bytes)
         presenter.controlAge(cbAge.toObservable())
         txtTillTime.setOnClickListener { TimePickerDialog.newInstance({h,m->presenter.timePicked(h,m)}).show(childFragmentManager,"timePicker") }
+        btnShare.setOnClickListener { if (it.isEnabled) presenter.shareClicked(txtAddress.text.toString(),edtDesc.text.toString(),cbDress.isChecked,cbAge.isChecked,txtAge.text.toString(),txtFromTime.text.toString(),txtTillTime.text.toString()) }
     }
 
     override fun showAddress(line: String) {

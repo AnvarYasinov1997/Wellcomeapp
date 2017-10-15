@@ -2,6 +2,11 @@ package com.mistreckless.support.wellcomeapp.util.rxfirebase
 
 import android.annotation.SuppressLint
 import com.google.firebase.storage.StorageReference
+import com.mistreckless.support.wellcomeapp.domain.entity.ShareState
+import com.mistreckless.support.wellcomeapp.domain.entity.StateUpload
+import com.mistreckless.support.wellcomeapp.domain.entity.StateUploaded
+import io.reactivex.ObservableEmitter
+import io.reactivex.ObservableOnSubscribe
 import io.reactivex.SingleEmitter
 import io.reactivex.SingleOnSubscribe
 import java.io.InputStream
@@ -23,6 +28,26 @@ class RxStorageUploadStream(private val storageRef: StorageReference, private va
                     stream.close()
                     if (!e.isDisposed)
                         e.onError(it)
+                }
+    }
+}
+
+class RxStorageUploadBytesWithProgress(private val storageRef: StorageReference,private val bytes : ByteArray) : ObservableOnSubscribe<ShareState>{
+    override fun subscribe(e: ObservableEmitter<ShareState>) {
+        storageRef.putBytes(bytes)
+                .addOnProgressListener {
+                    if (!e.isDisposed){
+                        e.onNext(StateUpload((it.bytesTransferred/it.totalByteCount).toInt()))
+                    }
+                }
+                .addOnFailureListener {
+                    if (!e.isDisposed){
+                        e.onError(it)
+                    }
+                }
+                .addOnSuccessListener {
+                    if (!e.isDisposed)
+                        e.onNext(StateUploaded(it.downloadUrl.toString()))
                 }
     }
 

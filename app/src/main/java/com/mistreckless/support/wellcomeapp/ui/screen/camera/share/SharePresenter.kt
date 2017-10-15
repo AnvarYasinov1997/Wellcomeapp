@@ -73,7 +73,12 @@ class SharePresenter(private val shareInteractor: ShareInteractor, private val r
         Log.e(TAG, "continue in minutes" + ((deletedTime - currentTime) / 1000 / 60))
         getView()?.showTillTime("till \n" + sdf.format(Date(deletedTime)))
         getView()?.showFromTime("from \n " + sdf.format(Date(currentTime)))
+    }
 
+    fun shareClicked(addressLine: String, descLine: String, isDressControl: Boolean, isAgeControl: Boolean, ageLine: String, fromTimeLine: String, tillTimeLine: String) {
+        shareInteractor.share(addressLine,descLine,isDressControl,isAgeControl,ageLine,
+                sdf.parse(fromTimeLine.substring(fromTimeLine.indexOf("\n")+1)).time,
+                sdf.parse(tillTimeLine.substring(tillTimeLine.indexOf("\n")+1)).time)
     }
 
     private fun findAddress() {
@@ -112,6 +117,7 @@ class SharePresenter(private val shareInteractor: ShareInteractor, private val r
     companion object {
         const val TAG = "SharePresenter"
     }
+
 
 }
 
