@@ -1,5 +1,7 @@
 package com.mistreckless.support.wellcomeapp.domain.interactor
 
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.mistreckless.support.wellcomeapp.domain.entity.ShareState
 import com.mistreckless.support.wellcomeapp.domain.entity.StateError
 import com.mistreckless.support.wellcomeapp.domain.entity.StateInit
@@ -37,11 +39,10 @@ class ShareInteractorImpl(private val userRepository: UserRepository,
     override fun share(addressLine: String, descLine: String, dressControl: Boolean, ageControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long): Observable<ShareState> {
         val initObservable = Observable.just(StateInit())
         val tags = findTags(descLine)
-        val isAgeControl = ageControl && ageLine.isNotEmpty()
         return Observable.merge(initObservable, postRepository.uploadPost(bytes))
-                .flatMap { when(it){
-                    is StateUploaded-> Observable.just(it)
-                    else ->Observable.just(it)
+                .flatMap { state-> when(state){
+                    is StateUploaded-> postRepository.share(state.url,userRepository.getUserReference(),addressLine,descLine, dressControl,ageLine,fromTime,tillTime,tags)
+                    else ->Observable.just(state)
                 } }
                 .onErrorReturn { StateError(it.message ?: "Empty error") }
                 .observeOn(AndroidSchedulers.mainThread())
