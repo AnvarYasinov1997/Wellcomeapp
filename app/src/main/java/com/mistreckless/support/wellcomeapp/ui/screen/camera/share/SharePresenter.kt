@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import com.mistreckless.support.wellcomeapp.domain.entity.*
 import com.mistreckless.support.wellcomeapp.domain.interactor.ShareInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.BasePresenterProviderFactory
@@ -79,6 +80,15 @@ class SharePresenter(private val shareInteractor: ShareInteractor, private val r
         shareInteractor.share(addressLine,descLine,isDressControl,isAgeControl,ageLine,
                 sdf.parse(fromTimeLine.substring(fromTimeLine.indexOf("\n")+1)).time,
                 sdf.parse(tillTimeLine.substring(tillTimeLine.indexOf("\n")+1)).time)
+                .subscribe {
+                    when(it){
+                        is StateInit ->Log.e(TAG,"init")
+                        is StateUpload ->Log.e(TAG,"upload "+it.progress)
+                        is StateUploaded -> Log.e(TAG,"uploaded url " + it.url)
+                        is StateDone->Log.e(TAG,"done")
+                        is StateError -> Log.e(TAG,"error "+it.message)
+                    }
+                }
     }
 
     private fun findAddress() {

@@ -37,7 +37,7 @@ class RxStorageUploadBytesWithProgress(private val storageRef: StorageReference,
         storageRef.putBytes(bytes)
                 .addOnProgressListener {
                     if (!e.isDisposed){
-                        e.onNext(StateUpload((it.bytesTransferred/it.totalByteCount).toInt()))
+                        e.onNext(StateUpload((100 * it.bytesTransferred/it.totalByteCount).toInt()))
                     }
                 }
                 .addOnFailureListener {
@@ -50,5 +50,4 @@ class RxStorageUploadBytesWithProgress(private val storageRef: StorageReference,
                         e.onNext(StateUploaded(it.downloadUrl.toString()))
                 }
     }
-
 }

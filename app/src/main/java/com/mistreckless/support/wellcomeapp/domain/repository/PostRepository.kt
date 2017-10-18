@@ -3,13 +3,12 @@ package com.mistreckless.support.wellcomeapp.domain.repository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mistreckless.support.wellcomeapp.domain.CacheData
-import com.mistreckless.support.wellcomeapp.domain.entity.ContentData
-import com.mistreckless.support.wellcomeapp.domain.entity.PostData
-import com.mistreckless.support.wellcomeapp.domain.entity.PostType
-import com.mistreckless.support.wellcomeapp.domain.entity.ShareState
+import com.mistreckless.support.wellcomeapp.domain.entity.*
+import com.mistreckless.support.wellcomeapp.util.rxfirebase.setValue
 import com.mistreckless.support.wellcomeapp.util.rxfirebase.uploadBytesWithProgress
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
+import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
 /**
@@ -29,12 +28,15 @@ class PostRepositoryImpl(private val cacheData: CacheData) : PostRepository{
     }
 
     override fun share(postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, dressControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long, tags: List<String>): Observable<ShareState> {
-        val post = PostData()
+        val ref = FirebaseFirestore.getInstance().collection("city").document(cacheData.getString(CacheData.USER_CITY_REF)).collection("post").document()
+        val post = generatePost(ref.id, postType,url, userReference, addressLine, descLine, dressControl, ageLine, fromTime, tillTime)
+        return ref.setValue(post).toSingle<ShareState> { StateDone() }.toObservable()
     }
 
 
     private fun generatePost(ref : String,postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, dressControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long) : PostData{
         val postContent = ContentData(postType,userReference,url,descLine,fromTime,tillTime)
-        val postData = PostData(ref, mutableListOf(postContent),)
+        val postData = PostData(ref, mutableListOf(postContent), Pair(cacheData.getDouble(CacheData.TMP_LAT),cacheData.getDouble(CacheData.TMP_LON)),addressLine,cacheData.getString(CacheData.USER_CITY), dressControl,ageLine)
+        return postData
     }
 }

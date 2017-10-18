@@ -29,6 +29,10 @@ class LocationRepositoryImpl (private val rxLocation: RxLocation,
     override fun getCurrentAddress(): Single<Address> {
         return rxLocation.location().lastLocation()
                 .toSingle()
+                .doOnSuccess{
+                    cacheData.cacheDouble(CacheData.TMP_LAT,it.latitude)
+                    cacheData.cacheDouble(CacheData.TMP_LON,it.longitude)
+                }
                 .flatMap { getAddressFromLocation(it) }
                 .subscribeOn(Schedulers.io())
     }

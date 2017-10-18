@@ -2,10 +2,7 @@ package com.mistreckless.support.wellcomeapp.domain.interactor
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.mistreckless.support.wellcomeapp.domain.entity.ShareState
-import com.mistreckless.support.wellcomeapp.domain.entity.StateError
-import com.mistreckless.support.wellcomeapp.domain.entity.StateInit
-import com.mistreckless.support.wellcomeapp.domain.entity.StateUploaded
+import com.mistreckless.support.wellcomeapp.domain.entity.*
 import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.domain.repository.PostRepository
 import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
@@ -41,7 +38,7 @@ class ShareInteractorImpl(private val userRepository: UserRepository,
         val tags = findTags(descLine)
         return Observable.merge(initObservable, postRepository.uploadPost(bytes))
                 .flatMap { state-> when(state){
-                    is StateUploaded-> postRepository.share(state.url,userRepository.getUserReference(),addressLine,descLine, dressControl,ageLine,fromTime,tillTime,tags)
+                    is StateUploaded-> postRepository.share(PostType.PHOTO,state.url,userRepository.getUserReference(),addressLine,descLine, dressControl,ageLine,fromTime,tillTime,tags)
                     else ->Observable.just(state)
                 } }
                 .onErrorReturn { StateError(it.message ?: "Empty error") }

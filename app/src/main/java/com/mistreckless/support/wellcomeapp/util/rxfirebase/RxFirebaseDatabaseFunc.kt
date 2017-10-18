@@ -13,8 +13,8 @@ import io.reactivex.Single
  */
 
 
-inline fun <T> setValue(ref: DatabaseReference, value: T): Completable = Completable.create(RxSetValueDep(ref, value))
-
-inline fun <T>singleQuery(query: Query, clazz: Class<T>) : Single<T> = Single.create(RxSingleQueryDep(query,clazz))
-
-inline fun <T> observeValueEvent(ref: DatabaseReference, clazz: Class<T>) : Observable<T> = Observable.create(RxObserveValueEventDep(ref, clazz))
+//inline fun <T> setValue(ref: DatabaseReference, value: T): Completable = Completable.create(RxSetValueDep(ref, value))
+//
+//inline fun <T>singleQuery(query: Query, clazz: Class<T>) : Single<T> = Single.create(RxSingleQueryDep(query,clazz))
+//
+//inline fun <T> observeValueEvent(ref: DatabaseReference, clazz: Class<T>) : Observable<T> = Observable.create(RxObserveValueEventDep(ref, clazz))

@@ -19,34 +19,39 @@ data class ErrorState(var message: String) : RegistryUserState()
 
 data class UserData(var id: String,
                     var ref: String,
-                    var ratingRef: String,
                     var cityName: String,
                     var fullName: String?,
                     var displayedName: String,
-                    var photoUrl: String?) : Persistable {
-    constructor() : this("","","","","","","")
-
-    override fun writeExternal(out: DataOutput?) {
-        out?.writeString(id)
-        out?.writeString(ref)
-        out?.writeString(ratingRef)
-        out?.writeString(cityName)
-        out?.writeString(fullName)
-        out?.writeString(displayedName)
-        out?.writeString(photoUrl)
-    }
-
-    override fun readExternal(`in`: DataInput?) {
-        id = `in`?.readString()!!
-        ref = `in`.readString()
-        ratingRef = `in`.readString()
-        cityName = `in`.readString()
-        fullName = `in`.readString()
-        displayedName = `in`.readString()
-        photoUrl = `in`.readString()
-    }
-
-    override fun deepClone(): Persistable = copy(id = id, ref = ref)
-
-
-}
+                    var photoUrl: String?,
+                    var likeCount : Long=0,
+                    var postCount : Long = 0,
+                    var willComeCount : Long = 0,
+                    var additionalPoints : Long =0,
+                    var generalRating : Long = 0)
+//    : Persistable {
+//    constructor() : this("","","","","","","")
+//
+//    override fun writeExternal(out: DataOutput?) {
+//        out?.writeString(id)
+//        out?.writeString(ref)
+//        out?.writeString(ratingRef)
+//        out?.writeString(cityName)
+//        out?.writeString(fullName)
+//        out?.writeString(displayedName)
+//        out?.writeString(photoUrl)
+//    }
+//
+//    override fun readExternal(`in`: DataInput?) {
+//        id = `in`?.readString()!!
+//        ref = `in`.readString()
+//        ratingRef = `in`.readString()
+//        cityName = `in`.readString()
+//        fullName = `in`.readString()
+//        displayedName = `in`.readString()
+//        photoUrl = `in`.readString()
+//    }
+//
+//    override fun deepClone(): Persistable = copy(id = id, ref = ref)
+//
+//
+//}

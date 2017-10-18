@@ -8,10 +8,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mistreckless.support.wellcomeapp.domain.CacheData
-import com.mistreckless.support.wellcomeapp.domain.entity.RatingData
+import com.mistreckless.support.wellcomeapp.domain.entity.CityData
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
 import com.mistreckless.support.wellcomeapp.util.rxfirebase.*
 import io.reactivex.Completable
@@ -26,21 +26,17 @@ import java.io.FileInputStream
  */
 interface UserRepository {
     fun getUserReference(): String
-    fun getRatingReference(): String
     fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser>
     fun isUserAlreadyRegistered(uid: String): Single<Boolean>
     fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl: String): Completable
     fun findPhoto(data: Uri): Single<String>
     fun uploadPhotoIfNeeded(): Single<String>
     fun observeUserValueEvent(userRef: String): Observable<UserData>
-    fun observeRatingValueEvent(ratingRef: String): Observable<RatingData>
     fun cacheUserData(userData: UserData)
-    fun cacheRatingData(ratingData: RatingData)
 }
 
 class UserRepositoryImpl(private val cacheData: CacheData, private val context: Context) : UserRepository {
     override fun getUserReference(): String = cacheData.getString(CacheData.USER_REF)
-    override fun getRatingReference(): String = cacheData.getString(CacheData.RATING_REF)
 
     override fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser> {
         val instance = FirebaseAuth.getInstance()
@@ -49,22 +45,20 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     }
 
     override fun isUserAlreadyRegistered(uid: String): Single<Boolean> {
-        return singleQuery(FirebaseDatabase.getInstance().getReference("users").orderByChild("id").equalTo(uid), UserData::class.java)
-                .doOnSuccess { cacheUserData(it) }
-                .map { true }
-                .onErrorReturn { false }
+        return FirebaseFirestore.getInstance().collection("user").whereEqualTo("id", uid).getValues(UserData::class.java)
+                .doOnSuccess { if (it.isNotEmpty()) cacheUserData(it[0]) }
+                .map { it.isNotEmpty() }
+                .subscribeOn(Schedulers.io())
 
     }
 
     override fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl: String): Completable {
-        val userRef = FirebaseDatabase.getInstance().getReference("users").push()
-        val ratingRef = FirebaseDatabase.getInstance().getReference("ratings").push()
+        val userRef = FirebaseFirestore.getInstance().collection("user").document()
         val cityName = cacheData.getString(CacheData.USER_CITY)
         if (cityName.isEmpty()) return Completable.error(Exception("city is empty"))
-        val userData = UserData(uid, userRef.key, ratingRef.key, cityName, fullName, displayedName, photoUrl)
-        val ratingData = RatingData()
-        return setValue(userRef, userData)
-                .mergeWith(setValue(ratingRef, ratingData))
+        val userData = UserData(uid, userRef.id, cityName, fullName, displayedName, photoUrl)
+        return userRef.setValue(userData)
+                .mergeWith(initCityIfNeeded(cityName, ""))
                 .doOnComplete { cacheUserData(userData) }
                 .subscribeOn(Schedulers.io())
     }
@@ -91,14 +85,8 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     }
 
     override fun observeUserValueEvent(userRef: String): Observable<UserData> {
-        val fullUserRef = FirebaseDatabase.getInstance().getReference("users").child(userRef)
-        return observeValueEvent(fullUserRef, UserData::class.java)
-                .subscribeOn(Schedulers.io())
-    }
-
-    override fun observeRatingValueEvent(ratingRef: String): Observable<RatingData> {
-        val fullRatingRef = FirebaseDatabase.getInstance().getReference("ratings").child(ratingRef)
-        return observeValueEvent(fullRatingRef, RatingData::class.java)
+        val fullUserRef = FirebaseFirestore.getInstance().collection("user").document(userRef)
+        return fullUserRef.observeValue(UserData::class.java)
                 .subscribeOn(Schedulers.io())
     }
 
@@ -107,15 +95,23 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
         cacheData.cacheString(CacheData.USER_ID, userData.id)
         cacheData.cacheString(CacheData.USER_CITY, userData.cityName)
         cacheData.cacheString(CacheData.USER_DISPLAYED_NAME, userData.displayedName)
-        cacheData.cacheString(CacheData.RATING_REF, userData.ratingRef)
 
         val photoUrl = userData.photoUrl
         if (photoUrl != null && photoUrl.isNotEmpty())
             cacheData.cacheString(CacheData.USER_PHOTO, photoUrl)
     }
 
-    override fun cacheRatingData(ratingData: RatingData) {
+    private fun initCityIfNeeded(ruCityName: String, enCityName: String = ""): Completable {
+        return FirebaseFirestore.getInstance().collection("city").whereEqualTo("ruName", ruCityName)
+                .getValues(CityData::class.java)
+                .flatMapCompletable {
+                    if (it.isNotEmpty()) Completable.complete() else {
+                        val ref = FirebaseFirestore.getInstance().collection("city").document()
+                        ref.setValue(CityData(enCityName, ruCityName))
+                                .doOnComplete { cacheData.cacheString(CacheData.USER_CITY_REF, ref.id) }
 
+                    }
+                }
     }
 
 }

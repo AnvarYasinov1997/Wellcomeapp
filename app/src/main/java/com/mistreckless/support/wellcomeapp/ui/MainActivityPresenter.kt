@@ -31,7 +31,10 @@ class MainActivityPresenter (val mainInteractor: MainInteractor, val googleApiCl
             mainInteractor.signUpWithGoogle(result)
                     .subscribe({
                         when (it) {
-                            is AlreadyRegisteredState -> Log.e(MainActivity.TAG, "already reg")
+                            is AlreadyRegisteredState -> {
+                                Log.e(TAG, "already reg")
+                                getRouter()?.navigateToWall()
+                            }
                             is NewUserState -> getRouter()?.navigateToRegistry(it)
                             is ErrorState -> Log.e(MainActivity.TAG, it.message)
                         }
