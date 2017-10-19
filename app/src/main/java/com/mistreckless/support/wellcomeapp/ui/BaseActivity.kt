@@ -24,6 +24,8 @@ interface BaseActivityView {
     fun <T> bindUntilEvent(event: ActivityEvent): LifecycleTransformer<T>
 }
 
+interface BaseRouter
+
 abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProviderFactory<P>> : RxAppCompatActivity(), HasSupportFragmentInjector {
     @Inject
     lateinit var fragmentDispatcher: DispatchingAndroidInjector<Fragment>
@@ -59,7 +61,7 @@ abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProvider
         super.onDestroy()
     }
 
-    abstract fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean)
+    abstract fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean, isShowDrawer : Boolean)
 
     override fun supportFragmentInjector() = fragmentDispatcher
 }

@@ -33,6 +33,7 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
     val presenter : P by lazy { presenterFactory.get() }
 
     var restoredBundle : Bundle?=null
+    open val isShowDrawer = true
 
     override fun onAttach(context: Context?) {
         AndroidSupportInjection.inject(this)
@@ -57,7 +58,7 @@ abstract class BaseFragment<out P : BasePresenter<*, *>, F : BasePresenterProvid
         presenter.attachView(this)
         presenter.attachRouter(getRouter())
 
-        (activity as BaseActivity<*,*>).setToolbar(getCurrentToolbar(), isAddedToBackStack())
+        (activity as BaseActivity<*,*>).setToolbar(getCurrentToolbar(), isAddedToBackStack(), isShowDrawer)
 
         if (restoredBundle !=null) presenter.onViewRestoredWhenSystemKillAppOrActivity()
         else if(savedInstanceState==null) presenter.onFirstViewAttached()

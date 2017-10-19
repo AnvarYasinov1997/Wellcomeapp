@@ -1,4 +1,4 @@
-@file:Suppress("NOTHING_TO_INLINE")
+
 
 package com.mistreckless.support.wellcomeapp.util.rxfirebase
 
@@ -13,8 +13,8 @@ import io.reactivex.Single
  */
 
 
-inline fun signInWithCredential(instance: FirebaseAuth, credential: AuthCredential): Single<FirebaseUser>
-        = Single.create(RxSignInWithCredential(instance, credential))
+fun FirebaseAuth.signIn(credential: AuthCredential): Single<FirebaseUser>
+        = Single.create(RxSignInWithCredential(this, credential))
 
-inline fun signOut(instance: FirebaseAuth)
-        = Completable.create(RxSignOut(instance))
+fun FirebaseAuth.signOutComplteable() : Completable
+        = Completable.create(RxSignOut(this))

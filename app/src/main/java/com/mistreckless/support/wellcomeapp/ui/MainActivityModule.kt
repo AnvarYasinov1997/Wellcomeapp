@@ -55,4 +55,7 @@ class MainActivityModule {
 
     @Provides
     fun provideRxPermissions(mainActivity: MainActivity) : RxPermissions = RxPermissions(mainActivity)
+
+    @Provides
+    fun provideRouter(mainActivity: MainActivity) : BaseRouter = mainActivity
 }

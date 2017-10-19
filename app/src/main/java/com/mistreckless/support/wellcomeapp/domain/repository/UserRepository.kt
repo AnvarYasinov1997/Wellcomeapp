@@ -27,6 +27,7 @@ import java.io.FileInputStream
 interface UserRepository {
     fun getUserReference(): String
     fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser>
+    fun signOut() : Completable
     fun isUserAlreadyRegistered(uid: String): Single<Boolean>
     fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl: String): Completable
     fun findPhoto(data: Uri): Single<String>
@@ -39,10 +40,11 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     override fun getUserReference(): String = cacheData.getString(CacheData.USER_REF)
 
     override fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser> {
-        val instance = FirebaseAuth.getInstance()
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        return signInWithCredential(instance, credential)
+        return FirebaseAuth.getInstance().signIn(credential)
     }
+
+    override fun signOut(): Completable =FirebaseAuth.getInstance().signOutComplteable()
 
     override fun isUserAlreadyRegistered(uid: String): Single<Boolean> {
         return FirebaseFirestore.getInstance().collection("user").whereEqualTo("id", uid).getValues(UserData::class.java)

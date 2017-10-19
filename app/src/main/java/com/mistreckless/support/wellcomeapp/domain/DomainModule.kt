@@ -70,6 +70,10 @@ class InteractorModule {
     @Provides
     fun provideShareInteractor(userRepository: UserRepository,locationRepository: LocationRepository,postRepository: PostRepository) : ShareInteractor = ShareInteractorImpl(userRepository, locationRepository, postRepository)
 
+    @Singleton
+    @Provides
+    fun provideWallInteractor(userRepository: UserRepository,postRepository: PostRepository,locationRepository: LocationRepository) : WallInteractor = WallInteractorImpl(userRepository, postRepository, locationRepository)
+
 }
 
 @Singleton

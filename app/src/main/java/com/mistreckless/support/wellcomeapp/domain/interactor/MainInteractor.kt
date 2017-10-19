@@ -34,6 +34,7 @@ class MainInteractorImpl(private val userRepository: UserRepository) : MainInter
                                     else NewUserState(firebaseUser.uid, firebaseUser.displayName, firebaseUser.photoUrl.toString())
                                 }
                     }
+                    .onErrorReturn { ErrorState(it.localizedMessage) }
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
         }

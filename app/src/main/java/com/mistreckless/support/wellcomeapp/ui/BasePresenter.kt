@@ -7,7 +7,7 @@ import io.reactivex.disposables.CompositeDisposable
  * Created by @mistreckless on 30.07.2017. !
  */
 @Suppress("UNCHECKED_CAST")
-abstract class BasePresenter<V, R> {
+abstract class BasePresenter<out V, out R : BaseRouter> {
     private var router: R? = null
     private var view: V? = null
     protected val viewChangesDisposables by lazy { CompositeDisposable() }

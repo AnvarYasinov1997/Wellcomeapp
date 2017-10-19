@@ -17,12 +17,12 @@ data class NewUserState(var uid: String, var fullName: String?, var photoUrl: St
 data class ErrorState(var message: String) : RegistryUserState()
 
 
-data class UserData(var id: String,
-                    var ref: String,
-                    var cityName: String,
-                    var fullName: String?,
-                    var displayedName: String,
-                    var photoUrl: String?,
+data class UserData(var id: String="",
+                    var ref: String="",
+                    var cityName: String="",
+                    var fullName: String?="",
+                    var displayedName: String="",
+                    var photoUrl: String?="",
                     var likeCount : Long=0,
                     var postCount : Long = 0,
                     var willComeCount : Long = 0,

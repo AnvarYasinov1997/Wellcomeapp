@@ -17,7 +17,7 @@ import com.mxn.soul.flowingdrawer_core.ElasticDrawer
 import kotlinx.android.synthetic.main.activity_main.*
 
 @Layout(id = R.layout.activity_main)
-class MainActivity : BaseActivity<MainActivityPresenter,MainActivityPresenterProviderFactory>(), MainActivityView, MainActivityRouter {
+class MainActivity : BaseActivity<MainActivityPresenter, MainActivityPresenterProviderFactory>(), MainActivityView, MainActivityRouter {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -25,19 +25,23 @@ class MainActivity : BaseActivity<MainActivityPresenter,MainActivityPresenterPro
     }
 
     @SuppressLint("RestrictedApi", "PrivateResource")
-    override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean) {
+    override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean,isShowDrawer : Boolean) {
         setSupportActionBar(toolbar)
         when (isAddedToBackStack) {
             true -> {
-                toolbar?.setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-                toolbar?.setNavigationOnClickListener { onBackPressed() }
-                drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_NONE)
+                toolbar?.apply {
+                    setNavigationIcon(R.drawable.abc_ic_ab_back_material)
+                    setNavigationOnClickListener { onBackPressed() }
+                    drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_NONE)
+                }
             }
             false -> {
-                toolbar?.setNavigationIcon(R.drawable.ic_menu_white_24dp)
-                toolbar?.setNavigationOnClickListener { drawerLayout.openMenu(true) }
-                drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_FULLSCREEN)
-                if (menuLayout.visibility == View.GONE) {
+                toolbar?.apply {
+                    setNavigationIcon(R.drawable.ic_menu_white_24dp)
+                    setNavigationOnClickListener { drawerLayout.openMenu(true) }
+                    drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_FULLSCREEN)
+                }
+                if (isShowDrawer && menuLayout.visibility == View.GONE) {
                     menuLayout.visibility = View.VISIBLE
                     supportFragmentManager.beginTransaction()
                             .replace(R.id.menuContainer, Drawer())
@@ -98,7 +102,7 @@ class MainActivity : BaseActivity<MainActivityPresenter,MainActivityPresenterPro
 
 interface MainActivityView : BaseActivityView
 
-interface MainActivityRouter {
+interface MainActivityRouter : BaseRouter {
     fun navigateToRegistry(newUserState: NewUserState)
     fun navigateToGoogleAuthDialog(googleApiClient: GoogleApiClient)
     fun navigateToWall()

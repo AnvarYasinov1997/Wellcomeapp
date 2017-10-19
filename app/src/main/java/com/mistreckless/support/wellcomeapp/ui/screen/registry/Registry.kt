@@ -19,6 +19,9 @@ import java.io.File
 @Layout(id = R.layout.fragment_registry)
 class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactory>(), RegistryView {
 
+    override val isShowDrawer: Boolean
+        get() = false
+
     override fun getCurrentToolbar() = null
 
     override fun onStart() {

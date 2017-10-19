@@ -4,6 +4,7 @@ import android.support.v7.widget.Toolbar
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.BaseActivity
 import com.mistreckless.support.wellcomeapp.ui.BaseActivityView
+import com.mistreckless.support.wellcomeapp.ui.BaseRouter
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.picture.PictureSettings
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.preview.Preview
@@ -16,7 +17,7 @@ import com.mistreckless.support.wellcomeapp.ui.screen.camera.share.Share
 @Layout(id = R.layout.activity_camera)
 class CameraActivity : BaseActivity<CameraPresenter,CameraPresenterProviderFactory>(), CameraActivityView, CameraActivityRouter{
 
-    override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean) {}
+    override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean, isShowDrawer : Boolean) {}
 
 
     override fun navigateToPreview() {
@@ -42,7 +43,7 @@ class CameraActivity : BaseActivity<CameraPresenter,CameraPresenterProviderFacto
 
 interface CameraActivityView : BaseActivityView
 
-interface CameraActivityRouter {
+interface CameraActivityRouter : BaseRouter{
     fun navigateToPreview()
     fun navigateToPictureSettings()
     fun navigateToShare()

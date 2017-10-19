@@ -1,4 +1,4 @@
-package com.mistreckless.support.wellcomeapp.ui.view.drawer
+package com.mistreckless.support.wellcomeapp.ui.screen.drawer
 
 import android.view.ViewGroup
 import com.mistreckless.support.wellcomeapp.ui.PerFragment
@@ -6,6 +6,8 @@ import com.mistreckless.support.wellcomeapp.ui.model.DrawerItem
 import com.mistreckless.support.wellcomeapp.ui.model.HeaderItem
 import com.mistreckless.support.wellcomeapp.ui.view.BaseAdapter
 import com.mistreckless.support.wellcomeapp.ui.view.BaseViewHolder
+import com.mistreckless.support.wellcomeapp.ui.view.drawer.HeaderViewFactory
+import com.mistreckless.support.wellcomeapp.ui.view.drawer.ListViewFactory
 import javax.inject.Inject
 
 /**

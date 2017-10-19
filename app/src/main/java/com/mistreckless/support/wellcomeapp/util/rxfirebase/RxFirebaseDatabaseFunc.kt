@@ -2,12 +2,6 @@
 
 package com.mistreckless.support.wellcomeapp.util.rxfirebase
 
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.Query
-import io.reactivex.Completable
-import io.reactivex.Observable
-import io.reactivex.Single
-
 /**
  * Created by @mistreckless on 06.08.2017. !
  */

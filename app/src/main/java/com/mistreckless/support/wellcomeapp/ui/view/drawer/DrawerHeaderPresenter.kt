@@ -24,14 +24,7 @@ class DrawerHeaderPresenter @Inject constructor(private val fragmentView: BaseFr
                 .subscribe({
                     getView()?.updateUser(it)
                 }, {
-                    Log.e("error", it.message)
-                }))
-        compositeDisposable.add(profileInteractor.controlCurrentRatingData()
-                .compose(fragmentView.bindUntilEvent(FragmentEvent.DESTROY_VIEW))
-                .subscribe({
-                    getView()?.updateRating(it.generalRating.toString())
-                }, {
-                    Log.e("error", it.message)
+                    Log.e(TAG, it.message)
                 }))
     }
 
@@ -41,6 +34,10 @@ class DrawerHeaderPresenter @Inject constructor(private val fragmentView: BaseFr
 
     fun  headerClicked() {
         getRouter()?.navigateToProfile()
+    }
+
+    companion object {
+        const val TAG = "DrawerHeaderPresenter"
     }
 
 }
