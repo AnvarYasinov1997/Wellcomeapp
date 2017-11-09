@@ -2,8 +2,8 @@ package com.mistreckless.support.wellcomeapp.domain.interactor
 
 import android.content.Intent
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
-import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

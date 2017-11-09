@@ -3,7 +3,6 @@ package com.mistreckless.support.wellcomeapp.ui.view.indy
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.CheckBox
-import android.widget.LinearLayout
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposables
 

@@ -2,7 +2,7 @@ package com.mistreckless.support.wellcomeapp.domain.interactor
 
 import com.jakewharton.rx.replayingShare
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import io.reactivex.Observable
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ConcurrentMap

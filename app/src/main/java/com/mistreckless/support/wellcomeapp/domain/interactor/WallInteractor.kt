@@ -1,8 +1,8 @@
 package com.mistreckless.support.wellcomeapp.domain.interactor
 
-import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.PostRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
+import com.mistreckless.support.wellcomeapp.data.repository.PostRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 
 /**
  * Created by mistreckless on 19.10.17.

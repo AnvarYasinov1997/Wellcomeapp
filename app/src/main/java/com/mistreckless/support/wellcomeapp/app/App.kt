@@ -3,9 +3,9 @@ package com.mistreckless.support.wellcomeapp.app
 import android.app.Activity
 import android.app.Application
 import com.jakewharton.picasso.OkHttp3Downloader
-import com.mistreckless.support.wellcomeapp.domain.DataModule
+import com.mistreckless.support.wellcomeapp.data.DataModule
+import com.mistreckless.support.wellcomeapp.data.RepositoryModule
 import com.mistreckless.support.wellcomeapp.domain.InteractorModule
-import com.mistreckless.support.wellcomeapp.domain.RepositoryModule
 import com.squareup.picasso.Picasso
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector

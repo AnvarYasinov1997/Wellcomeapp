@@ -1,7 +1,7 @@
 package com.mistreckless.support.wellcomeapp.domain.interactor
 
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 

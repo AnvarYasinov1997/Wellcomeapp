@@ -2,9 +2,9 @@ package com.mistreckless.support.wellcomeapp.app
 
 import android.app.Application
 import android.content.Context
-import com.mistreckless.support.wellcomeapp.domain.DataModule
+import com.mistreckless.support.wellcomeapp.data.DataModule
+import com.mistreckless.support.wellcomeapp.data.RepositoryModule
 import com.mistreckless.support.wellcomeapp.domain.InteractorModule
-import com.mistreckless.support.wellcomeapp.domain.RepositoryModule
 import com.mistreckless.support.wellcomeapp.ui.MainActivity
 import com.mistreckless.support.wellcomeapp.ui.MainActivityFragmentProvider
 import com.mistreckless.support.wellcomeapp.ui.MainActivityModule
@@ -18,6 +18,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
 import dagger.android.ContributesAndroidInjector
+import java.util.*
 import javax.inject.Singleton
 
 /**
@@ -28,8 +29,14 @@ import javax.inject.Singleton
 @Module
 class AppModule {
 
+    @Singleton
     @Provides
     fun providesContext(application: Application) : Context = application
+
+    @Singleton
+    @Provides
+    fun provideLocale() : Locale = Locale.ENGLISH
+
 }
 
 @PerActivity

@@ -1,11 +1,9 @@
 package com.mistreckless.support.wellcomeapp.domain.interactor
 
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import com.mistreckless.support.wellcomeapp.domain.entity.*
-import com.mistreckless.support.wellcomeapp.domain.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.PostRepository
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
+import com.mistreckless.support.wellcomeapp.data.repository.PostRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers

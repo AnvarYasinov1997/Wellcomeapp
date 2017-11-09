@@ -28,7 +28,7 @@
             android:launchMode="singleTop" />
 
         <activity
-            android:name=".util.rxlocation.LocationSettingsActivity"
+            android:name=".data.rxlocation.LocationSettingsActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>

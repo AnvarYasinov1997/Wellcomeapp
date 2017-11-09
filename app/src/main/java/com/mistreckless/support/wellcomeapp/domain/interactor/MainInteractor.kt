@@ -5,7 +5,7 @@ import com.mistreckless.support.wellcomeapp.domain.entity.AlreadyRegisteredState
 import com.mistreckless.support.wellcomeapp.domain.entity.ErrorState
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.domain.entity.RegistryUserState
-import com.mistreckless.support.wellcomeapp.domain.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
