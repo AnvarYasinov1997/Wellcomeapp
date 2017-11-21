@@ -1,7 +1,8 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.Toolbar
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
@@ -15,17 +16,18 @@ import javax.inject.Inject
  */
 
 @Layout(R.layout.fragment_wall)
-class Wall : BaseFragment<WallPresenter, WallPresenterProviderFactory>(), WallView{
+class Wall : BaseFragment<WallPresenter>(), WallView{
+
+    @InjectPresenter
+    override lateinit var presenter: WallPresenter
+    @ProvidePresenter
+    fun providePresenter() = presenterProvider.get()
 
     @Inject
     lateinit var adapter : WallAdapter
 
-    override fun getCurrentToolbar(): Toolbar? {
-        toolbar.title=getString(R.string.app_name)
-        return toolbar
-    }
-
     override fun initUi(){
+        toolbar.title=getString(R.string.app_name)
         fub.setOnClickListener { presenter.fubClicked() }
         recyclerView.layoutManager=LinearLayoutManager(context)
         recyclerView.adapter=adapter

@@ -1,55 +1,32 @@
 package com.mistreckless.support.wellcomeapp.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.support.v7.widget.Toolbar
-import android.view.View
+import android.os.Bundle
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
-import com.mistreckless.support.wellcomeapp.ui.screen.drawer.Drawer
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
-import com.mxn.soul.flowingdrawer_core.ElasticDrawer
 import kotlinx.android.synthetic.main.activity_main.*
 
-@Layout(id = R.layout.activity_main)
-class MainActivity : BaseActivity<MainActivityPresenter, MainActivityPresenterProviderFactory>(), MainActivityView, MainActivityRouter {
+@Layout(id = R.layout.activity_main, containerId =  R.id.container)
+class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView, MainActivityRouter {
+
+    @InjectPresenter
+    override lateinit var presenter: MainActivityPresenter
+
+    @ProvidePresenter
+    fun providePresenter() = presenterProvider.get()
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         presenter.authResult(requestCode, resultCode, data)
-    }
-
-    @SuppressLint("RestrictedApi", "PrivateResource")
-    override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean,isShowDrawer : Boolean) {
-        setSupportActionBar(toolbar)
-        when (isAddedToBackStack) {
-            true -> {
-                toolbar?.apply {
-                    setNavigationIcon(R.drawable.abc_ic_ab_back_material)
-                    setNavigationOnClickListener { onBackPressed() }
-                    drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_NONE)
-                }
-            }
-            false -> {
-                toolbar?.apply {
-                    setNavigationIcon(R.drawable.ic_menu_white_24dp)
-                    setNavigationOnClickListener { drawerLayout.openMenu(true) }
-                    drawerLayout.setTouchMode(ElasticDrawer.TOUCH_MODE_FULLSCREEN)
-                }
-                if (isShowDrawer && menuLayout.visibility == View.GONE) {
-                    menuLayout.visibility = View.VISIBLE
-                    supportFragmentManager.beginTransaction()
-                            .replace(R.id.menuContainer, Drawer())
-                            .commit()
-                }
-            }
-        }
-
     }
 
     override fun onBackPressed() {
@@ -57,11 +34,6 @@ class MainActivity : BaseActivity<MainActivityPresenter, MainActivityPresenterPr
             drawerLayout.closeMenu(true)
         else
             super.onBackPressed()
-    }
-
-    override fun onDestroy() {
-        presenter.destroyed()
-        super.onDestroy()
     }
 
     override fun navigateToRegistry(newUserState: NewUserState) {
@@ -96,7 +68,6 @@ class MainActivity : BaseActivity<MainActivityPresenter, MainActivityPresenterPr
 
     companion object {
         const val TAG = "MainActivity"
-        const val RC_SIGN_IN = 88
     }
 }
 

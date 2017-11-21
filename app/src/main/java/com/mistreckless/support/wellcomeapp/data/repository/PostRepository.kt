@@ -15,7 +15,7 @@ import io.reactivex.schedulers.Schedulers
  */
 interface PostRepository {
     fun uploadPost(bytes: ByteArray): ObservableSource<ShareState>
-    fun share(postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, dressControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long, tags: List<String>): Observable<ShareState>
+    fun share(postType: PostType,url: String, userReference: String, addressLine: String, descLine: String,  fromTime: Long, tillTime: Long, tags: List<String>): Observable<ShareState>
 }
 
 
@@ -26,16 +26,16 @@ class PostRepositoryImpl(private val cacheData: CacheData) : PostRepository{
                 .subscribeOn(Schedulers.io())
     }
 
-    override fun share(postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, dressControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long, tags: List<String>): Observable<ShareState> {
+    override fun share(postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, fromTime: Long, tillTime: Long, tags: List<String>): Observable<ShareState> {
         val ref = FirebaseFirestore.getInstance().collection("city").document(cacheData.getString(CacheData.USER_CITY_REF)).collection("post").document()
-        val post = generatePost(ref.id, postType,url, userReference, addressLine, descLine, dressControl, ageLine, fromTime, tillTime)
+        val post = generatePost(ref.id, postType,url, userReference, addressLine, descLine, fromTime, tillTime)
         return ref.setValue(post).toSingle<ShareState> { StateDone() }.toObservable()
     }
 
 
-    private fun generatePost(ref : String,postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, dressControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long) : PostData{
+    private fun generatePost(ref : String,postType: PostType,url: String, userReference: String, addressLine: String, descLine: String, fromTime: Long, tillTime: Long) : PostData{
         val postContent = ContentData(postType,userReference,url,descLine,fromTime,tillTime)
-        val postData = PostData(ref, mutableListOf(postContent), Pair(cacheData.getDouble(CacheData.TMP_LAT),cacheData.getDouble(CacheData.TMP_LON)),addressLine,cacheData.getString(CacheData.USER_CITY), dressControl,ageLine)
+        val postData = PostData(ref, mutableListOf(postContent), Pair(cacheData.getDouble(CacheData.TMP_LAT),cacheData.getDouble(CacheData.TMP_LON)),addressLine,cacheData.getString(CacheData.USER_CITY))
         return postData
     }
 }

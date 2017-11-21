@@ -17,7 +17,7 @@ class TimePickerDialog : DialogFragment() {
 
     @Suppress("UNCHECKED_CAST")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val sayYes = arguments.getSerializable("yes") as (Int, Int)->Unit
+        val sayYes = arguments?.getSerializable("yes") as (Int, Int)->Unit
         val dialog =TimePickerDialog(context, TimePickerDialog.OnTimeSetListener{ timePicker, h, m -> sayYes(h,m) },10,25,true)
         dialog.setTitle("Время окончания")
         return  dialog
@@ -38,8 +38,8 @@ class AgePickerDialog : DialogFragment() {
     @Suppress("UNCHECKED_CAST")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
-        val sayYes = arguments.getSerializable("yes") as (Int)->Unit
-        val sayNo = arguments.getSerializable("no") as () -> Unit
+        val sayYes = arguments?.getSerializable("yes") as (Int)->Unit
+        val sayNo = arguments?.getSerializable("no") as () -> Unit
 
         val numberPicker = NumberPicker(context)
         numberPicker.apply {

@@ -1,5 +1,6 @@
 package com.mistreckless.support.wellcomeapp.ui.screen
 
+import android.support.annotation.IdRes
 import android.support.annotation.LayoutRes
 
 /**
@@ -7,4 +8,4 @@ import android.support.annotation.LayoutRes
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class Layout(@LayoutRes val id : Int)
+annotation class Layout(@LayoutRes val id : Int, @IdRes val containerId : Int = 0)

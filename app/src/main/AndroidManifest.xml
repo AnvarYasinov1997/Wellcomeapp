@@ -27,10 +27,6 @@
             android:name=".ui.screen.camera.CameraActivity"
             android:launchMode="singleTop" />
 
-        <activity
-            android:name=".data.rxlocation.LocationSettingsActivity"
-            android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.content.Context
 import com.mistreckless.support.wellcomeapp.data.DataModule
 import com.mistreckless.support.wellcomeapp.data.RepositoryModule
 import com.mistreckless.support.wellcomeapp.domain.InteractorModule
+import com.mistreckless.support.wellcomeapp.navigation.NavigationModule
 import com.mistreckless.support.wellcomeapp.ui.MainActivity
 import com.mistreckless.support.wellcomeapp.ui.MainActivityFragmentProvider
 import com.mistreckless.support.wellcomeapp.ui.MainActivityModule
@@ -59,6 +60,7 @@ abstract class ActivityBuilder {
         DataModule::class,
         RepositoryModule::class,
         InteractorModule::class,
+        NavigationModule::class,
         ActivityBuilder::class))
 interface AppComponent {
 
@@ -68,6 +70,7 @@ interface AppComponent {
         fun dataModule(dataModule: DataModule) : Builder
         fun repositoryModule(repositoryModule: RepositoryModule) : Builder
         fun interactorModule(interactorModule: InteractorModule) : Builder
+        fun navigationModule(navigationModule: NavigationModule) : Builder
         fun build(): AppComponent
     }
 

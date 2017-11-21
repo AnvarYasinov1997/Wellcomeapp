@@ -1,5 +1,7 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.camera.preview
 
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
@@ -12,7 +14,12 @@ import kotlinx.android.synthetic.main.fragment_preview.*
  * Created by @mistreckless on 10.09.2017. !
  */
 @Layout(id = R.layout.fragment_preview)
-class Preview : BaseFragment<PreviewPresenter,PreviewPresenterProviderFactory>(),PreviewView{
+class Preview : BaseFragment<PreviewPresenter>(),PreviewView{
+
+    @InjectPresenter
+    override lateinit var presenter : PreviewPresenter
+    @ProvidePresenter
+    fun providePresenter() = presenterProvider.get()
 
     override fun onResume() {
         super.onResume()
@@ -29,8 +36,6 @@ class Preview : BaseFragment<PreviewPresenter,PreviewPresenterProviderFactory>()
         super.onDestroyView()
     }
 
-
-    override fun getCurrentToolbar()=toolbar
     override fun getRouter() = activity as CameraActivityRouter
 
     override fun initUi() {
@@ -43,6 +48,9 @@ class Preview : BaseFragment<PreviewPresenter,PreviewPresenterProviderFactory>()
         })
     }
 
+    companion object {
+        const val TAG ="PreviewFragment"
+    }
 }
 
 interface PreviewView : BaseFragmentView {

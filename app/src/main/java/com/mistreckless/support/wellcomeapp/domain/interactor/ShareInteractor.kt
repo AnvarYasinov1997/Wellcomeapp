@@ -15,7 +15,7 @@ interface ShareInteractor {
     fun findMyLocation(): Single<String>
     fun putPhotoBytes(bytes: ByteArray)
     fun getPhotoBytes(): ByteArray
-    fun share(addressLine: String, descLine: String, dressControl: Boolean, ageControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long): Observable<ShareState>
+    fun share(addressLine: String, descLine: String,fromTime: Long, tillTime: Long): Observable<ShareState>
 
 }
 
@@ -31,12 +31,12 @@ class ShareInteractorImpl(private val userRepository: UserRepository,
                 .observeOn(AndroidSchedulers.mainThread())
     }
 
-    override fun share(addressLine: String, descLine: String, dressControl: Boolean, ageControl: Boolean, ageLine: String, fromTime: Long, tillTime: Long): Observable<ShareState> {
+    override fun share(addressLine: String, descLine: String, fromTime: Long, tillTime: Long): Observable<ShareState> {
         val initObservable = Observable.just(StateInit())
         val tags = findTags(descLine)
         return Observable.merge(initObservable, postRepository.uploadPost(bytes))
                 .flatMap { state-> when(state){
-                    is StateUploaded-> postRepository.share(PostType.PHOTO,state.url,userRepository.getUserReference(),addressLine,descLine, dressControl,ageLine,fromTime,tillTime,tags)
+                    is StateUploaded-> postRepository.share(PostType.PHOTO,state.url,userRepository.getUserReference(),addressLine,descLine,fromTime,tillTime,tags)
                     else ->Observable.just(state)
                 } }
                 .onErrorReturn { StateError(it.message ?: "Empty error") }

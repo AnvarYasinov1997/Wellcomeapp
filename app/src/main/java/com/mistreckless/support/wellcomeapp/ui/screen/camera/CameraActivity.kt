@@ -1,6 +1,7 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.camera
 
-import android.support.v7.widget.Toolbar
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.BaseActivity
 import com.mistreckless.support.wellcomeapp.ui.BaseActivityView
@@ -15,10 +16,12 @@ import com.mistreckless.support.wellcomeapp.ui.screen.camera.share.Share
  */
 
 @Layout(id = R.layout.activity_camera)
-class CameraActivity : BaseActivity<CameraPresenter,CameraPresenterProviderFactory>(), CameraActivityView, CameraActivityRouter{
+class CameraActivity : BaseActivity<CameraPresenter>(), CameraActivityView, CameraActivityRouter{
 
-    override fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean, isShowDrawer : Boolean) {}
-
+    @InjectPresenter
+    override lateinit var presenter : CameraPresenter
+    @ProvidePresenter
+    fun providePresenter() : CameraPresenter = presenterProvider.get()
 
     override fun navigateToPreview() {
         supportFragmentManager.beginTransaction()
@@ -38,6 +41,10 @@ class CameraActivity : BaseActivity<CameraPresenter,CameraPresenterProviderFacto
                 .replace(R.id.container,Share())
                 .addToBackStack(null)
                 .commit()
+    }
+
+    companion object {
+        const val TAG = "CameraActivity"
     }
 }
 

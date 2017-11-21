@@ -3,10 +3,8 @@ package com.mistreckless.support.wellcomeapp.data.location
 import android.annotation.SuppressLint
 import android.location.Address
 import android.location.Geocoder
-import android.location.LocationManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import io.reactivex.Single
-import java.util.*
 
 /**
  * Created by mistreckless on 27.10.17.

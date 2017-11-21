@@ -1,8 +1,11 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.registry
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.provider.MediaStore
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
@@ -17,12 +20,13 @@ import java.io.File
  * Created by @mistreckless on 31.07.2017. !
  */
 @Layout(id = R.layout.fragment_registry)
-class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactory>(), RegistryView {
+class Registry : BaseFragment<RegistryPresenter>(), RegistryView {
 
-    override val isShowDrawer: Boolean
-        get() = false
+    @InjectPresenter
+    override lateinit var presenter : RegistryPresenter
+    @ProvidePresenter
+    fun providePresenter() = presenterProvider.get()
 
-    override fun getCurrentToolbar() = null
 
     override fun onStart() {
         super.onStart()
@@ -34,14 +38,15 @@ class Registry : BaseFragment<RegistryPresenter, RegistryPresenterProviderFactor
     }
 
     override fun initUi() {
-        val user = arguments.getSerializable("user_state") as NewUserState
+        val user = arguments!!.getSerializable("user_state") as NewUserState
         edtName.hint = user.fullName
-        btnFinish.setOnClickListener { if (it.isEnabled) presenter.finishClicked(txtName.text.toString(), arguments.getSerializable("user_state") as NewUserState) }
+        btnFinish.setOnClickListener { if (it.isEnabled) presenter.finishClicked(txtName.text.toString(), arguments!!.getSerializable("user_state") as NewUserState) }
         imgUser.setOnClickListener { presenter.photoClicked() }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun showCity(city: String) {
-        txtHeader.text = "Welcome to " + city
+        txtHeader.text = "Welcome to $city"
     }
 
     override fun showName(name: String) {

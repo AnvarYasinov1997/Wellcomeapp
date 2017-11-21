@@ -1,51 +1,23 @@
 package com.mistreckless.support.wellcomeapp.ui
 
-import android.os.Bundle
+import com.arellomobile.mvp.MvpPresenter
+import com.arellomobile.mvp.MvpView
 import io.reactivex.disposables.CompositeDisposable
 
 /**
  * Created by @mistreckless on 30.07.2017. !
  */
 @Suppress("UNCHECKED_CAST")
-abstract class BasePresenter<out V, out R : BaseRouter> {
-    private var router: R? = null
-    private var view: V? = null
+abstract class BasePresenter<V : MvpView> : MvpPresenter<V>() {
     protected val viewChangesDisposables by lazy { CompositeDisposable() }
 
-    fun attachRouter(router: Any) {
-        this.router = router as R
+    override fun destroyView(view: V) {
+        onViewDestroyed()
+        super.destroyView(view)
     }
 
-    fun detachRouter() {
-        router = null
-    }
-
-    fun getRouter() = router
-
-    fun attachView(view: Any) {
-        this.view = view as V
-    }
-
-    fun detachView() {
-        onViewDetached()
-        this.view = null
-    }
-
-    fun getView() = view
-
-    abstract fun onFirstViewAttached()
-
-    open fun onViewDetached(){
+    open fun onViewDestroyed(){
         viewChangesDisposables.clear()
     }
 
-    open fun onViewRestored(saveInstanceState: Bundle) {}
-
-    open fun onViewRestoredWhenSystemKillAppOrActivity(){}
 }
-
-interface BasePresenterProviderFactory<out T : BasePresenter<*,*>>{
-    fun get() : T
-}
-
-val presenterHolder: MutableMap<String, BasePresenter<*, *>> = HashMap()

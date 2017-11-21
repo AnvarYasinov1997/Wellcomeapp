@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.provider.MediaStore
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -17,6 +18,7 @@ import com.mistreckless.support.wellcomeapp.data.rxfirebase.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.toSingle
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileInputStream
@@ -26,25 +28,27 @@ import java.io.FileInputStream
  */
 interface UserRepository {
     fun getUserReference(): String
+    fun isSignInToGoogle(): Boolean
     fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser>
-    fun signOut() : Completable
     fun isUserAlreadyRegistered(uid: String): Single<Boolean>
     fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl: String): Completable
     fun findPhoto(data: Uri): Single<String>
     fun uploadPhotoIfNeeded(): Single<String>
     fun observeUserValueEvent(userRef: String): Observable<UserData>
     fun cacheUserData(userData: UserData)
+    fun bindToCity() : Completable
 }
 
 class UserRepositoryImpl(private val cacheData: CacheData, private val context: Context) : UserRepository {
     override fun getUserReference(): String = cacheData.getString(CacheData.USER_REF)
+
+    override fun isSignInToGoogle(): Boolean = GoogleSignIn.getLastSignedInAccount(context) != null
 
     override fun signUpWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser> {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         return FirebaseAuth.getInstance().signIn(credential)
     }
 
-    override fun signOut(): Completable =FirebaseAuth.getInstance().signOutComplteable()
 
     override fun isUserAlreadyRegistered(uid: String): Single<Boolean> {
         return FirebaseFirestore.getInstance().collection("user").whereEqualTo("id", uid).getValues(UserData::class.java)
@@ -103,17 +107,19 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
             cacheData.cacheString(CacheData.USER_PHOTO, photoUrl)
     }
 
+    override fun bindToCity(): Completable {
+        val ruCityName = cacheData.getString(CacheData.USER_CITY)
+        return initCityIfNeeded(ruCityName)
+    }
+
     private fun initCityIfNeeded(ruCityName: String, enCityName: String = ""): Completable {
+        val ref = FirebaseFirestore.getInstance().collection("city").document()
+
         return FirebaseFirestore.getInstance().collection("city").whereEqualTo("ruName", ruCityName)
                 .getValues(CityData::class.java)
-                .flatMapCompletable {
-                    if (it.isNotEmpty()) Completable.complete() else {
-                        val ref = FirebaseFirestore.getInstance().collection("city").document()
-                        ref.setValue(CityData(enCityName, ruCityName))
-                                .doOnComplete { cacheData.cacheString(CacheData.USER_CITY_REF, ref.id) }
-
-                    }
-                }
+                .flatMap { if (it.isNotEmpty()) Single.just(it[0].ref) else ref.setValue(CityData(ref.id, enCityName, ruCityName)).toSingle() }
+                .map { cacheData.cacheString(CacheData.USER_CITY_REF, ref.id) }
+                .toCompletable()
     }
 
 }

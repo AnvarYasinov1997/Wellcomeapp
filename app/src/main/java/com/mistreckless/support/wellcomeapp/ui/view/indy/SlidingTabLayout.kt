@@ -163,10 +163,10 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun populateTabStrip() {
-        val adapter = mViewPager!!.adapter
+        val adapter = mViewPager!!.adapter!!
         val tabClickListener = TabClickListener()
 
-        for (i in 0..adapter.count - 1) {
+        for (i in 0 until adapter.count) {
             var tabView: View? = null
             var tabTitleView: TextView? = null
 
@@ -285,7 +285,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private inner class TabClickListener : View.OnClickListener {
         override fun onClick(v: View) {
-            for (i in 0..mTabStrip.getChildCount() - 1) {
+            for (i in 0 until mTabStrip.getChildCount()) {
                 if (v === mTabStrip.getChildAt(i)) {
                     mViewPager!!.currentItem = i
                     return

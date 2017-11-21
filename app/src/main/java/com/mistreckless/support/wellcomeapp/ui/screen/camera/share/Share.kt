@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.util.DisplayMetrics
 import android.view.View
+import com.arellomobile.mvp.presenter.InjectPresenter
+import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
@@ -22,17 +24,19 @@ import kotlinx.android.synthetic.main.fragment_share.*
  * Created by @mistreckless on 08.10.2017. !
  */
 @Layout(id = R.layout.fragment_share)
-class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), ShareView {
+class Share : BaseFragment<SharePresenter>(), ShareView {
 
+    @InjectPresenter
+    override lateinit var presenter : SharePresenter
+    @ProvidePresenter
+    fun providePresenter() = presenterProvider.get()
 
-    override fun getCurrentToolbar() = toolbar
     override fun getRouter() = activity as CameraActivityRouter
 
     override fun initUi(bytes: ByteArray) {
         initAppBar(bytes)
-        presenter.controlAge(cbAge.toObservable())
         txtTillTime.setOnClickListener { TimePickerDialog.newInstance({h,m->presenter.timePicked(h,m)}).show(childFragmentManager,"timePicker") }
-        btnShare.setOnClickListener { if (it.isEnabled) presenter.shareClicked(txtAddress.text.toString(),edtDesc.text.toString(),cbDress.isChecked,cbAge.isChecked,txtAge.text.toString(),txtFromTime.text.toString(),txtTillTime.text.toString()) }
+        btnShare.setOnClickListener { if (it.isEnabled) presenter.shareClicked(txtAddress.text.toString(),edtDesc.text.toString(),txtFromTime.text.toString(),txtTillTime.text.toString()) }
     }
 
     override fun showAddress(line: String) {
@@ -44,19 +48,6 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
     override fun showAddressProgressBar() {
         txtAddress.visibility= View.INVISIBLE
         pbAddress.visibility=View.VISIBLE
-    }
-
-    override fun showNumberPicker() {
-        AgePickerDialog.newInstance({presenter.agePicked(it)},{cbAge.isChecked=false}).show(childFragmentManager,"agePicker")
-    }
-
-    override fun showAge(ageLine: String) {
-        txtAge.visibility=View.VISIBLE
-        txtAge.text=ageLine
-    }
-
-    override fun hideAge() {
-        txtAge.visibility=View.GONE
     }
 
     override fun showFromTime(fromTime: String) {
@@ -87,18 +78,9 @@ class Share : BaseFragment<SharePresenter, SharePresenterProviderFactory>(), Sha
         })
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState?.apply {
-            putString(ADDRESS_KEY,txtAddress.text.toString())
-            putString(DESC_KEY,edtDesc.text.toString())
-            putString(AGE_NUMBER_KEY,txtAge.text.toString())
-            putBoolean(AGE_KEY,cbAge.isChecked)
-            putBoolean(DRESS_KEY,cbDress.isChecked)
-        }
-        super.onSaveInstanceState(outState)
-    }
 
     companion object {
+        const val TAG ="ShareFragment"
         const val ADDRESS_KEY="address"
         const val DESC_KEY="desc"
         const val AGE_NUMBER_KEY="age_number"
@@ -114,9 +96,6 @@ interface ShareView : BaseFragmentView {
     fun initUi(bytes : ByteArray)
     fun showAddress(line: String)
     fun showAddressProgressBar()
-    fun showNumberPicker()
-    fun showAge(ageLine: String)
-    fun hideAge()
     fun showTillTime(tillTime: String)
     fun showFromTime(fromTime : String)
     fun setBtnShareEnabled(isEnabled : Boolean)

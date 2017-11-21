@@ -1,17 +1,11 @@
 package com.mistreckless.support.wellcomeapp.domain
 
-import android.content.Context
-import com.google.android.gms.location.LocationRequest
-import com.ironz.binaryprefs.BinaryPreferencesBuilder
-import com.ironz.binaryprefs.Preferences
-import com.mistreckless.support.wellcomeapp.data.CacheData
-import com.mistreckless.support.wellcomeapp.data.CacheDataImp
+import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
+import com.mistreckless.support.wellcomeapp.data.repository.PostRepository
+import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import com.mistreckless.support.wellcomeapp.domain.interactor.*
-import com.mistreckless.support.wellcomeapp.data.repository.*
-import com.mistreckless.support.wellcomeapp.data.rxlocation.RxLocation
 import dagger.Module
 import dagger.Provides
-import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -26,7 +20,7 @@ class InteractorModule {
 
     @Singleton
     @Provides
-    fun provideMainInteractor(userRepository: UserRepository): MainInteractor = MainInteractorImpl(userRepository)
+    fun provideMainInteractor(userRepository: UserRepository, locationRepository: LocationRepository): MainInteractor = MainInteractorImpl(userRepository,locationRepository)
 
     @Singleton
     @Provides

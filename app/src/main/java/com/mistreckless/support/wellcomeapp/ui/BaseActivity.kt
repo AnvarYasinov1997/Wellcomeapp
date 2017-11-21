@@ -1,49 +1,64 @@
 package com.mistreckless.support.wellcomeapp.ui
 
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
-import android.support.v7.widget.Toolbar
+import com.arellomobile.mvp.MvpAppCompatActivity
+import com.arellomobile.mvp.MvpView
+import com.mistreckless.support.wellcomeapp.R
+import com.mistreckless.support.wellcomeapp.navigation.WelcomeNavigator
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
-import com.trello.rxlifecycle2.LifecycleTransformer
-import com.trello.rxlifecycle2.android.ActivityEvent
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import dagger.android.AndroidInjection
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_main.view.*
+import ru.terrakok.cicerone.NavigatorHolder
 import javax.inject.Inject
+import javax.inject.Provider
 
 /**
  * Created by @mistreckless on 05.08.2017. !
  */
 
 
-interface BaseActivityView {
-    fun lifecycle(): Observable<ActivityEvent>
-    fun <T> bindToLifecycle(): LifecycleTransformer<T>
-    fun <T> bindUntilEvent(event: ActivityEvent): LifecycleTransformer<T>
-}
+interface BaseActivityView : MvpView
 
 interface BaseRouter
 
-abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProviderFactory<P>> : RxAppCompatActivity(), HasSupportFragmentInjector {
+abstract class BaseActivity<P : BasePresenter<*>> : MvpAppCompatActivity(), HasSupportFragmentInjector {
+
+
     @Inject
     lateinit var fragmentDispatcher: DispatchingAndroidInjector<Fragment>
-    @Inject
-    lateinit var presenterProviderFactory : F
 
-    val presenter by lazy { presenterProviderFactory.get() }
+    @Inject
+    lateinit var presenterProvider: Provider<P>
+
+    @Inject
+    lateinit var navigatorHolder : NavigatorHolder
+
+    abstract val presenter: P
+
+    @IdRes
+    private var containerId : Int=0
+
+    private val navigator by lazy { WelcomeNavigator(this,supportFragmentManager, containerId)}
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         initView()
-        presenter.attachRouter(this)
-        presenter.attachView(this)
-        if (savedInstanceState == null) {
-            presenter.onFirstViewAttached()
-        } else presenter.onViewRestored(savedInstanceState)
+    }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        navigatorHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        navigatorHolder.removeNavigator()
+        super.onPause()
     }
 
 
@@ -52,17 +67,16 @@ abstract class BaseActivity<out P : BasePresenter<*,*>,F : BasePresenterProvider
         if (cls.isAnnotationPresent(Layout::class.java)) {
             val annotation = cls.getAnnotation(Layout::class.java)
             setContentView(annotation.id)
+            containerId=annotation.containerId
+            if (containerId==0) throw RuntimeException("Container id in activity doesn't exists")
         }
     }
 
-    override fun onDestroy() {
-        presenter.detachRouter()
-        presenter.detachView()
-        super.onDestroy()
-    }
-
-    abstract fun setToolbar(toolbar: Toolbar?, isAddedToBackStack: Boolean, isShowDrawer : Boolean)
-
     override fun supportFragmentInjector() = fragmentDispatcher
+
+    companion object {
+        const val GOOGLE_AUTH_ACTIVITY_TAG="GoogleAuthActivity"
+        const val RC_SIGN_IN = 88
+    }
 }
 

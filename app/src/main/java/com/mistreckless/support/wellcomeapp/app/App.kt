@@ -6,6 +6,7 @@ import com.jakewharton.picasso.OkHttp3Downloader
 import com.mistreckless.support.wellcomeapp.data.DataModule
 import com.mistreckless.support.wellcomeapp.data.RepositoryModule
 import com.mistreckless.support.wellcomeapp.domain.InteractorModule
+import com.mistreckless.support.wellcomeapp.navigation.NavigationModule
 import com.squareup.picasso.Picasso
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
@@ -31,6 +32,7 @@ class App : Application(), HasActivityInjector {
                 .dataModule(DataModule())
                 .repositoryModule(RepositoryModule())
                 .interactorModule(InteractorModule())
+                .navigationModule(NavigationModule())
                 .build()
                 .inject(this)
         initPicasso()
