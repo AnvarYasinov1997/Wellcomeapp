@@ -4,8 +4,11 @@ import android.content.Intent
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.app.FragmentManager
+import android.util.Log
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
+import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.ui.BaseActivity
 import com.mistreckless.support.wellcomeapp.ui.MainActivity
@@ -30,10 +33,7 @@ class WelcomeNavigator(private val activity: FragmentActivity, manager: Fragment
     override fun createActivityIntent(screenKey: String, data: Any?): Intent? = when (screenKey) {
         CameraActivity.TAG -> Intent(activity, CameraActivity::class.java)
         MainActivity.TAG -> Intent(activity, MainActivity::class.java)
-        BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG -> {
-            if (data != null && data is GoogleApiClient) Auth.GoogleSignInApi.getSignInIntent(data)
-            else throw RuntimeException("error opening google auth " + data)
-        }
+        BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG -> Auth.GoogleSignInApi.getSignInIntent(provideGoogleApiClient())
         else -> null
     }
 
@@ -41,6 +41,7 @@ class WelcomeNavigator(private val activity: FragmentActivity, manager: Fragment
         Wall.TAG -> Wall()
         Profile.TAG -> Profile()
         Registry.TAG -> {
+
             if (data != null && data is NewUserState) Registry.newInstance(data)
             else throw RuntimeException("error opening registry data is null or not newUserState " + data)
         }
@@ -48,5 +49,16 @@ class WelcomeNavigator(private val activity: FragmentActivity, manager: Fragment
         PictureSettings.TAG -> PictureSettings()
         Share.TAG -> Share()
         else -> null
+    }
+
+    private fun provideGoogleApiClient(): GoogleApiClient {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(activity.getString(R.string.web_client_id))
+                .requestEmail()
+                .build()
+        return GoogleApiClient.Builder(activity)
+                .enableAutoManage(activity, { connectionResult -> Log.e(MainActivity.TAG, connectionResult.errorMessage) })
+                .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, gso)
+                .build()
     }
 }

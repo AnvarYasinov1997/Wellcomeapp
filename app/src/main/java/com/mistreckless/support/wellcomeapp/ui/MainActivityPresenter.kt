@@ -10,6 +10,7 @@ import com.mistreckless.support.wellcomeapp.domain.entity.AlreadyRegisteredState
 import com.mistreckless.support.wellcomeapp.domain.entity.ErrorState
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.domain.interactor.MainInteractor
+import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -24,7 +25,7 @@ import javax.inject.Provider
 
 @PerActivity
 @InjectViewState
-class MainActivityPresenter @Inject constructor(private val mainInteractor: MainInteractor, private val rxPermissions: Provider<RxPermissions>, private val router : Router) : BasePresenter<MainActivityView>() {
+class MainActivityPresenter @Inject constructor(private val mainInteractor: MainInteractor, private val rxPermissions: Provider<RxPermissions>, private val router: Router) : BasePresenter<MainActivityView>() {
 
     override fun onFirstViewAttach() {
         val isGranted = rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -33,17 +34,20 @@ class MainActivityPresenter @Inject constructor(private val mainInteractor: Main
         when {
             isGranted && isAuth -> mainInteractor.bindToLocation()
                     .subscribe({
+                        viewState.initUi()
                         router.newRootScreen(Wall.TAG)
                     }, {
                         Log.e(TAG, it.message)
                     })
             !isGranted -> viewChangesDisposables.add(rxPermissions.get().request(Manifest.permission.ACCESS_COARSE_LOCATION)
                     .subscribe({
-                        if (it && isAuth) router.newRootScreen(Wall.TAG)
-                        else if (it) router.navigateToActivityForResult(BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG,BaseActivity.RC_SIGN_IN)
+                        if (it && isAuth) {
+                            viewState.initUi()
+                            router.newRootScreen(Wall.TAG)
+                        } else if (it) router.navigateToActivityForResult(BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG, BaseActivity.RC_SIGN_IN)
                         else onFirstViewAttach()
                     }))
-            !isAuth -> router.navigateToActivityForResult(BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG,BaseActivity.RC_SIGN_IN)
+            !isAuth -> router.navigateToActivityForResult(BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG, BaseActivity.RC_SIGN_IN)
         }
     }
 
@@ -57,18 +61,30 @@ class MainActivityPresenter @Inject constructor(private val mainInteractor: Main
                                 when (it) {
                                     is AlreadyRegisteredState -> {
                                         Log.e(TAG, "already reg")
+                                        viewState.initUi()
                                         router.newRootScreen(Wall.TAG)
                                     }
-                                    is NewUserState -> router.navigateTo(Registry.TAG,it)
+                                    is NewUserState -> {
+                                        router.setResultListener(Registry.RESULT_OK, {
+                                            router.removeResultListener(Registry.RESULT_OK)
+                                            viewState.initUi()
+                                            router.newRootScreen(Wall.TAG)
+                                        })
+                                        router.newRootScreen(Registry.TAG)
+                                    }
                                     is ErrorState -> Log.e(MainActivity.TAG, it.message)
                                 }
 
-                            }, { Log.e(MainActivity.TAG, it.message,it) })
+                            }, { Log.e(MainActivity.TAG, it.message, it) })
                 }
             }
         }
 
     }
+
+    fun wallClicked() = router.newRootScreen(Wall.TAG)
+
+    fun profileClicked() = router.navigateTo(Profile.TAG)
 
     companion object {
         const val TAG = "MainActivityPresenter"

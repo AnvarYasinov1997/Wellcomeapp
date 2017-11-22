@@ -10,7 +10,6 @@ import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.domain.interactor.RegistryInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.PerFragment
-import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
@@ -43,8 +42,7 @@ class RegistryPresenter @Inject constructor(private val rxPermissions: Provider<
     fun finishClicked(name: String, newUserState: NewUserState) {
         compositeDisposable.add(registryInteractor.regUser(name, newUserState)
                 .subscribe({
-                    router.newRootScreen(Wall.TAG)
-                    compositeDisposable.dispose()
+                    router.exitWithResult(Registry.RESULT_OK,null)
                 }, { Log.e(Registry.TAG, it.message) }))
     }
 

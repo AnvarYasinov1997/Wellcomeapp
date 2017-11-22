@@ -21,7 +21,7 @@ class Wall : BaseFragment<WallPresenter>(), WallView{
     @InjectPresenter
     override lateinit var presenter: WallPresenter
     @ProvidePresenter
-    fun providePresenter() = presenterProvider.get()
+    fun providePresenter(): WallPresenter = presenterProvider.get()
 
     @Inject
     lateinit var adapter : WallAdapter

@@ -1,13 +1,14 @@
 package com.mistreckless.support.wellcomeapp.ui
 
 import android.content.Intent
+import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import kotlinx.android.synthetic.main.activity_main.*
 
-@Layout(id = R.layout.activity_main, containerId =  R.id.container)
+@Layout(id = R.layout.activity_main, containerId = R.id.container)
 class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView {
 
     @InjectPresenter
@@ -17,16 +18,20 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView {
     fun providePresenter() = presenterProvider.get()
 
 
+    override fun initUi() {
+        navigationView.visibility= View.VISIBLE
+        navigationView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.actionProfile -> presenter.profileClicked()
+                R.id.actionWall -> presenter.wallClicked()
+            }
+            return@setOnNavigationItemSelectedListener true
+        }
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         presenter.authResult(requestCode, resultCode, data)
-    }
-
-    override fun onBackPressed() {
-        if (drawerLayout.isMenuVisible)
-            drawerLayout.closeMenu(true)
-        else
-            super.onBackPressed()
     }
 
     companion object {
@@ -34,4 +39,6 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView {
     }
 }
 
-interface MainActivityView : BaseActivityView
+interface MainActivityView : BaseActivityView {
+    fun initUi()
+}

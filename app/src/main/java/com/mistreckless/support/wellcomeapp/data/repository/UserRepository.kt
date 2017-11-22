@@ -12,13 +12,12 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mistreckless.support.wellcomeapp.data.CacheData
+import com.mistreckless.support.wellcomeapp.data.rxfirebase.*
 import com.mistreckless.support.wellcomeapp.domain.entity.CityData
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
-import com.mistreckless.support.wellcomeapp.data.rxfirebase.*
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toSingle
 import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileInputStream
@@ -113,12 +112,15 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     }
 
     private fun initCityIfNeeded(ruCityName: String, enCityName: String = ""): Completable {
-        val ref = FirebaseFirestore.getInstance().collection("city").document()
 
         return FirebaseFirestore.getInstance().collection("city").whereEqualTo("ruName", ruCityName)
                 .getValues(CityData::class.java)
-                .flatMap { if (it.isNotEmpty()) Single.just(it[0].ref) else ref.setValue(CityData(ref.id, enCityName, ruCityName)).toSingle() }
-                .map { cacheData.cacheString(CacheData.USER_CITY_REF, ref.id) }
+                .flatMap { if (it.isNotEmpty()) Single.just(it[0].ref) else {
+                    val path = FirebaseFirestore.getInstance().collection("city").document()
+                    val ref = path.id
+                    path.setValue(CityData(ref, enCityName, ruCityName)).toSingleDefault(ref)
+                } }
+                .map { cacheData.cacheString(CacheData.USER_CITY_REF, it) }
                 .toCompletable()
     }
 

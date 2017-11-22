@@ -70,6 +70,7 @@ class Registry : BaseFragment<RegistryPresenter>(), RegistryView {
     companion object {
         const val TAG = "Auth"
         const val GALLERY_INTENT_CODE = 8
+        const val RESULT_OK=6
 
         fun newInstance(newUserState: NewUserState): Registry {
             val fragment = Registry()

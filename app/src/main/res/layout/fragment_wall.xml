@@ -27,8 +27,9 @@
         android:id="@+id/fub"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_margin="16dp"
         android:src="@android:drawable/ic_menu_camera"
+        android:layout_marginBottom="72dp"
+        android:layout_marginEnd="16dp"
         app:elevation="4dp"
         app:layout_anchor="@id/recyclerView"
         app:layout_anchorGravity="bottom|right|end" />

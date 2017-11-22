@@ -28,7 +28,7 @@ class RxAddValue<T : Any>(private val ref: CollectionReference, private val valu
 
 }
 
-class RxQuery<T>(private val query: Query, val clazz: Class<T>) : SingleOnSubscribe<MutableList<T>> {
+class RxQuery<T>(private val query: Query, private val clazz: Class<T>) : SingleOnSubscribe<MutableList<T>> {
     override fun subscribe(e: SingleEmitter<MutableList<T>>) {
         query.get()
                 .addOnSuccessListener {
@@ -42,15 +42,15 @@ class RxQuery<T>(private val query: Query, val clazz: Class<T>) : SingleOnSubscr
     }
 }
 
-class RxDocumentObserver<T>(private val documentReference: DocumentReference,private val clazz: Class<T>) : ObservableOnSubscribe<T>{
+class RxDocumentObserver<T>(private val documentReference: DocumentReference, private val clazz: Class<T>) : ObservableOnSubscribe<T> {
     override fun subscribe(e: ObservableEmitter<T>) {
         val listener = EventListener<DocumentSnapshot> { documentSnapshot, firebaseFirestoreException ->
-            if (!e.isDisposed){
-                if (documentSnapshot !=null && documentSnapshot.exists()) {
+            if (!e.isDisposed) {
+                if (documentSnapshot != null && documentSnapshot.exists()) {
                     val value = documentSnapshot.toObject(clazz)
-                    if (value==null) e.onError(Exception("cannot parse class "+ clazz.canonicalName))
+                    if (value == null) e.onError(Exception("cannot parse class " + clazz.canonicalName))
                     else e.onNext(value)
-                }else e.onError(firebaseFirestoreException ?: Exception("firebase firestore exception"))
+                } else e.onError(firebaseFirestoreException ?: Exception("firebase firestore exception"))
             }
         }
         documentReference.addSnapshotListener(listener)

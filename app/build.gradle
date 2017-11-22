@@ -3,6 +3,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+
+//apply plugin: 'com.fernandocejas.frodo2'
+//frodo2{
+//    enabled = true
+//}
 androidExtensions {
     experimental = true
 }
@@ -41,6 +46,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    defaultPublishConfig "debug"
 }
 
 dependencies {
@@ -85,8 +91,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-    implementation 'com.mxn.soul:flowingdrawer-core:2.0.0'
-    implementation 'com.nineoldandroids:library:2.4.0'
+
     implementation 'com.otaliastudios:cameraview:1.2.0'
 
     implementation 'com.arello-mobile:moxy:1.5.3'
