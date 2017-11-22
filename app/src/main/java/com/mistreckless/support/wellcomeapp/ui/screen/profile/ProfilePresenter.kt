@@ -2,7 +2,8 @@ package com.mistreckless.support.wellcomeapp.ui.screen.profile
 
 import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.interactor.ProfileInteractor
-import com.mistreckless.support.wellcomeapp.ui.*
+import com.mistreckless.support.wellcomeapp.ui.BasePresenter
+import com.mistreckless.support.wellcomeapp.ui.PerFragment
 import javax.inject.Inject
 
 /**
@@ -10,7 +11,7 @@ import javax.inject.Inject
  */
 @PerFragment
 @InjectViewState
-class ProfilePresenter @Inject constructor(private val profileInteractor: ProfileInteractor) : BasePresenter<ProfileView, MainActivityRouter>() {
+class ProfilePresenter @Inject constructor(private val profileInteractor: ProfileInteractor) : BasePresenter<ProfileView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         profileInteractor.controlCurrentUserData()

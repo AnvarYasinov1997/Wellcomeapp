@@ -5,13 +5,11 @@ import android.support.annotation.IdRes
 import android.support.v4.app.Fragment
 import com.arellomobile.mvp.MvpAppCompatActivity
 import com.arellomobile.mvp.MvpView
-import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.navigation.WelcomeNavigator
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
 import dagger.android.AndroidInjection
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.HasSupportFragmentInjector
-import kotlinx.android.synthetic.main.activity_main.view.*
 import ru.terrakok.cicerone.NavigatorHolder
 import javax.inject.Inject
 import javax.inject.Provider
@@ -23,10 +21,7 @@ import javax.inject.Provider
 
 interface BaseActivityView : MvpView
 
-interface BaseRouter
-
 abstract class BaseActivity<P : BasePresenter<*>> : MvpAppCompatActivity(), HasSupportFragmentInjector {
-
 
     @Inject
     lateinit var fragmentDispatcher: DispatchingAndroidInjector<Fragment>
@@ -68,7 +63,6 @@ abstract class BaseActivity<P : BasePresenter<*>> : MvpAppCompatActivity(), HasS
             val annotation = cls.getAnnotation(Layout::class.java)
             setContentView(annotation.id)
             containerId=annotation.containerId
-            if (containerId==0) throw RuntimeException("Container id in activity doesn't exists")
         }
     }
 

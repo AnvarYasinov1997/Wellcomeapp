@@ -49,8 +49,7 @@ class MainInteractorImpl(private val userRepository: UserRepository, private val
     }
 
     override fun bindToLocation(): Completable = locationRepository.getCurrentCity()
-            .toCompletable()
-            .andThen { userRepository.bindToCity() }
+            .flatMapCompletable { userRepository.bindToCity() }
             .observeOn(AndroidSchedulers.mainThread())
 
 }

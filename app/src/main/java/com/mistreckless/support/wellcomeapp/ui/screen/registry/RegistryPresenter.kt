@@ -8,9 +8,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.jakewharton.rxbinding2.InitialValueObservable
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.domain.interactor.RegistryInteractor
-import com.mistreckless.support.wellcomeapp.ui.*
+import com.mistreckless.support.wellcomeapp.ui.BasePresenter
+import com.mistreckless.support.wellcomeapp.ui.PerFragment
+import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.disposables.CompositeDisposable
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -20,7 +23,7 @@ import javax.inject.Provider
 
 @PerFragment
 @InjectViewState
-class RegistryPresenter @Inject constructor(private val rxPermissions: Provider<RxPermissions>, private val registryInteractor: RegistryInteractor) : BasePresenter<RegistryView, MainActivityRouter>() {
+class RegistryPresenter @Inject constructor(private val rxPermissions: Provider<RxPermissions>, private val registryInteractor: RegistryInteractor, private val router: Router) : BasePresenter<RegistryView>() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
@@ -40,7 +43,7 @@ class RegistryPresenter @Inject constructor(private val rxPermissions: Provider<
     fun finishClicked(name: String, newUserState: NewUserState) {
         compositeDisposable.add(registryInteractor.regUser(name, newUserState)
                 .subscribe({
-                    getRouter()?.navigateToWall()
+                    router.newRootScreen(Wall.TAG)
                     compositeDisposable.dispose()
                 }, { Log.e(Registry.TAG, it.message) }))
     }

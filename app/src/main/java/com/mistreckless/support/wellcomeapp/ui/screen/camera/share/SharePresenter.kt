@@ -2,17 +2,15 @@ package com.mistreckless.support.wellcomeapp.ui.screen.camera.share
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.os.Bundle
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.entity.*
 import com.mistreckless.support.wellcomeapp.domain.interactor.ShareInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.PerFragment
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityRouter
 import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.Observable
 import io.reactivex.Single
+import ru.terrakok.cicerone.Router
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -24,7 +22,7 @@ import javax.inject.Provider
  */
 @PerFragment
 @InjectViewState
-class SharePresenter @Inject constructor(private val shareInteractor: ShareInteractor, private val rxPermission: Provider<RxPermissions>) : BasePresenter<ShareView, CameraActivityRouter>() {
+class SharePresenter @Inject constructor(private val shareInteractor: ShareInteractor, private val rxPermission: Provider<RxPermissions>, private val router: Router) : BasePresenter<ShareView>() {
 
     private val sdf by lazy { SimpleDateFormat("dd MMM HH : mm") }
     private val currentTime by lazy { System.currentTimeMillis() }
@@ -39,7 +37,6 @@ class SharePresenter @Inject constructor(private val shareInteractor: ShareInter
         }
         findAddress()
     }
-
 
     fun timePicked(h: Int, m: Int) {
         val deletedTime = calculateDeleteTime(h, m)
@@ -57,7 +54,10 @@ class SharePresenter @Inject constructor(private val shareInteractor: ShareInter
                         is StateInit -> Log.e(TAG, "init")
                         is StateUpload -> Log.e(TAG, "upload " + it.progress)
                         is StateUploaded -> Log.e(TAG, "uploaded url " + it.url)
-                        is StateDone -> Log.e(TAG, "done")
+                        is StateDone -> {
+                            router.finishChain()
+                            Log.e(TAG, "done")
+                        }
                         is StateError -> Log.e(TAG, "error " + it.message)
                     }
                 }

@@ -21,16 +21,18 @@ import ru.terrakok.cicerone.android.SupportAppNavigator
 /**
  * Created by mistreckless on 21.11.17.
  */
-class WelcomeNavigator(private val activity: FragmentActivity, private val manager: FragmentManager, containerId: Int) : SupportAppNavigator(activity, manager, containerId) {
+class WelcomeNavigator(private val activity: FragmentActivity, manager: FragmentManager, containerId: Int) : SupportAppNavigator(activity, manager, containerId) {
+
+    init {
+        if (containerId==0) throw RuntimeException("Container id in activity doesn't exists")
+    }
 
     override fun createActivityIntent(screenKey: String, data: Any?): Intent? = when (screenKey) {
         CameraActivity.TAG -> Intent(activity, CameraActivity::class.java)
         MainActivity.TAG -> Intent(activity, MainActivity::class.java)
-        BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG-> {
-            if (data != null && data is GoogleApiClient){
-                 Auth.GoogleSignInApi.getSignInIntent(data)
-              //  activity.startActivityForResult(intent,BaseActivity.RC_SIGN_IN)
-            }else throw RuntimeException("error opening google auth "+data)
+        BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG -> {
+            if (data != null && data is GoogleApiClient) Auth.GoogleSignInApi.getSignInIntent(data)
+            else throw RuntimeException("error opening google auth " + data)
         }
         else -> null
     }

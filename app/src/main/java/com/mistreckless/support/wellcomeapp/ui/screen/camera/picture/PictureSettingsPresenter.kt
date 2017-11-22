@@ -4,7 +4,8 @@ import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.interactor.ShareInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.PerFragment
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityRouter
+import com.mistreckless.support.wellcomeapp.ui.screen.camera.share.Share
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 /**
@@ -12,7 +13,7 @@ import javax.inject.Inject
  */
 @PerFragment
 @InjectViewState
-class PictureSettingsPresenter @Inject constructor(private val shareInteractor: ShareInteractor) : BasePresenter<PictureSettingsView,CameraActivityRouter>(){
+class PictureSettingsPresenter @Inject constructor(private val shareInteractor: ShareInteractor, private val router: Router) : BasePresenter<PictureSettingsView>(){
 
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
@@ -24,6 +25,6 @@ class PictureSettingsPresenter @Inject constructor(private val shareInteractor: 
     }
 
     fun nextClicked() {
-        getRouter()?.navigateToShare()
+        router.navigateTo(Share.TAG)
     }
 }

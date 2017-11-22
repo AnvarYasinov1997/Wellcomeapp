@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ironz.binaryprefs.test" >
+
+    <uses-sdk
+        android:minSdkVersion="14"
+        android:targetSdkVersion="27" />
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:functionalTest="false"
+        android:handleProfiling="false"
+        android:label="Tests for com.ironz.binaryprefs.test"
+        android:targetPackage="com.ironz.binaryprefs.test" />
+
+    <application android:debuggable="true" >
+        <uses-library android:name="android.test.runner" />
+
+        <receiver
+            android:name="com.ironz.binaryprefs.dump.DumpReceiver"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="com.ironz.binaryprefs.ACTION_DUMP_PREFERENCE" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

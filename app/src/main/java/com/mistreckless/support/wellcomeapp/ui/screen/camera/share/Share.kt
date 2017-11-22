@@ -2,7 +2,6 @@ package com.mistreckless.support.wellcomeapp.ui.screen.camera.share
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.util.DisplayMetrics
 import android.view.View
@@ -12,10 +11,7 @@ import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityRouter
-import com.mistreckless.support.wellcomeapp.ui.view.camera.AgePickerDialog
 import com.mistreckless.support.wellcomeapp.ui.view.camera.TimePickerDialog
-import com.mistreckless.support.wellcomeapp.ui.view.indy.toObservable
 import com.otaliastudios.cameraview.CameraUtils
 import kotlinx.android.synthetic.main.fragment_share.*
 
@@ -30,8 +26,6 @@ class Share : BaseFragment<SharePresenter>(), ShareView {
     override lateinit var presenter : SharePresenter
     @ProvidePresenter
     fun providePresenter() = presenterProvider.get()
-
-    override fun getRouter() = activity as CameraActivityRouter
 
     override fun initUi(bytes: ByteArray) {
         initAppBar(bytes)

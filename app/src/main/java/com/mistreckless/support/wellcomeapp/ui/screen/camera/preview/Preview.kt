@@ -6,7 +6,6 @@ import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityRouter
 import com.otaliastudios.cameraview.CameraListener
 import kotlinx.android.synthetic.main.fragment_preview.*
 
@@ -35,8 +34,6 @@ class Preview : BaseFragment<PreviewPresenter>(),PreviewView{
         cameraView.destroy()
         super.onDestroyView()
     }
-
-    override fun getRouter() = activity as CameraActivityRouter
 
     override fun initUi() {
         imgTakePicture.setOnClickListener { cameraView.capturePicture() }

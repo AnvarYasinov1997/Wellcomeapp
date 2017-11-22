@@ -6,7 +6,6 @@ import android.content.Intent
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.domain.entity.AlreadyRegisteredState
 import com.mistreckless.support.wellcomeapp.domain.entity.ErrorState
 import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
@@ -34,23 +33,23 @@ class MainActivityPresenter @Inject constructor(private val mainInteractor: Main
         when {
             isGranted && isAuth -> mainInteractor.bindToLocation()
                     .subscribe({
-                        router.navigateTo(Wall.TAG)
+                        router.newRootScreen(Wall.TAG)
                     }, {
                         Log.e(TAG, it.message)
                     })
             !isGranted -> viewChangesDisposables.add(rxPermissions.get().request(Manifest.permission.ACCESS_COARSE_LOCATION)
                     .subscribe({
-                        if (it && isAuth) router.navigateTo(Wall.TAG)
-                        else if (it) getRouter()?.navigateToGoogleAuthDialog(googleApiClient.get())
+                        if (it && isAuth) router.newRootScreen(Wall.TAG)
+                        else if (it) router.navigateToActivityForResult(BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG,BaseActivity.RC_SIGN_IN)
                         else onFirstViewAttach()
                     }))
-            !isAuth -> getRouter()?.navigateToGoogleAuthDialog(googleApiClient.get())
+            !isAuth -> router.navigateToActivityForResult(BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG,BaseActivity.RC_SIGN_IN)
         }
     }
 
     fun authResult(requestCode: Int, resultCode: Int, data: Intent?) {
         when (requestCode) {
-            MainActivity.RC_SIGN_IN -> {
+            BaseActivity.RC_SIGN_IN -> {
                 if (resultCode == Activity.RESULT_OK) {
                     val result = Auth.GoogleSignInApi.getSignInResultFromIntent(data)
                     mainInteractor.signUpWithGoogle(result)
@@ -58,7 +57,7 @@ class MainActivityPresenter @Inject constructor(private val mainInteractor: Main
                                 when (it) {
                                     is AlreadyRegisteredState -> {
                                         Log.e(TAG, "already reg")
-                                        router.navigateTo(Wall.TAG)
+                                        router.newRootScreen(Wall.TAG)
                                     }
                                     is NewUserState -> router.navigateTo(Registry.TAG,it)
                                     is ErrorState -> Log.e(MainActivity.TAG, it.message)

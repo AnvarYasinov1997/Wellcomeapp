@@ -2,8 +2,11 @@ package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
 import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.interactor.WallInteractor
-import com.mistreckless.support.wellcomeapp.ui.*
+import com.mistreckless.support.wellcomeapp.ui.BasePresenter
+import com.mistreckless.support.wellcomeapp.ui.PerFragment
+import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
 import io.reactivex.Observable
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 /**
@@ -11,14 +14,14 @@ import javax.inject.Inject
  */
 @PerFragment
 @InjectViewState
-class WallPresenter @Inject constructor(private val wallInteractor: WallInteractor) : BasePresenter<WallView, MainActivity>() {
+class WallPresenter @Inject constructor(private val wallInteractor: WallInteractor, private val router: Router) : BasePresenter<WallView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.initUi()
     }
 
     fun fubClicked() {
-        getRouter()?.navigateToCamera()
+        router.newScreenChain(CameraActivity.TAG)
     }
 
     companion object {
