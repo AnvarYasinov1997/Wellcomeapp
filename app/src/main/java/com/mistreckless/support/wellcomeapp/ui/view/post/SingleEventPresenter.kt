@@ -1,8 +1,8 @@
 package com.mistreckless.support.wellcomeapp.ui.view.post
 
 import com.arellomobile.mvp.InjectViewState
-import com.google.firebase.firestore.DocumentReference
-import com.mistreckless.support.wellcomeapp.domain.interactor.WallInteractor
+import com.mistreckless.support.wellcomeapp.domain.entity.EventData
+import com.mistreckless.support.wellcomeapp.domain.interactor.EventInteractor
 import com.mistreckless.support.wellcomeapp.ui.view.BaseViewHolderPresenter
 import javax.inject.Inject
 
@@ -11,9 +11,9 @@ import javax.inject.Inject
  */
 
 @InjectViewState
-class PostPresenter @Inject constructor(private val wallInteractor : WallInteractor): BaseViewHolderPresenter<PostView>(){
+class SingleEventPresenter @Inject constructor(private val eventInteractor: EventInteractor): BaseViewHolderPresenter<EventView,EventData>(){
 
-    override fun onViewBinded(ref : DocumentReference) {
+    override fun onViewBinded(item : EventData) {
      ///   viewState.initUi(model)
     }
 

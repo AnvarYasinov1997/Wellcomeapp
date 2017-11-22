@@ -14,8 +14,8 @@ import javax.inject.Inject
 class ProfilePresenter @Inject constructor(private val profileInteractor: ProfileInteractor) : BasePresenter<ProfileView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
-        profileInteractor.controlCurrentUserData()
-                .subscribe { viewState.initUi(it) }
+//        profileInteractor.controlCurrentUserData()
+//                .subscribe { viewState.initUi(it) }
     }
 
     companion object {

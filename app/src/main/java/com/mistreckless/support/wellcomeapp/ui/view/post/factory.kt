@@ -8,7 +8,7 @@ import javax.inject.Inject
  */
 
 
-class PostViewFactory @Inject constructor(private val presenter: PostPresenter){
+class EventViewFactory @Inject constructor(private val presenter: SingleEventPresenter){
 
-    fun create(parent : ViewGroup?) = PostViewHolder(presenter,parent)
+    fun create(parent : ViewGroup?) = EventViewHolder(presenter,parent)
 }

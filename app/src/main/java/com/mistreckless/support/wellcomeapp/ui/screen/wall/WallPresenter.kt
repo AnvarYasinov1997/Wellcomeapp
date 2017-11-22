@@ -1,7 +1,8 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.mistreckless.support.wellcomeapp.domain.interactor.WallInteractor
+import com.mistreckless.support.wellcomeapp.domain.interactor.EventInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.PerFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
@@ -14,7 +15,7 @@ import javax.inject.Inject
  */
 @PerFragment
 @InjectViewState
-class WallPresenter @Inject constructor(private val wallInteractor: WallInteractor, private val router: Router) : BasePresenter<WallView>() {
+class WallPresenter @Inject constructor(private val eventInteractor: EventInteractor, private val router: Router) : BasePresenter<WallView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.initUi()
@@ -24,11 +25,17 @@ class WallPresenter @Inject constructor(private val wallInteractor: WallInteract
         router.newScreenChain(CameraActivity.TAG)
     }
 
-    companion object {
-        const val TAG = "WallPresenter"
-    }
 
     fun controlWall(observeScroll: Observable<Int>) {
-       // wallInteractor.controlWall(observeScroll)
+       viewChangesDisposables.add(eventInteractor.controlEvents(observeScroll)
+               .subscribe({
+                   viewState.addEvents(it)
+               },{
+                   Log.e(TAG,it.message,it)
+               }))
+    }
+
+    companion object {
+        const val TAG = "WallPresenter"
     }
 }

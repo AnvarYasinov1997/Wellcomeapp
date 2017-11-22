@@ -36,7 +36,7 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun providePostRepository(cacheData: CacheData) : PostRepository = PostRepositoryImpl(cacheData)
+    fun providePostRepository(cacheData: CacheData) : EventRepository = EventRepositoryImpl(cacheData)
 }
 
 @Singleton

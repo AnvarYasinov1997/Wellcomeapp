@@ -1,9 +1,9 @@
 package com.mistreckless.support.wellcomeapp.domain.interactor
 
-import com.mistreckless.support.wellcomeapp.domain.entity.*
+import com.mistreckless.support.wellcomeapp.data.repository.EventRepository
 import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.data.repository.PostRepository
 import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
+import com.mistreckless.support.wellcomeapp.domain.entity.*
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,7 +22,7 @@ interface ShareInteractor {
 
 class ShareInteractorImpl(private val userRepository: UserRepository,
                           private val locationRepository: LocationRepository,
-                          private val postRepository: PostRepository) : ShareInteractor {
+                          private val eventRepository: EventRepository) : ShareInteractor {
     lateinit var bytes: ByteArray
 
     override fun findMyLocation(): Single<String> {
@@ -34,9 +34,9 @@ class ShareInteractorImpl(private val userRepository: UserRepository,
     override fun share(addressLine: String, descLine: String, fromTime: Long, tillTime: Long): Observable<ShareState> {
         val initObservable = Observable.just(StateInit())
         val tags = findTags(descLine)
-        return Observable.merge(initObservable, postRepository.uploadPost(bytes))
+        return Observable.merge(initObservable, eventRepository.uploadEvent(bytes))
                 .flatMap { state-> when(state){
-                    is StateUploaded-> postRepository.share(PostType.PHOTO,state.url,userRepository.getUserReference(),addressLine,descLine,fromTime,tillTime,tags)
+                    is StateUploaded-> eventRepository.share(ContentType.PHOTO,state.url,userRepository.getUserReference(),addressLine,descLine,fromTime,tillTime,tags)
                     else ->Observable.just(state)
                 } }
                 .onErrorReturn { StateError(it.message ?: "Empty error") }

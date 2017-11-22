@@ -16,19 +16,22 @@ fun CheckBox.toObservable(): Observable<Boolean> {
         this.setOnCheckedChangeListener { _, isChecked ->
             if (!e.isDisposed) e.onNext(isChecked)
         }
-    }.doOnDispose { this.setOnCheckedChangeListener(null) }
+        e.setDisposable(Disposables.fromAction { setOnCheckedChangeListener(null) })
+    }
 }
 
-fun RecyclerView.observeScroll(): Observable<Int> = Observable.create<Int> { e ->
+fun RecyclerView.observeScroll(initialValue : Int =0): Observable<Int> = Observable.create<Int> { e ->
+    if (!e.isDisposed)
+        e.onNext(initialValue)
     val listener = object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView?, dx: Int, dy: Int) {
             if (!e.isDisposed) {
                 val position = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-                val needToEmit = layoutManager.itemCount==0 || position * 100 / layoutManager.itemCount > 70
+                val needToEmit = layoutManager.itemCount!=0 && position * 100 / layoutManager.itemCount > 70
                 if (needToEmit) e.onNext(layoutManager.itemCount)
             }
         }
     }
     addOnScrollListener(listener)
     e.setDisposable(Disposables.fromAction { removeOnScrollListener(listener) })
-}.distinctUntilChanged()
+}

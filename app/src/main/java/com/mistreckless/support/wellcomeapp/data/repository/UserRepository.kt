@@ -50,7 +50,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
 
 
     override fun isUserAlreadyRegistered(uid: String): Single<Boolean> {
-        return FirebaseFirestore.getInstance().collection("user").whereEqualTo("id", uid).getValues(UserData::class.java)
+        return FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).whereEqualTo("id", uid).getValues(UserData::class.java)
                 .doOnSuccess { if (it.isNotEmpty()) cacheUserData(it[0]) }
                 .map { it.isNotEmpty() }
                 .subscribeOn(Schedulers.io())
@@ -58,7 +58,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     }
 
     override fun registryNewUser(uid: String, fullName: String?, displayedName: String, photoUrl: String): Completable {
-        val userRef = FirebaseFirestore.getInstance().collection("user").document()
+        val userRef = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document()
         val cityName = cacheData.getString(CacheData.USER_CITY)
         if (cityName.isEmpty()) return Completable.error(Exception("city is empty"))
         val userData = UserData(uid, userRef.id, cityName, fullName, displayedName, photoUrl)
@@ -90,7 +90,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     }
 
     override fun observeUserValueEvent(userRef: String): Observable<UserData> {
-        val fullUserRef = FirebaseFirestore.getInstance().collection("user").document(userRef)
+        val fullUserRef = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY).document(userRef)
         return fullUserRef.observeValue(UserData::class.java)
                 .subscribeOn(Schedulers.io())
     }
@@ -113,10 +113,10 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
 
     private fun initCityIfNeeded(ruCityName: String, enCityName: String = ""): Completable {
 
-        return FirebaseFirestore.getInstance().collection("city").whereEqualTo("ruName", ruCityName)
+        return FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY).whereEqualTo("ruName", ruCityName)
                 .getValues(CityData::class.java)
                 .flatMap { if (it.isNotEmpty()) Single.just(it[0].ref) else {
-                    val path = FirebaseFirestore.getInstance().collection("city").document()
+                    val path = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY).document()
                     val ref = path.id
                     path.setValue(CityData(ref, enCityName, ruCityName)).toSingleDefault(ref)
                 } }

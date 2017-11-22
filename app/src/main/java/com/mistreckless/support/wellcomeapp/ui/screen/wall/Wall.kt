@@ -4,6 +4,7 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
+import com.mistreckless.support.wellcomeapp.domain.entity.EventData
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
 import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.screen.Layout
@@ -34,6 +35,11 @@ class Wall : BaseFragment<WallPresenter>(), WallView{
         presenter.controlWall(recyclerView.observeScroll())
     }
 
+    override fun addEvents(events: MutableList<EventData>) {
+        adapter.items.addAll(events)
+        adapter.notifyItemRangeInserted(adapter.itemCount-events.size,adapter.itemCount)
+    }
+
     companion object {
         const val TAG="Wall"
     }
@@ -43,4 +49,5 @@ class Wall : BaseFragment<WallPresenter>(), WallView{
 interface WallView : BaseFragmentView{
 
     fun initUi()
+    fun addEvents(events: MutableList<EventData>)
 }
