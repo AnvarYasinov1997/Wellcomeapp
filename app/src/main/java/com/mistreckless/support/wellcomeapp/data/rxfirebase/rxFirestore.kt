@@ -32,6 +32,7 @@ class RxQuery<T>(private val query: Query, private val clazz: Class<T>) : Single
     override fun subscribe(e: SingleEmitter<MutableList<T>>) {
         query.get()
                 .addOnSuccessListener {
+                    it.documents[0].toString()
                     if (!e.isDisposed)
                         e.onSuccess(it.toObjects(clazz))
                 }

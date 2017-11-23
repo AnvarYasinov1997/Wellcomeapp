@@ -55,6 +55,6 @@ class EventRepositoryImpl(private val cacheData: CacheData) : EventRepository {
 
     private fun generatePost(ref: String, contentType: ContentType, url: String, userReference: String, addressLine: String, descLine: String, fromTime: Long, tillTime: Long): EventData {
         val postContent = ContentData(contentType, userReference, url, descLine, fromTime, tillTime)
-        return EventData(ref/*, mutableListOf(postContent)*//*, Pair(cacheData.getDouble(CacheData.TMP_LAT)*//*, cacheData.getDouble(CacheData.TMP_LON))*/, addressLine, cacheData.getString(CacheData.USER_CITY),EventDataType.SINGLE)
+        return EventData(ref, mutableListOf(postContent), LatLon(cacheData.getDouble(CacheData.TMP_LAT), cacheData.getDouble(CacheData.TMP_LON)), addressLine, cacheData.getString(CacheData.USER_CITY),EventDataType.SINGLE)
     }
 }
