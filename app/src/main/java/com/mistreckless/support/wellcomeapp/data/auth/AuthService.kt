@@ -60,17 +60,13 @@ class GoogleAuthService(
         FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .whereEqualTo(CITY_NAME, cityName)
             .getValues(CityData::class.java)
-            .flatMap { chain(cityName, it) }
-
-    private fun chain(cityName: String, cities: List<CityData>) = Single.just(cities)
-        .filter(List<CityData>::isEmpty)
-        .flatMap { initCity(cityName)}
-        .switchIfEmpty(MaybeSource {
-            Maybe.just(Unit)
+            .filter(List<CityData>::isNotEmpty)
+            .flatMap { cities -> Maybe.just(Unit)
                 .doOnSuccess { cacheData.cacheString(CacheData.USER_CITY_REF, cities.first().ref) }
-        })
-        .onErrorReturn { if (it is FirebaseFirestoreException) Unit }
-        .toSingle()
+            }
+            .switchIfEmpty(initCity(cityName))
+            .onErrorReturn { if (it is FirebaseFirestoreException) Unit }
+            .toSingle()
 
     private fun initCity(cityName: String) = with(
         FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
