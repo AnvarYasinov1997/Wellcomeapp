@@ -7,6 +7,7 @@ import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 /**
  * Created by @mistreckless on 13.08.2017. !
@@ -18,18 +19,29 @@ interface RegistryInteractor {
 
 }
 
-class RegistryInteractorImpl(private val userRepository: UserRepository, private val locationRepository: LocationRepository) : RegistryInteractor {
+class RegistryInteractorImpl(
+    private val userRepository: UserRepository,
+    private val locationRepository: LocationRepository
+) : RegistryInteractor {
     override fun findMyCity(): Single<String> = locationRepository.getCurrentCity()
-            .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(AndroidSchedulers.mainThread())
 
     override fun regUser(name: String, newUserState: NewUserState): Completable {
         return userRepository.uploadPhotoIfNeeded()
-                .flatMapCompletable { userRepository.registryNewUser(newUserState.uid, newUserState.fullName, if (name.isEmpty()) newUserState.fullName ?: "noname" else name, it) }
-                .observeOn(AndroidSchedulers.mainThread())
+            .flatMapCompletable {
+                userRepository.registryNewUser(
+                    newUserState.uid,
+                    newUserState.fullName,
+                    if (name.isEmpty()) newUserState.fullName ?: "noname" else name,
+                    it
+                )
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
     }
 
     override fun choosePhoto(data: Intent): Single<String> =
-            userRepository.findPhoto(data.data)
-                    .observeOn(AndroidSchedulers.mainThread())
+        userRepository.findPhoto(data.data)
+            .observeOn(AndroidSchedulers.mainThread())
 
 }

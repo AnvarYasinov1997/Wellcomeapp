@@ -35,7 +35,7 @@ class Wall : BaseFragment<WallPresenter>(), WallView{
         presenter.controlWall(recyclerView.observeScroll())
     }
 
-    override fun addEvents(events: MutableList<EventData>) {
+    override fun addEvents(events: List<EventData>) {
         adapter.items.addAll(events)
         adapter.notifyItemRangeInserted(adapter.itemCount-events.size,adapter.itemCount)
     }
@@ -49,5 +49,5 @@ class Wall : BaseFragment<WallPresenter>(), WallView{
 interface WallView : BaseFragmentView{
 
     fun initUi()
-    fun addEvents(events: MutableList<EventData>)
+    fun addEvents(events: List<EventData>)
 }

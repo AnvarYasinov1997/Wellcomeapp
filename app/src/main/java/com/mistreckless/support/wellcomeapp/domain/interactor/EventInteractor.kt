@@ -12,12 +12,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
  */
 
 interface EventInteractor {
-    fun controlEvents(observeScroll: Observable<Int>): Observable<MutableList<EventData>>
+    fun controlEvents(observeScroll: Observable<Int>): Observable<List<EventData>>
 }
 
 
 class EventInteractorImpl(private val userRepository: UserRepository, private val eventRepository: EventRepository, private val locationRepository: LocationRepository) : EventInteractor {
-    override fun controlEvents(observeScroll: Observable<Int>): Observable<MutableList<EventData>> {
+    override fun controlEvents(observeScroll: Observable<Int>): Observable<List<EventData>> {
         var lastTimestamp = 0L
         return observeScroll.distinctUntilChanged()
                 .flatMapSingle { eventRepository.fetchEvents(lastTimestamp).doOnSuccess { lastTimestamp = it.last().timestamp } }

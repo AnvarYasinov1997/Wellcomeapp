@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers
 interface EventRepository {
     fun uploadEvent(bytes: ByteArray): ObservableSource<ShareState>
     fun share(contentType: ContentType, url: String, userReference: String, addressLine: String, descLine: String, fromTime: Long, tillTime: Long, tags: List<String>): Observable<ShareState>
-    fun fetchEvents(lastTimeStamp: Long,limit : Long=10): Single<MutableList<EventData>>
+    fun fetchEvents(lastTimeStamp: Long,limit : Long=10): Single<List<EventData>>
 }
 
 
@@ -36,7 +36,7 @@ class EventRepositoryImpl(private val cacheData: CacheData) : EventRepository {
         return ref.setValue(post).toSingle<ShareState> { StateDone() }.toObservable()
     }
 
-    override fun fetchEvents(lastTimeStamp: Long,limit: Long): Single<MutableList<EventData>> {
+    override fun fetchEvents(lastTimeStamp: Long,limit: Long): Single<List<EventData>> {
         val ref = FirebaseFirestore.getInstance()
                 .collection(FirebaseConstants.CITY)
                 .document(cacheData.getString(CacheData.USER_CITY_REF))

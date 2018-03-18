@@ -3,12 +3,10 @@ package com.mistreckless.support.wellcomeapp.data.location
 import android.annotation.SuppressLint
 import android.location.Address
 import android.location.Geocoder
+import android.util.Log
 import com.google.android.gms.location.FusedLocationProviderClient
 import io.reactivex.Single
 
-/**
- * Created by mistreckless on 27.10.17.
- */
 
 interface RxLocation {
 

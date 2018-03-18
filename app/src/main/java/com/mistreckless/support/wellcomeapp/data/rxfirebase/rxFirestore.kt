@@ -12,7 +12,11 @@ class RxSetValue<T : Any>(private val ref: DocumentReference, private val value:
     override fun subscribe(e: CompletableEmitter) {
         ref.set(value).addOnCompleteListener {
             if (!e.isDisposed) {
-                if (it.isSuccessful) e.onComplete() else e.onError(it.exception!!)
+                if (it.isSuccessful) {
+                    e.onComplete()
+                } else {
+                    e.onError(it.exception!!)
+                }
             }
         }
     }
@@ -28,13 +32,12 @@ class RxAddValue<T : Any>(private val ref: CollectionReference, private val valu
 
 }
 
-class RxQuery<T>(private val query: Query, private val clazz: Class<T>) : SingleOnSubscribe<MutableList<T>> {
-    override fun subscribe(e: SingleEmitter<MutableList<T>>) {
+class RxQuery<T>(private val query: Query, private val clazz: Class<T>) : SingleOnSubscribe<List<T>> {
+    override fun subscribe(e: SingleEmitter<List<T>>) {
         query.get()
                 .addOnSuccessListener {
-                    it.documents[0].toString()
                     if (!e.isDisposed)
-                        e.onSuccess(it.toObjects(clazz))
+                        e.onSuccess(if (it.documents.isNotEmpty()) it.toObjects(clazz) else emptyList())
                 }
                 .addOnFailureListener {
                     if (!e.isDisposed)
@@ -55,8 +58,6 @@ class RxDocumentObserver<T>(private val documentReference: DocumentReference, pr
             }
         }
         documentReference.addSnapshotListener(listener)
-
-        e.setDisposable(Disposables.fromAction { })
     }
 
 }

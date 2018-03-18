@@ -1,6 +1,5 @@
 package com.mistreckless.support.wellcomeapp.ui
 
-import android.content.Intent
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
@@ -15,7 +14,7 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView {
     override lateinit var presenter: MainActivityPresenter
 
     @ProvidePresenter
-    fun providePresenter() = presenterProvider.get()
+    fun providePresenter(): MainActivityPresenter = presenterProvider.get()
 
 
     override fun initUi() {
@@ -27,11 +26,6 @@ class MainActivity : BaseActivity<MainActivityPresenter>(), MainActivityView {
             }
             return@setOnNavigationItemSelectedListener true
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        presenter.authResult(requestCode, resultCode, data)
     }
 
     companion object {

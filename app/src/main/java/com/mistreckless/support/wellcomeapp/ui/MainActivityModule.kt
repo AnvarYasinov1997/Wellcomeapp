@@ -4,6 +4,11 @@ import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.R
+import com.mistreckless.support.wellcomeapp.data.CacheData
+import com.mistreckless.support.wellcomeapp.data.auth.AuthService
+import com.mistreckless.support.wellcomeapp.data.auth.GoogleAuthService
+import com.mistreckless.support.wellcomeapp.data.auth.RxAuth
+import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
@@ -48,5 +53,11 @@ class MainActivityModule {
     }
 
     @Provides
-    fun provideRxPermissions(mainActivity: MainActivity) : RxPermissions = RxPermissions(mainActivity)
+    fun provideRxPermissions(activity: MainActivity) : RxPermissions = RxPermissions(activity)
+
+    @Provides
+    fun provideRxAuth(activity: MainActivity): RxAuth = RxAuth(activity)
+
+    @Provides
+    fun provideAuthService(cacheData: CacheData,locationRepository: LocationRepository): AuthService = GoogleAuthService(cacheData, locationRepository)
 }

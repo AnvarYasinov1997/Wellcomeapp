@@ -25,7 +25,7 @@ class LocationRepositoryImpl (private val rxLocation: RxLocation,
 
 
     @SuppressLint("SupportAnnotationUsage", "MissingPermission")
-    @RequiresPermission(allOf = arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION))
+    @RequiresPermission(allOf = [(android.Manifest.permission.ACCESS_COARSE_LOCATION), (android.Manifest.permission.ACCESS_FINE_LOCATION)])
     override fun getCurrentAddress(): Single<Address> {
         return rxLocation.getLastKnownLocation()
                 .doOnSuccess{
@@ -37,7 +37,7 @@ class LocationRepositoryImpl (private val rxLocation: RxLocation,
     }
 
     @SuppressLint("SupportAnnotationUsage", "MissingPermission")
-    @RequiresPermission(allOf = arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION))
+    @RequiresPermission(allOf = [(android.Manifest.permission.ACCESS_COARSE_LOCATION)])
     override fun getCurrentCity(): Single<String> {
         return rxLocation.getLastKnownLocation()
                 .flatMap { getAddressFromLocation(it) }

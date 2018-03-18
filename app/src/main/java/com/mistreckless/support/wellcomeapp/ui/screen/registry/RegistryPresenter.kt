@@ -11,8 +11,10 @@ import com.mistreckless.support.wellcomeapp.domain.interactor.RegistryInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
 import com.mistreckless.support.wellcomeapp.ui.PerFragment
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import ru.terrakok.cicerone.Router
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -22,51 +24,59 @@ import javax.inject.Provider
 
 @PerFragment
 @InjectViewState
-class RegistryPresenter @Inject constructor(private val rxPermissions: Provider<RxPermissions>, private val registryInteractor: RegistryInteractor, private val router: Router) : BasePresenter<RegistryView>() {
+class RegistryPresenter @Inject constructor(
+    private val rxPermissions: Provider<RxPermissions>,
+    private val registryInteractor: RegistryInteractor,
+    private val router: Router
+) : BasePresenter<RegistryView>() {
 
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
     override fun onFirstViewAttach() {
         viewState.initUi()
         compositeDisposable.add(rxPermissions.get().request(Manifest.permission.ACCESS_COARSE_LOCATION)
-                .flatMap { granted -> if (granted) registryInteractor.findMyCity().toObservable() else error("no city") }
-                .subscribe({ city: String ->
-                    viewState.showCity(city)
-                    viewState.setBtnNextEnabled(true)
-                }, {
-                    Log.e(Registry.TAG, it.message)
-                    viewState.setBtnNextEnabled(false)
-                }))
+            .filter { it }
+            .flatMap { registryInteractor.findMyCity().toObservable() }
+            .switchIfEmpty({ error("no city") })
+            .subscribe({ city: String ->
+                viewState.showCity(city)
+                viewState.setBtnNextEnabled(true)
+            }, {
+                Log.e(Registry.TAG, it.message)
+                viewState.setBtnNextEnabled(false)
+            })
+        )
     }
 
     fun finishClicked(name: String, newUserState: NewUserState) {
         compositeDisposable.add(registryInteractor.regUser(name, newUserState)
-                .subscribe({
-                    router.exitWithResult(Registry.RESULT_OK,null)
-                }, { Log.e(Registry.TAG, it.message) }))
+            .subscribe({
+                router.exitWithResult(Registry.RESULT_OK, null)
+            }, { Log.e(Registry.TAG, it.message) })
+        )
     }
 
     fun controlName(nameChanges: InitialValueObservable<CharSequence>) {
         compositeDisposable.add(nameChanges
-                .map { it.toString() }
-                .subscribe { viewState.showName(it) })
+            .map { it.toString() }
+            .subscribe { viewState.showName(it) })
     }
 
     fun photoClicked() {
         rxPermissions.get()
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .subscribe { granted ->
-                    if (granted)
-                        viewState.sendIntentToGallery()
-                }
+            .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            .subscribe { granted ->
+                if (granted)
+                    viewState.sendIntentToGallery()
+            }
     }
 
     fun resultFromIntent(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Registry.GALLERY_INTENT_CODE && resultCode == Activity.RESULT_OK && data != null)
             registryInteractor.choosePhoto(data)
-                    .subscribe({ viewState.setPhoto(it) }, {
-                        Log.e(Registry.TAG, it.message)
-                    })
+                .subscribe({ viewState.setPhoto(it) }, {
+                    Log.e(Registry.TAG, it.message)
+                })
     }
 
     companion object {

@@ -20,7 +20,6 @@ data class ErrorState(var message: String) : RegistryUserState()
 data class UserData(var id: String="",
                     var ref: String="",
                     var cityName: String="",
-                    var fullName: String?="",
                     var displayedName: String="",
                     var photoUrl: String?="",
                     var likeCount : Long=0,

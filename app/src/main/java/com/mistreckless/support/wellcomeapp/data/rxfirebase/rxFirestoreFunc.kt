@@ -15,6 +15,6 @@ fun <T : Any>DocumentReference.setValue(value : T): Completable = Completable.cr
 
 fun <T : Any>CollectionReference.addValue(value : T): Completable = Completable.create(RxAddValue(this,value))
 
-fun <T> Query.getValues(clazz: Class<T>) : Single<MutableList<T>> = Single.create(RxQuery(this,clazz))
+fun <T> Query.getValues(clazz: Class<T>) : Single<List<T>> = Single.create(RxQuery(this,clazz))
 
 fun<T>DocumentReference.observeValue(clazz: Class<T>) : Observable<T> = Observable.create(RxDocumentObserver(this,clazz))
