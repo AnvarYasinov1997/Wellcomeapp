@@ -16,11 +16,6 @@ import java.util.*
 import javax.inject.Named
 import javax.inject.Singleton
 
-/**
- * Created by mistreckless on 09.11.17.
- */
-
-
 @Singleton
 @Module
 class RepositoryModule {
@@ -53,18 +48,6 @@ class DataModule {
     @Singleton
     @Provides
     fun provideCacheData(preferences: Preferences): CacheData = CacheDataImp(preferences)
-
-    @Singleton
-    @Named("lowLocationRequest")
-    fun provideLowLocationRequest(context: Context): LocationRequest = LocationRequest.create()
-            .setPriority(LocationRequest.PRIORITY_LOW_POWER)
-            .setMaxWaitTime(1 * 1000)
-
-    @Singleton
-    @Named("accuracyLocationRequest")
-    fun provideAccuracyLocationRequest(context: Context): LocationRequest = LocationRequest.create()
-            .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setMaxWaitTime(1 * 9000)
 
     @Singleton
     @Provides

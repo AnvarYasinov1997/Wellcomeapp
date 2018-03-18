@@ -12,10 +12,6 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 import javax.inject.Provider
 
-/**
- * Created by @mistreckless on 31.07.2017. !
- */
-
 interface BaseFragmentView : MvpView
 
 abstract class BaseFragment<P : BasePresenter<*>> : MvpAppCompatFragment() {

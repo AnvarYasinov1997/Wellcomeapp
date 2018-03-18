@@ -19,8 +19,8 @@ import io.reactivex.Single
 
 interface AuthService {
     fun signInWithGoogle(account: GoogleSignInAccount): Single<Unit>
-
     fun bindToCity(): Single<Unit>
+    fun isAuthenticated() : Boolean
 }
 
 class GoogleAuthService(
@@ -35,6 +35,8 @@ class GoogleAuthService(
 
     override fun bindToCity(): Single<Unit> = locationRepository.getCurrentCity()
         .flatMap(this::checkCity)
+
+    override fun isAuthenticated() = cacheData.getString(CacheData.USER_REF).isNotEmpty()
 
     private fun confirmUser(firebaseUser: FirebaseUser) =
         FirebaseFirestore.getInstance().collection(FirebaseConstants.USER)

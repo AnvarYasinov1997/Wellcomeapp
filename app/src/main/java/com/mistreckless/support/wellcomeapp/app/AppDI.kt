@@ -32,11 +32,11 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providesContext(application: Application) : Context = application
+    fun providesContext(application: Application): Context = application
 
     @Singleton
     @Provides
-    fun provideLocale() : Locale = Locale.ENGLISH
+    fun provideLocale(): Locale = Locale.ENGLISH
 
 }
 
@@ -45,32 +45,29 @@ class AppModule {
 abstract class ActivityBuilder {
 
     @PerActivity
-    @ContributesAndroidInjector(modules = arrayOf(MainActivityFragmentProvider::class, MainActivityModule::class))
+    @ContributesAndroidInjector(
+        modules = [(MainActivityFragmentProvider::class), (MainActivityModule::class)]
+    )
     abstract fun bindMainActivity(): MainActivity
 
     @PerActivity
-    @ContributesAndroidInjector(modules = arrayOf(CameraActivityFragmentProvider::class,CameraModule::class))
-    abstract fun bindCameraActivity() : CameraActivity
+    @ContributesAndroidInjector(
+        modules = [(CameraActivityFragmentProvider::class), (CameraModule::class)]
+    )
+    abstract fun bindCameraActivity(): CameraActivity
 }
 
 @Singleton
-@Component(modules = arrayOf(
-        AndroidInjectionModule::class,
-        AppModule::class,
-        DataModule::class,
-        RepositoryModule::class,
-        InteractorModule::class,
-        NavigationModule::class,
-        ActivityBuilder::class))
+@Component(modules = [(AndroidInjectionModule::class), (AppModule::class), (DataModule::class), (RepositoryModule::class), (InteractorModule::class), (NavigationModule::class), (ActivityBuilder::class)])
 interface AppComponent {
 
     @Component.Builder
     interface Builder {
-        @BindsInstance fun application(application: Application) : Builder
-        fun dataModule(dataModule: DataModule) : Builder
-        fun repositoryModule(repositoryModule: RepositoryModule) : Builder
-        fun interactorModule(interactorModule: InteractorModule) : Builder
-        fun navigationModule(navigationModule: NavigationModule) : Builder
+        @BindsInstance fun application(application: Application): Builder
+        fun dataModule(dataModule: DataModule): Builder
+        fun repositoryModule(repositoryModule: RepositoryModule): Builder
+        fun interactorModule(interactorModule: InteractorModule): Builder
+        fun navigationModule(navigationModule: NavigationModule): Builder
         fun build(): AppComponent
     }
 

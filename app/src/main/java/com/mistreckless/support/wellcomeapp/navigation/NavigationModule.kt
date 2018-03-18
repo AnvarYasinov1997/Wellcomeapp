@@ -7,10 +7,6 @@ import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router
 import javax.inject.Singleton
 
-/**
- * Created by mistreckless on 21.11.17.
- */
-
 @Singleton
 @Module
 class NavigationModule{

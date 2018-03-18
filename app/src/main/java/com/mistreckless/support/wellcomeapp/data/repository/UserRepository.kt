@@ -28,60 +28,15 @@ import java.io.FileInputStream
  */
 interface UserRepository {
     fun getUserReference(): String
-    fun isSignInToGoogle(): Boolean
-    fun signInWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser>
-    fun isUserAlreadyRegistered(uid: String): Single<Boolean>
-    fun registryNewUser(
-        uid: String,
-        fullName: String?,
-        displayedName: String,
-        photoUrl: String
-    ): Completable
-
     fun findPhoto(data: Uri): Single<String>
     fun uploadPhotoIfNeeded(): Single<String>
     fun observeUserValueEvent(userRef: String): Observable<UserData>
     fun cacheUserData(userData: UserData)
-    fun bindToCity(): Completable
 }
 
 class UserRepositoryImpl(private val cacheData: CacheData, private val context: Context) :
     UserRepository {
     override fun getUserReference(): String = cacheData.getString(CacheData.USER_REF)
-
-    override fun isSignInToGoogle(): Boolean = GoogleSignIn.getLastSignedInAccount(context) != null
-
-    override fun signInWithGoogle(account: GoogleSignInAccount): Single<FirebaseUser> {
-        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
-        return FirebaseAuth.getInstance().signIn(credential)
-    }
-
-
-    override fun isUserAlreadyRegistered(uid: String): Single<Boolean> {
-        return FirebaseFirestore.getInstance().collection(FirebaseConstants.USER)
-            .whereEqualTo("id", uid).getValues(UserData::class.java)
-            .doOnSuccess { if (it.isNotEmpty()) cacheUserData(it[0]) }
-            .map { it.isNotEmpty() }
-            .onErrorReturn { false }
-            .subscribeOn(Schedulers.io())
-
-    }
-
-    override fun registryNewUser(
-        uid: String,
-        fullName: String?,
-        displayedName: String,
-        photoUrl: String
-    ): Completable {
-        val userRef = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document()
-        val cityName = cacheData.getString(CacheData.USER_CITY)
-        if (cityName.isEmpty()) return Completable.error(Exception("city is empty"))
-        val userData = UserData(uid, userRef.id, cityName,  displayedName, photoUrl)
-        return userRef.setValue(userData)
-            .mergeWith(initCityIfNeeded(cityName))
-            .doOnComplete { cacheUserData(userData) }
-            .doOnError { Log.e("err", it.message, it) }
-    }
 
     override fun findPhoto(data: Uri): Single<String> = Single.create<String>({ emitter ->
         val filePathColumns = arrayOf(MediaStore.Images.Media.DATA)
@@ -122,29 +77,5 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
         val photoUrl = userData.photoUrl
         if (photoUrl != null && photoUrl.isNotEmpty())
             cacheData.cacheString(CacheData.USER_PHOTO, photoUrl)
-    }
-
-    override fun bindToCity(): Completable {
-        val ruCityName = cacheData.getString(CacheData.USER_CITY)
-        return initCityIfNeeded(ruCityName)
-    }
-
-    private fun initCityIfNeeded(cityName: String) =
-        FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
-            .whereEqualTo("cityName", cityName)
-            .getValues(CityData::class.java)
-            .flatMap { checkCity(it, cityName) }
-            .doOnSuccess { cacheData.cacheString(CacheData.USER_CITY_REF, it) }
-            .toCompletable()
-
-
-    private fun checkCity(cities: List<CityData>, cityName: String) = when (cities.isNotEmpty()) {
-        true -> Single.just(cities[0].ref)
-        false -> {
-            val path = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
-                .document()
-            val ref = path.id
-            path.setValue(CityData(ref, cityName)).toSingleDefault(ref)
-        }
     }
 }

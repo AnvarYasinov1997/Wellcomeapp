@@ -1,39 +1,22 @@
 package com.mistreckless.support.wellcomeapp.ui
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.google.android.gms.auth.api.Auth
-import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.mistreckless.support.wellcomeapp.data.auth.AuthService
 import com.mistreckless.support.wellcomeapp.data.auth.RxAuth
-import com.mistreckless.support.wellcomeapp.domain.entity.AlreadyRegisteredState
-import com.mistreckless.support.wellcomeapp.domain.entity.ErrorState
-import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
-import com.mistreckless.support.wellcomeapp.domain.interactor.MainInteractor
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
-import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.reactivex.Maybe
-import io.reactivex.MaybeSource
 import io.reactivex.Single
-import io.reactivex.SingleSource
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 import javax.inject.Provider
 
-
-/**
- * Created by @mistreckless on 30.07.2017. !
- */
-
 @PerActivity
 @InjectViewState
 class MainActivityPresenter @Inject constructor(
-    private val mainInteractor: MainInteractor,
     private val rxPermissions: Provider<RxPermissions>,
     private val rxAuth: Provider<RxAuth>,
     private val authService: AuthService,
@@ -41,7 +24,7 @@ class MainActivityPresenter @Inject constructor(
 ) : BasePresenter<MainActivityView>() {
 
     override fun onFirstViewAttach() {
-        val isAuth = rxAuth.get().isAuthWithGoogle()
+        val isAuth = rxAuth.get().isAuthWithGoogle() && authService.isAuthenticated()
 
         bindToLocation()
             .map { isAuth }

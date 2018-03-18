@@ -15,11 +15,6 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
-
-/**
- * Created by @mistreckless on 28.07.2017. !
- */
-
 class App : Application(), HasActivityInjector {
 
     @Inject

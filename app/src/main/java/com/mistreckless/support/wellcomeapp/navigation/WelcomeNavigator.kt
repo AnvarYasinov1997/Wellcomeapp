@@ -9,7 +9,6 @@ import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.GoogleApiClient
 import com.mistreckless.support.wellcomeapp.R
-import com.mistreckless.support.wellcomeapp.domain.entity.NewUserState
 import com.mistreckless.support.wellcomeapp.ui.BaseActivity
 import com.mistreckless.support.wellcomeapp.ui.MainActivity
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
@@ -17,13 +16,9 @@ import com.mistreckless.support.wellcomeapp.ui.screen.camera.picture.PictureSett
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.preview.Preview
 import com.mistreckless.support.wellcomeapp.ui.screen.camera.share.Share
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
-import com.mistreckless.support.wellcomeapp.ui.screen.registry.Registry
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-/**
- * Created by mistreckless on 21.11.17.
- */
 class WelcomeNavigator(private val activity: FragmentActivity, manager: FragmentManager, containerId: Int) : SupportAppNavigator(activity, manager, containerId) {
 
     init {
@@ -40,11 +35,6 @@ class WelcomeNavigator(private val activity: FragmentActivity, manager: Fragment
     override fun createFragment(screenKey: String, data: Any?): Fragment? = when (screenKey) {
         Wall.TAG -> Wall()
         Profile.TAG -> Profile()
-        Registry.TAG -> {
-
-            if (data != null && data is NewUserState) Registry.newInstance(data)
-            else throw RuntimeException("error opening registry data is null or not newUserState " + data)
-        }
         Preview.TAG -> Preview()
         PictureSettings.TAG -> PictureSettings()
         Share.TAG -> Share()
