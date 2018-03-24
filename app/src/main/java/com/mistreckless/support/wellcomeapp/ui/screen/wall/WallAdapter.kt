@@ -1,17 +1,42 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.domain.entity.EventData
-import com.mistreckless.support.wellcomeapp.ui.PerFragment
-import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimeAdapter
-import com.mistreckless.support.wellcomeapp.ui.view.BaseViewHolder
-import com.mistreckless.support.wellcomeapp.ui.view.event.SingleEventViewFactory
-import javax.inject.Inject
+import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimeViewHolder
+import com.mistreckless.support.wellcomeapp.ui.view.DelegateRealTimeViewHolder
+import com.mistreckless.support.wellcomeapp.ui.view.RealTimeAdapter
+import com.mistreckless.support.wellcomeapp.ui.view.event.SingleEventPresenterProvider
+import com.mistreckless.support.wellcomeapp.ui.view.event.SingleEventViewHolder
 
-/**
- * Created by mistreckless on 19.10.17.
- */
-@PerFragment
-class WallAdapter @Inject constructor(private val singleEventViewFactory: SingleEventViewFactory) : BaseRealTimeAdapter<EventData>() {
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): BaseViewHolder<*,*,EventData> = singleEventViewFactory.create(parent)
+@Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
+class WallAdapter(
+    private val realTimeAdapter: RealTimeAdapter<BaseRealTimeViewHolder>,
+    private val singlePresenterProvider: SingleEventPresenterProvider
+) : RecyclerView.Adapter<BaseRealTimeViewHolder>(),
+    RealTimeAdapter<BaseRealTimeViewHolder> by realTimeAdapter {
+
+    val events by lazy { mutableListOf<EventData>() }
+
+    override fun getItemViewType(position: Int): Int = SINGLE_TYPE
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRealTimeViewHolder =
+        SingleEventViewHolder(
+            DelegateRealTimeViewHolder(
+                parent,
+                R.layout.view_single_event, singlePresenterProvider
+            )
+        ).apply { view = this }
+
+
+    override fun getItemCount(): Int = events.size
+
+    override fun onBindViewHolder(holder: BaseRealTimeViewHolder, position: Int) {
+        (holder as SingleEventViewHolder).delegate.bind(events[position])
+    }
+
+    companion object {
+        const val SINGLE_TYPE = 1
+    }
 }

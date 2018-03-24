@@ -32,7 +32,9 @@ class MainActivityPresenter @Inject constructor(
             .flatMap { auth() }
             .defaultIfEmpty(true)
             .subscribe({
-                Log.e(TAG, it.toString())
+                Log.e(TAG,"yeah")
+                viewState.initUi()
+                router.newRootScreen(Wall.TAG)
             },Throwable::printStackTrace)
     }
 
@@ -66,5 +68,3 @@ class MainActivityPresenter @Inject constructor(
     }
 
 }
-
-fun Boolean.value() = this

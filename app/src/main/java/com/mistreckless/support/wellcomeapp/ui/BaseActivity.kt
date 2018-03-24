@@ -14,11 +14,6 @@ import ru.terrakok.cicerone.NavigatorHolder
 import javax.inject.Inject
 import javax.inject.Provider
 
-/**
- * Created by @mistreckless on 05.08.2017. !
- */
-
-
 interface BaseActivityView : MvpView
 
 abstract class BaseActivity<P : BasePresenter<*>> : MvpAppCompatActivity(), HasSupportFragmentInjector {

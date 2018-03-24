@@ -1,38 +1,22 @@
 package com.mistreckless.support.wellcomeapp.ui.view.event
 
-import android.annotation.SuppressLint
-import android.view.ViewGroup
-import com.arellomobile.mvp.MvpView
-import com.arellomobile.mvp.presenter.InjectPresenter
-import com.arellomobile.mvp.presenter.PresenterType
-import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.mistreckless.support.wellcomeapp.R
+import android.util.Log
 import com.mistreckless.support.wellcomeapp.domain.entity.EventData
-import com.mistreckless.support.wellcomeapp.ui.view.BaseViewHolder
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.view_single_event.*
-import javax.inject.Provider
+import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimeView
+import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimeViewHolder
 
-/**
- * Created by mistreckless on 19.10.17.
- */
+class SingleEventViewHolder(val delegate: BaseRealTimeView<SingleEventPresenter,EventData,SingleEventView>) :
+    BaseRealTimeViewHolder(delegate.containerView),SingleEventView,
+    BaseRealTimeView<SingleEventPresenter,EventData,SingleEventView> by delegate {
 
-class SingleEventViewHolder(override val presenter : SingleEventPresenter, parent: ViewGroup?) : BaseViewHolder<SingleEventView,SingleEventPresenter,EventData>(parent, R.layout.view_single_event), SingleEventView {
-
-    @SuppressLint("SetTextI18n")
-    override fun initUi(model: EventData) {
-        Picasso.with(itemView.context).load(model.contents[0].content).into(imgContent)
-        txtDesc.text=model.contents[0].desc
-        txtAddress.text=model.address
-        txtTime.text="${model.contents[0].createTime} - ${model.contents[0].deleteTime}"
-    }
-
-    override fun updateUi(model: EventData) {
-
+    override fun test() {
+        Log.e("view","test")
     }
 }
+
 
 interface SingleEventView{
-    fun initUi(model: EventData)
-    fun updateUi(model: EventData)
+    fun test()
 }
+
+

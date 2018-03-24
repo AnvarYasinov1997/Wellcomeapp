@@ -10,6 +10,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.DocumentListenOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.mistreckless.support.wellcomeapp.data.CacheData
@@ -64,7 +65,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
     override fun observeUserValueEvent(userRef: String): Observable<UserData> {
         val fullUserRef =
             FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY).document(userRef)
-        return fullUserRef.observeValue(UserData::class.java)
+        return fullUserRef.observeValue(DocumentListenOptions().includeMetadataChanges(), UserData::class.java)
             .subscribeOn(Schedulers.io())
     }
 

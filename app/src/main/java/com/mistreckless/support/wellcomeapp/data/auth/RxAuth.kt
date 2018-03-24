@@ -16,7 +16,6 @@ import io.reactivex.subjects.SingleSubject
 
 class RxAuth(private val activity: AppCompatActivity) {
 
-
     private val googleClient by lazy {
         GoogleSignIn.getClient(
             activity, GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

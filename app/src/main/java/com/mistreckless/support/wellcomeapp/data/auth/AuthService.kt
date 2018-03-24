@@ -8,19 +8,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.mistreckless.support.wellcomeapp.data.CacheData
 import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.data.rxfirebase.FirebaseConstants
-import com.mistreckless.support.wellcomeapp.data.rxfirebase.getValues
-import com.mistreckless.support.wellcomeapp.data.rxfirebase.setValue
-import com.mistreckless.support.wellcomeapp.data.rxfirebase.signIn
+import com.mistreckless.support.wellcomeapp.data.rxfirebase.*
 import com.mistreckless.support.wellcomeapp.domain.entity.CityData
 import com.mistreckless.support.wellcomeapp.domain.entity.UserData
-import io.reactivex.Maybe
-import io.reactivex.Single
+import io.reactivex.*
+import io.reactivex.functions.Consumer
 
 interface AuthService {
     fun signInWithGoogle(account: GoogleSignInAccount): Single<Unit>
     fun bindToCity(): Single<Unit>
-    fun isAuthenticated() : Boolean
+    fun isAuthenticated(): Boolean
 }
 
 class GoogleAuthService(
@@ -50,7 +47,14 @@ class GoogleAuthService(
         val userRef = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document()
         val cityName = cacheData.getString(CacheData.USER_CITY)
         return checkCity(cityName)
-            .map { UserData(user.uid, userRef.id, cityName, user.displayName ?: "Anonymous") }
+            .map {
+                UserData(
+                    user.uid,
+                    userRef.id,
+                    cityName,
+                    user.displayName ?: "Anonymous"
+                )
+            }
             .flatMap {
                 userRef.setValue(it).doOnComplete { cacheUserData(it) }.toSingleDefault(Unit)
             }
@@ -61,15 +65,8 @@ class GoogleAuthService(
             .whereEqualTo(CITY_NAME, cityName)
             .getValues(CityData::class.java)
             .filter(List<CityData>::isNotEmpty)
-            .flatMap { cities ->
-                Maybe.just(Unit).doOnSuccess {
-                    cacheData.cacheString(
-                        CacheData.USER_CITY_REF,
-                        cities.first().ref
-                    )
-                }
-            }
-            .switchIfEmpty(initCity(cityName))
+            .flatMap { Maybe.just(Unit).doOnSuccess(cacheCity(it.first().ref)) }
+            .switchIfEmpty(Maybe.just(Unit).flatMap { initCity(cityName) })
             .onErrorReturn { if (it is FirebaseFirestoreException) Unit }
             .toSingle()
 
@@ -78,11 +75,14 @@ class GoogleAuthService(
             .document()
     ) {
         setValue(CityData(id, cityName))
-            .doOnComplete { cacheData.cacheString(CacheData.USER_CITY_REF, id) }
             .toSingleDefault(Unit)
+            .doOnSuccess(cacheCity(id))
             .toMaybe()
     }
 
+    @Suppress("NOTHING_TO_INLINE")
+    private inline fun cacheCity(cityRef: String): Consumer<Unit> =
+        Consumer { cacheData.cacheString(CacheData.USER_CITY_REF, cityRef) }
 
     private fun cacheUserData(userData: UserData) {
         cacheData.cacheString(CacheData.USER_REF, userData.ref)

@@ -19,16 +19,19 @@ import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-class WelcomeNavigator(private val activity: FragmentActivity, manager: FragmentManager, containerId: Int) : SupportAppNavigator(activity, manager, containerId) {
+class WelcomeNavigator(
+    private val activity: FragmentActivity,
+    manager: FragmentManager,
+    containerId: Int
+) : SupportAppNavigator(activity, manager, containerId) {
 
     init {
-        if (containerId==0) throw RuntimeException("Container id in activity doesn't exists")
+        if (containerId == 0) throw RuntimeException("Container id in activity doesn't exists")
     }
 
     override fun createActivityIntent(screenKey: String, data: Any?): Intent? = when (screenKey) {
         CameraActivity.TAG -> Intent(activity, CameraActivity::class.java)
         MainActivity.TAG -> Intent(activity, MainActivity::class.java)
-        BaseActivity.GOOGLE_AUTH_ACTIVITY_TAG -> Auth.GoogleSignInApi.getSignInIntent(provideGoogleApiClient())
         else -> null
     }
 
@@ -39,16 +42,5 @@ class WelcomeNavigator(private val activity: FragmentActivity, manager: Fragment
         PictureSettings.TAG -> PictureSettings()
         Share.TAG -> Share()
         else -> null
-    }
-
-    private fun provideGoogleApiClient(): GoogleApiClient {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(activity.getString(R.string.web_client_id))
-                .requestEmail()
-                .build()
-        return GoogleApiClient.Builder(activity)
-                .enableAutoManage(activity, { connectionResult -> Log.e(MainActivity.TAG, connectionResult.errorMessage) })
-                .addApi(com.google.android.gms.auth.api.Auth.GOOGLE_SIGN_IN_API, gso)
-                .build()
     }
 }

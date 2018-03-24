@@ -7,9 +7,6 @@ import com.mistreckless.support.wellcomeapp.domain.entity.EventData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 
-/**
- * Created by mistreckless on 19.10.17.
- */
 
 interface EventInteractor {
     fun controlEvents(observeScroll: Observable<Int>): Observable<List<EventData>>
@@ -20,7 +17,7 @@ class EventInteractorImpl(private val userRepository: UserRepository, private va
     override fun controlEvents(observeScroll: Observable<Int>): Observable<List<EventData>> {
         var lastTimestamp = 0L
         return observeScroll.distinctUntilChanged()
-                .flatMapSingle { eventRepository.fetchEvents(lastTimestamp).doOnSuccess { lastTimestamp = it.last().timestamp } }
+                .flatMapSingle { eventRepository.fetchEvents(lastTimestamp).doOnSuccess { lastTimestamp = it.lastOrNull()?.timestamp ?: lastTimestamp } }
                 .observeOn(AndroidSchedulers.mainThread())
     }
 

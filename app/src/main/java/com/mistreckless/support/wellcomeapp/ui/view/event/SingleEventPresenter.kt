@@ -1,23 +1,29 @@
 package com.mistreckless.support.wellcomeapp.ui.view.event
 
-import com.arellomobile.mvp.InjectViewState
+import android.util.Log
 import com.mistreckless.support.wellcomeapp.domain.entity.EventData
-import com.mistreckless.support.wellcomeapp.domain.interactor.EventInteractor
-import com.mistreckless.support.wellcomeapp.ui.view.BaseViewHolderPresenter
+import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimePresenter
+import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimePresenterProvider
 import javax.inject.Inject
 
-/**
- * Created by mistreckless on 19.10.17.
- */
-
-class SingleEventPresenter @Inject constructor(private val eventInteractor: EventInteractor): BaseViewHolderPresenter<SingleEventView,EventData>(){
-
-    override fun onViewBinded(item : EventData,view : SingleEventView) {
-        view.initUi(item)
+class SingleEventPresenter(private val view: SingleEventView) : BaseRealTimePresenter<EventData>() {
+    override fun onViewBinded(item: EventData) {
+        Log.e("binded", item.ref)
     }
 
-    override fun onViewUnbinded() {
-
+    override fun viewAttached() {
+        Log.e("view", "attached")
+        view.test()
     }
 
+    override fun viewDetached() {
+        super.viewDetached()
+        Log.e("view", "detached")
+    }
+}
+
+class SingleEventPresenterProvider @Inject constructor() :
+    BaseRealTimePresenterProvider<SingleEventPresenter, SingleEventView> {
+    override fun providePresenter(view: SingleEventView): SingleEventPresenter =
+        SingleEventPresenter(view)
 }
