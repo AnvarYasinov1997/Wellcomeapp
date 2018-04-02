@@ -10,7 +10,10 @@ interface RealTimeAdapter<in VH : RealTimeVH>{
     fun onViewDetachedFromWindow(holder: VH)
 }
 
-class RealTimeAdapterDelegate<in VH : RealTimeVH> : RealTimeAdapter<VH>, LifecycleObserver{
+class RealTimeAdapterDelegate<in VH : RealTimeVH>(private val lifecycle: Lifecycle) : RealTimeAdapter<VH>, LifecycleObserver{
+    init {
+        lifecycle.addObserver(this)
+    }
     private val holders = mutableListOf<RealTimeVH>()
 
     override fun onViewAttachedToWindow(holder: VH) {
@@ -22,6 +25,9 @@ class RealTimeAdapterDelegate<in VH : RealTimeVH> : RealTimeAdapter<VH>, Lifecyc
         holder.onDetach()
         holders.remove(holder)
     }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() = lifecycle.removeObserver(this)
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     fun onStart() = holders.forEach { it.onAttach() }

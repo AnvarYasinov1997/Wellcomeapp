@@ -24,14 +24,11 @@ import io.reactivex.schedulers.Schedulers
 import java.io.File
 import java.io.FileInputStream
 
-/**
- * Created by @mistreckless on 05.08.2017. !
- */
 interface UserRepository {
     fun getUserReference(): String
     fun findPhoto(data: Uri): Single<String>
     fun uploadPhotoIfNeeded(): Single<String>
-    fun observeUserValueEvent(userRef: String): Observable<UserData>
+    fun observeUserValueEvent(userRef: String): Observable<DocumentState<UserData>>
     fun cacheUserData(userData: UserData)
 }
 
@@ -47,7 +44,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
             val columnIndex = it.getColumnIndex(filePathColumns[0])
             val path = it.getString(columnIndex)
             emitter.onSuccess(path)
-        } ?: emitter.onError(Exception("cannot find photo with path" + data))
+        } ?: emitter.onError(Exception("cannot find photo with path $data"))
     })
         .doOnSuccess { cacheData.cacheString(CacheData.USER_PHOTO, it) }
         .subscribeOn(Schedulers.computation())
@@ -62,7 +59,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
             .subscribeOn(Schedulers.io())
     }
 
-    override fun observeUserValueEvent(userRef: String): Observable<UserData> {
+    override fun observeUserValueEvent(userRef: String): Observable<DocumentState<UserData>> {
         val fullUserRef =
             FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY).document(userRef)
         return fullUserRef.observeValue(DocumentListenOptions().includeMetadataChanges(), UserData::class.java)

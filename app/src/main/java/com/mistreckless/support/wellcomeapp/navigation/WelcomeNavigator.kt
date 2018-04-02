@@ -1,5 +1,6 @@
 package com.mistreckless.support.wellcomeapp.navigation
 
+import android.content.Context
 import android.content.Intent
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
@@ -29,7 +30,7 @@ class WelcomeNavigator(
         if (containerId == 0) throw RuntimeException("Container id in activity doesn't exists")
     }
 
-    override fun createActivityIntent(screenKey: String, data: Any?): Intent? = when (screenKey) {
+    override fun createActivityIntent(context: Context, screenKey: String, data: Any?): Intent? = when (screenKey) {
         CameraActivity.TAG -> Intent(activity, CameraActivity::class.java)
         MainActivity.TAG -> Intent(activity, MainActivity::class.java)
         else -> null

@@ -1,6 +1,5 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
-import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.interactor.EventInteractor
 import com.mistreckless.support.wellcomeapp.ui.BasePresenter
@@ -10,12 +9,13 @@ import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-/**
- * Created by @mistreckless on 27.08.2017. !
- */
 @PerFragment
 @InjectViewState
-class WallPresenter @Inject constructor(private val eventInteractor: EventInteractor, private val router: Router) : BasePresenter<WallView>() {
+class WallPresenter @Inject constructor(
+    private val eventInteractor: EventInteractor,
+    private val router: Router,
+    private val viewModel: WallViewModel
+) : BasePresenter<WallView>() {
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.initUi()
@@ -25,14 +25,15 @@ class WallPresenter @Inject constructor(private val eventInteractor: EventIntera
         router.newScreenChain(CameraActivity.TAG)
     }
 
-
     fun controlWall(observeScroll: Observable<Int>) {
-       viewChangesDisposables.add(eventInteractor.controlEvents(observeScroll)
-               .subscribe({
-                   viewState.addEvents(it)
-               },{
-                   Log.e(TAG,it.message,it)
-               }))
+        viewChangesDisposables.add(
+            eventInteractor.controlEvents(observeScroll)
+                .doOnNext(viewModel::addItems)
+                .map { viewModel.items.firstOrNull()?.timestamp ?: 0 }
+                .distinctUntilChanged()
+                .switchMap(eventInteractor::controlEventsChanges)
+                .doOnNext(viewModel::putDocument)
+                .subscribe())
     }
 
     companion object {

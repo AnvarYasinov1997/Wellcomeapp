@@ -7,6 +7,7 @@ import com.mistreckless.support.wellcomeapp.data.auth.RxAuth
 import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
+import com.mistreckless.support.wellcomeapp.ui.screen.wall.WallModule
 import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.Module
 import dagger.Provides
@@ -15,7 +16,7 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class MainActivityFragmentProvider {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = [WallModule::class])
     @PerFragment
     abstract fun provideWallFactory() : Wall
 
