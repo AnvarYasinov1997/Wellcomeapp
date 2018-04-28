@@ -31,8 +31,11 @@ android {
             }
         }
     }
-    packagingOptions{
-        exclude 'plugin.xml'
+//    packagingOptions{
+//        exclude 'plugin.xml'
+//    }
+    packagingOptions {
+        pickFirst 'META-INF/main.kotlin_module'
     }
     buildTypes {
         release {
@@ -45,10 +48,23 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     defaultPublishConfig "debug"
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(':binaryprefs')
+    implementation project(':platform-android')
+    implementation project(':common')
+    implementation project(':android-utils')
+
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -96,7 +112,6 @@ dependencies {
     implementation 'com.arello-mobile:moxy-app-compat:1.5.3'
     kapt 'com.arello-mobile:moxy-compiler:1.5.3'
 
-    compile project(path: ':binaryprefs')
     implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
 }
 
@@ -105,3 +120,8 @@ kapt {
 }
 
 apply plugin: 'com.google.gms.google-services'
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

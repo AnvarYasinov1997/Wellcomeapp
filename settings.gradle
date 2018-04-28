@@ -1,1 +1,1 @@
-include ':app', ':binaryprefs', ':stub-android', ':cicerone'
+include ':app', ':binaryprefs', ':stub-android', ':cicerone', ':common', ':platform-android', ':android-utils'
