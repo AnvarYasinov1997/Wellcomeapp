@@ -31,12 +31,17 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     expectedBy project(":common")
-    implementation project(":binaryprefs")
+//    implementation project(":binaryprefs")
+    implementation project(":android-utils")
 
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
+    implementation "com.google.firebase:firebase-storage:$playServicesVersion"
+    implementation "com.google.firebase:firebase-firestore:$playServicesVersion"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.22.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
+
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

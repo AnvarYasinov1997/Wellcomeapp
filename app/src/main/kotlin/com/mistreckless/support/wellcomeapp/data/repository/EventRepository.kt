@@ -82,7 +82,7 @@ class EventRepositoryImpl(private val cacheData: CacheData) : EventRepository {
             fromTime,
             tillTime
         )
-        return ref.setValue(post).toSingle<ShareState> { StateDone() }.toObservable()
+        return ref.setValue(post).toSingle<ShareState> { StateError(Exception()) }.toObservable()
     }
 
     override fun fetchEvents(lastTimeStamp: Long, limit: Long): Single<List<EventData>> {
@@ -125,7 +125,5 @@ class EventRepositoryImpl(private val cacheData: CacheData) : EventRepository {
             fromTime
         )
     }
-    fun t(){
 
-    }
 }

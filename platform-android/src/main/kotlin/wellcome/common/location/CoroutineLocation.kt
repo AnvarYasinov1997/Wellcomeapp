@@ -5,14 +5,15 @@ package wellcome.common.location
 import android.annotation.SuppressLint
 import android.location.Geocoder
 import com.google.android.gms.location.FusedLocationProviderClient
-import kotlinx.coroutines.experimental.Deferred
-import kotlinx.coroutines.experimental.async
+import wellcome.common.coroutines.Deferred
+import wellcome.common.coroutines.async
 import wellcome.common.entity.Address
+import kotlin.coroutines.experimental.coroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
 
-actual class CoroutineLocation(private val fusedLocationProviderClient: FusedLocationProviderClient, private val geocoder: Geocoder){
+ class CoroutineLocation(private val fusedLocationProviderClient: FusedLocationProviderClient, private val geocoder: Geocoder){
     @SuppressLint("MissingPermission")
-    actual fun getLastKnownLocation(): Deferred<Pair<Double, Double>> = async {
+     suspend fun getLastKnownLocation(): Deferred<Pair<Double, Double>> = async(coroutineContext) {
         suspendCoroutine<Pair<Double,Double>> { cont->
             fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
                 val location = task.result
@@ -22,13 +23,12 @@ actual class CoroutineLocation(private val fusedLocationProviderClient: FusedLoc
         }
     }
 
-    actual fun getAddressesFromLocation(
+     suspend fun getAddressesFromLocation(
         lat: Double,
         lon: Double,
         maxResult: Int
-    ): Deferred<List<Address>> = async {
-        geocoder.getFromLocation(lat,lon,maxResult).toEntities()
-    }
+    ): List<Address> = geocoder.getFromLocation(lat,lon,maxResult).toEntities()
+
 }
 
 fun MutableList<android.location.Address?>.toEntities(): List<Address>{

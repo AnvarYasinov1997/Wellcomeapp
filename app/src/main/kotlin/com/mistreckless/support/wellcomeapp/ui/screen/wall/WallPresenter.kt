@@ -2,9 +2,9 @@ package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
 import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.interactor.EventInteractor
-import com.mistreckless.support.wellcomeapp.ui.BasePresenter
-import com.mistreckless.support.wellcomeapp.ui.PerFragment
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
+import com.wellcome.share.CameraActivity
+import com.wellcome.utils.ui.BasePresenter
+import com.wellcome.utils.ui.PerFragment
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject

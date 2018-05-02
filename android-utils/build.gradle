@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+
 
 android {
     compileSdkVersion compileSdk
@@ -32,7 +34,7 @@ kotlin {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(":binaryprefs")
+//    implementation project(":binaryprefs")
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
 
  //   implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
@@ -40,6 +42,17 @@ dependencies {
     implementation "com.google.firebase:firebase-storage:$playServicesVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.firebase:firebase-firestore:$playServicesVersion"
+
+    implementation "com.arello-mobile:moxy:$moxyVersion"
+    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
 
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     testImplementation 'junit:junit:4.12'
@@ -49,4 +62,9 @@ dependencies {
 }
 repositories {
     mavenCentral()
+}
+kapt{
+    arguments {
+        arg("moxyReflectorPackage", "com.wellcome.utils")
+    }
 }

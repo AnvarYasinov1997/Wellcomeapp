@@ -2,6 +2,9 @@ package com.mistreckless.support.wellcomeapp.app
 
 import android.app.Activity
 import android.app.Application
+import com.arellomobile.mvp.RegisterMoxyReflectorPackages
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.jakewharton.picasso.OkHttp3Downloader
 import com.mistreckless.support.wellcomeapp.data.DataModule
 import com.mistreckless.support.wellcomeapp.data.RepositoryModule
@@ -15,6 +18,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
+@RegisterMoxyReflectorPackages("com.wellcome.share")
 class App : Application(), HasActivityInjector {
 
     @Inject
@@ -52,5 +56,10 @@ class App : Application(), HasActivityInjector {
                 .downloader(okHttp3Downloader)
                 .build()
         Picasso.setSingletonInstance(picasso)
+    }
+
+    private fun initFirebase(){
+        val settings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build()
+        FirebaseFirestore.getInstance().firestoreSettings = settings
     }
 }

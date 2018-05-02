@@ -9,10 +9,10 @@ import com.mistreckless.support.wellcomeapp.navigation.NavigationModule
 import com.mistreckless.support.wellcomeapp.ui.MainActivity
 import com.mistreckless.support.wellcomeapp.ui.MainActivityFragmentProvider
 import com.mistreckless.support.wellcomeapp.ui.MainActivityModule
-import com.mistreckless.support.wellcomeapp.ui.PerActivity
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivity
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraActivityFragmentProvider
-import com.mistreckless.support.wellcomeapp.ui.screen.camera.CameraModule
+import com.wellcome.share.CameraActivity
+import com.wellcome.share.CameraActivityFragmentProvider
+import com.wellcome.share.CameraModule
+import com.wellcome.utils.ui.PerActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module

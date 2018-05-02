@@ -1,23 +1,24 @@
 package wellcome.common.cache
 
-import com.ironz.binaryprefs.Preferences
+import android.content.SharedPreferences
 
-actual class Cache(private val preferences: Preferences) {
-    actual fun cacheString(key: String, value: String) =
+
+class Cache(private val preferences: SharedPreferences) {
+     fun cacheString(key: String, value: String) =
         preferences.edit().putString(key, value).apply()
 
-    actual fun cacheInt(key: String, value: Int) = preferences.edit().putInt(key, value).apply()
-    actual fun cacheLong(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
-    actual fun cacheDouble(key: String, value: Double) =
-        preferences.edit().putDouble(key, value).apply()
+     fun cacheInt(key: String, value: Int) = preferences.edit().putInt(key, value).apply()
+     fun cacheLong(key: String, value: Long) = preferences.edit().putLong(key, value).apply()
+     fun cacheDouble(key: String, value: Double) =
+        preferences.edit().putString(key, value.toString()).apply()
 
-    actual fun getString(key: String, defaultValue: String): String =
+     fun getString(key: String, defaultValue: String): String =
         preferences.getString(key, defaultValue)
 
-    actual fun getInt(key: String, defaultValue: Int): Int = preferences.getInt(key, defaultValue)
-    actual fun getLong(key: String, defaultValue: Long): Long =
+     fun getInt(key: String, defaultValue: Int): Int = preferences.getInt(key, defaultValue)
+     fun getLong(key: String, defaultValue: Long): Long =
         preferences.getLong(key, defaultValue)
 
-    actual fun getDouble(key: String, defaultValue: Double): Double =
-        preferences.getDouble(key, defaultValue)
+     fun getDouble(key: String, defaultValue: Double): Double =
+        preferences.getString(key, defaultValue.toString()).toDouble()
 }

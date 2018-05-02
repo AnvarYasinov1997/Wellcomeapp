@@ -30,7 +30,6 @@ class DelegateRealTimeViewHolder<out P : BaseRealTimePresenter<T>, in T,V: Any>(
     override lateinit var view: V
     override val presenter by lazy { presenterProvider.providePresenter(view) }
 
-
     override fun bind(model: T) = presenter.onViewBinded(model)
 
     @CallSuper

@@ -1,11 +1,13 @@
 package com.mistreckless.support.wellcomeapp.domain
 
-import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.data.repository.EventRepository
 import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import com.mistreckless.support.wellcomeapp.domain.interactor.*
 import dagger.Module
 import dagger.Provides
+import wellcome.common.interactor.ShareInteractor
+import wellcome.common.interactor.ShareInteractorImpl
+import wellcome.common.location.LocationService
 import javax.inject.Singleton
 
 @Singleton
@@ -27,17 +29,13 @@ class InteractorModule {
     @Singleton
     @Provides
     fun provideShareInteractor(
-        userRepository: UserRepository,
-        locationRepository: LocationRepository,
-        eventRepository: EventRepository
-    ): ShareInteractor = ShareInteractorImpl(userRepository, locationRepository, eventRepository)
+        userRepository: wellcome.common.repository.UserRepository,
+        locationService: LocationService,
+        eventRepository: wellcome.common.repository.EventRepository
+    ): ShareInteractor = ShareInteractorImpl(locationService, userRepository, eventRepository)
 
     @Singleton
     @Provides
-    fun provideWallInteractor(
-        userRepository: UserRepository,
-        eventRepository: EventRepository,
-        locationRepository: LocationRepository
-    ): EventInteractor = EventInteractorImpl(userRepository, eventRepository, locationRepository)
+    fun provideWallInteractor(eventRepository: EventRepository): EventInteractor = EventInteractorImpl(eventRepository)
 
 }

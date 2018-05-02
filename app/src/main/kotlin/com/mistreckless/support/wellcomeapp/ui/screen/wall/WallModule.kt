@@ -1,7 +1,7 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
 import android.arch.lifecycle.ViewModelProviders
-import com.mistreckless.support.wellcomeapp.ui.PerFragment
+import com.wellcome.utils.ui.PerFragment
 import dagger.Module
 import dagger.Provides
 

@@ -2,8 +2,8 @@ package com.mistreckless.support.wellcomeapp.ui.screen.profile
 
 import com.arellomobile.mvp.InjectViewState
 import com.mistreckless.support.wellcomeapp.domain.interactor.ProfileInteractor
-import com.mistreckless.support.wellcomeapp.ui.BasePresenter
-import com.mistreckless.support.wellcomeapp.ui.PerFragment
+import com.wellcome.utils.ui.BasePresenter
+import com.wellcome.utils.ui.PerFragment
 import javax.inject.Inject
 
 /**

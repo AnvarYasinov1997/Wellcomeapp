@@ -1,10 +1,7 @@
 package com.mistreckless.support.wellcomeapp.ui
 
-import com.mistreckless.support.wellcomeapp.data.CacheData
-import com.mistreckless.support.wellcomeapp.data.auth.AuthService
-import com.mistreckless.support.wellcomeapp.data.auth.GoogleAuthService
+import android.content.Context
 import com.mistreckless.support.wellcomeapp.data.auth.RxAuth
-import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.WallModule
@@ -12,6 +9,11 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import wellcome.common.cache.Cache
+import wellcome.common.location.LocationService
+import com.mistreckless.support.wellcomeapp.domain.auth.AuthService
+import com.mistreckless.support.wellcomeapp.domain.auth.GoogleAuthService
+import com.wellcome.utils.ui.PerFragment
 
 @Module
 abstract class MainActivityFragmentProvider {
@@ -35,5 +37,5 @@ class MainActivityModule {
     fun provideRxAuth(activity: MainActivity): RxAuth = RxAuth(activity)
 
     @Provides
-    fun provideAuthService(cacheData: CacheData,locationRepository: LocationRepository): AuthService = GoogleAuthService(cacheData, locationRepository)
+    fun provideAuthService(context: Context,cache: Cache, locationService: LocationService): AuthService = GoogleAuthService(context,cache, locationService)
 }

@@ -3,7 +3,7 @@ package com.mistreckless.support.wellcomeapp.data.rxfirebase
 import android.annotation.SuppressLint
 import com.google.firebase.storage.StorageReference
 import wellcome.common.entity.ShareState
-import wellcome.common.entity.StateUpload
+import wellcome.common.entity.StateProgress
 import wellcome.common.entity.StateUploaded
 import io.reactivex.ObservableEmitter
 import io.reactivex.ObservableOnSubscribe
@@ -37,7 +37,7 @@ class RxStorageUploadBytesWithProgress(private val storageRef: StorageReference,
         storageRef.putBytes(bytes)
                 .addOnProgressListener {
                     if (!e.isDisposed){
-                        e.onNext(StateUpload((100 * it.bytesTransferred/it.totalByteCount).toInt()))
+                        e.onNext(StateProgress((100 * it.bytesTransferred/it.totalByteCount).toInt()))
                     }
                 }
                 .addOnFailureListener {

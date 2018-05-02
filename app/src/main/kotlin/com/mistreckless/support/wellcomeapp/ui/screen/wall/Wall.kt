@@ -4,17 +4,17 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
-import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
-import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
-import com.mistreckless.support.wellcomeapp.ui.screen.Layout
+import com.wellcome.utils.ui.BaseFragment
+import com.wellcome.utils.ui.BaseFragmentView
 import com.mistreckless.support.wellcomeapp.ui.view.RealTimeAdapterDelegate
 import com.mistreckless.support.wellcomeapp.ui.view.event.SingleEventPresenterProvider
 import com.mistreckless.support.wellcomeapp.ui.view.indy.observeScroll
 import kotlinx.android.synthetic.main.fragment_wall.*
 import javax.inject.Inject
 
-@Layout(R.layout.fragment_wall)
 class Wall : BaseFragment<WallPresenter>(), WallView {
+    override val layoutId: Int
+        get() = R.layout.fragment_wall
 
     @InjectPresenter
     override lateinit var presenter: WallPresenter

@@ -1,12 +1,10 @@
 package com.mistreckless.support.wellcomeapp.domain.interactor
 
 import com.mistreckless.support.wellcomeapp.data.repository.EventRepository
-import com.mistreckless.support.wellcomeapp.data.repository.LocationRepository
-import com.mistreckless.support.wellcomeapp.data.repository.UserRepository
 import com.mistreckless.support.wellcomeapp.data.rxfirebase.DocumentState
-import wellcome.common.entity.EventData
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import wellcome.common.entity.EventData
 
 
 interface EventInteractor {
@@ -19,9 +17,7 @@ interface EventInteractor {
 
 
 class EventInteractorImpl(
-    private val userRepository: UserRepository,
-    private val eventRepository: EventRepository,
-    private val locationRepository: LocationRepository
+    private val eventRepository: EventRepository
 ) : EventInteractor {
     override fun controlEvents(observeScroll: Observable<Int>): Observable<List<EventData>> {
         var lastTimestamp = 0L

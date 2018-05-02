@@ -2,11 +2,9 @@ package wellcome.common.entity
 
 sealed class ShareState
 
-class StateInit : ShareState()
-class StateUpload(val progress: Int = 0) : ShareState()
+class StateProgress(val progress: Int = 0) : ShareState()
 class StateUploaded(val url: String) : ShareState()
-class StateDone : ShareState()
-class StateError(val message: String) : ShareState()
+class StateError(val exception: Exception) : ShareState()
 
 
 data class EventData(val ref: String = "",
@@ -19,7 +17,12 @@ data class EventData(val ref: String = "",
                      val likeCount: Int = 0,
                      val commentCount: Int = 0,
                      val willcomeCount: Int = 0,
-                     val reportCount: Int = 0)
+                     val reportCount: Int = 0){
+    companion object {
+        const val REF ="ref"
+        const val TIMESTAMP = "timestamp"
+    }
+}
 
 enum class EventDataType {
     MULTI, SINGLE
@@ -38,3 +41,9 @@ data class ContentData(val contentType: ContentType = ContentType.PHOTO,
 
 data class LatLon(val lat: Double = 0.0,
                   val lon: Double = 0.0)
+
+sealed class EventState
+data class EventAdded(val event: EventData): EventState()
+data class EventModified(val event: EventData): EventState()
+data class EventRemoved(val ref: String): EventState()
+data class EventError(val exception: Exception): EventState()

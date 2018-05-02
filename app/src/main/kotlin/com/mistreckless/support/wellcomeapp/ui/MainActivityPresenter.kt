@@ -3,60 +3,78 @@ package com.mistreckless.support.wellcomeapp.ui
 import android.Manifest
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.mistreckless.support.wellcomeapp.data.auth.AuthService
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.mistreckless.support.wellcomeapp.data.auth.RxAuth
+import com.mistreckless.support.wellcomeapp.domain.auth.AuthService
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
-import io.reactivex.Maybe
-import io.reactivex.Single
+import com.wellcome.utils.ui.BasePresenter
+import com.wellcome.utils.ui.PerActivity
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
+import wellcome.common.cache.Cache
+import wellcome.common.cache.CacheConst
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.coroutines.experimental.suspendCoroutine
 
+@Suppress("EXPERIMENTAL_FEATURE_WARNING")
 @PerActivity
 @InjectViewState
 class MainActivityPresenter @Inject constructor(
     private val rxPermissions: Provider<RxPermissions>,
     private val rxAuth: Provider<RxAuth>,
     private val authService: AuthService,
-    private val router: Router
+    private val router: Router,
+    private val cache: Cache
 ) : BasePresenter<MainActivityView>() {
 
     override fun onFirstViewAttach() {
-        val isAuth = rxAuth.get().isAuthWithGoogle() && authService.isAuthenticated()
+        launch {
+            val city = cache.getString(CacheConst.USER_CITY, "")
+            Log.e(TAG, city)
+        }
+        launch(UI) {
+            val isAuth = authService.isAuthenticated()
+            if (!isAuth) {
+                val account = auth()
+                val firebaseUser = authService.signInWithGoogle(account).await()
+                if (!authService.checkUserExist(firebaseUser).await())
+                    authService.registryNewUser(firebaseUser).join()
+            }
 
-        bindToLocation()
-            .map { isAuth }
-            .filter(Boolean::not)
-            .flatMap { auth() }
-            .defaultIfEmpty(true)
-            .subscribe({
-                Log.e(TAG,"yeah")
+            val isGranted =
+                rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (isGranted || requestAccess()) {
+                authService.bindToCity().join()
+                Log.e(TAG, "yeah")
                 viewState.initUi()
                 router.newRootScreen(Wall.TAG)
-            },Throwable::printStackTrace)
+            }
+        }
     }
 
-    private fun requestAccess() = rxPermissions.get()
-        .request(Manifest.permission.ACCESS_COARSE_LOCATION)
-        .firstElement()
-
-    private fun bindToLocation() : Single<Unit> {
-        val isGranted = rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
-        return Single.just(isGranted)
-            .filter(Boolean::not)
-            .flatMap { requestAccess() }
-            .defaultIfEmpty(true)
-            .toSingle()
-            .flatMap{authService.bindToCity()}
+    private suspend fun requestAccess() = suspendCoroutine<Boolean> { cont ->
+        rxPermissions.get()
+            .request(Manifest.permission.ACCESS_COARSE_LOCATION)
+            .firstElement()
+            .subscribe {
+                cont.resume(it)
+            }
     }
 
-    private fun auth() = rxAuth.get()
-        .authWithGoogle()
-        .flatMap(authService::signInWithGoogle)
-        .flatMapMaybe { Maybe.just(true) }
-
+    private suspend fun auth() = suspendCoroutine<GoogleSignInAccount> { cont ->
+        rxAuth.get()
+            .authWithGoogle()
+            .subscribe({
+                cont.resume(it)
+            }, {
+                Log.e(TAG, it.message, it)
+                cont.resumeWithException(it)
+            })
+    }
 
     fun wallClicked() = router.newRootScreen(Wall.TAG)
 

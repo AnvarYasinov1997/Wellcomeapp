@@ -4,17 +4,17 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import wellcome.common.entity.UserData
-import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragment
-import com.mistreckless.support.wellcomeapp.ui.screen.BaseFragmentView
-import com.mistreckless.support.wellcomeapp.ui.screen.Layout
+import com.wellcome.utils.ui.BaseFragment
+import com.wellcome.utils.ui.BaseFragmentView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
  * Created by @mistreckless on 02.09.2017. !
  */
-@Layout(id = R.layout.fragment_profile)
 class Profile : BaseFragment<ProfilePresenter>(), ProfileView {
+    override val layoutId: Int
+        get() = R.layout.fragment_profile
 
     @InjectPresenter
     override lateinit var presenter : ProfilePresenter

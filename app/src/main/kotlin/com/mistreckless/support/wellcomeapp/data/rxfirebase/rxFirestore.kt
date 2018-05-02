@@ -24,7 +24,7 @@ class RxGetValue<T>(private val ref: DocumentReference, private val clazz: Class
     override fun subscribe(e: SingleEmitter<T>) = with(ref.get()) {
         addOnSuccessListener {
             if (!e.isDisposed)
-                e.onSuccess(it.toObject(clazz))
+                e.onSuccess(it.toObject(clazz)!!)
         }
         addOnFailureListener {
             if (!e.isDisposed)

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -24,8 +25,6 @@ class RxAuth(private val activity: AppCompatActivity) {
                 .build()
         )
     }
-
-    fun isAuthWithGoogle() = GoogleSignIn.getLastSignedInAccount(activity) != null
 
     fun authWithGoogle(): Single<GoogleSignInAccount> {
         val fragment = GoogleAuthFragment()

@@ -1,25 +1,25 @@
 package wellcome.common.cache
 
-expect class Cache {
-
-    fun cacheString(key: String, value: String)
-
-    fun cacheInt(key: String, value: Int)
-
-    fun cacheLong(key: String, value: Long)
-
-    fun cacheDouble(key: String, value: Double)
-
-
-    fun getString(key: String, defaultValue: String): String
-
-    fun getInt(key: String, defaultValue: Int): Int
-
-    fun getLong(key: String, defaultValue: Long): Long
-
-    fun getDouble(key: String, defaultValue: Double): Double
-
-}
+//expect class Cache {
+//
+//    fun cacheString(key: String, value: String)
+//
+//    fun cacheInt(key: String, value: Int)
+//
+//    fun cacheLong(key: String, value: Long)
+//
+//    fun cacheDouble(key: String, value: Double)
+//
+//
+//    fun getString(key: String, defaultValue: String): String
+//
+//    fun getInt(key: String, defaultValue: Int): Int
+//
+//    fun getLong(key: String, defaultValue: Long): Long
+//
+//    fun getDouble(key: String, defaultValue: Double): Double
+//
+//}
 
 object CacheConst {
     const val USER_REF = "user_ref"
@@ -30,4 +30,5 @@ object CacheConst {
     const val USER_PHOTO = "user_photo"
     const val TMP_LAT = "tmp_lat"
     const val TMP_LON = "tmp_lon"
+    const val TMP_PICTURE = "tmp_picture"
 }

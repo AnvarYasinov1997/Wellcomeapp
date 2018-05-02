@@ -11,4 +11,10 @@ data class UserData(
     val willComeCount: Long = 0,
     val additionalPoints: Long = 0,
     val generalRating: Long = 0
-)
+){
+    companion object {
+        const val ID="id"
+        const val REF = "ref"
+        const val CITY_NAME = "cityName"
+    }
+}

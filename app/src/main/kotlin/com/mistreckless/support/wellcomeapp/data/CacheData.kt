@@ -1,16 +1,15 @@
 package com.mistreckless.support.wellcomeapp.data
 
-import com.ironz.binaryprefs.Preferences
-import com.ironz.binaryprefs.serialization.serializer.persistable.Persistable
+import android.content.SharedPreferences
+
 
 /**
  * Created by @mistreckless on 26.08.2017. !
  */
 
-class CacheDataImp(private val preferences: Preferences) : CacheData {
+class CacheDataImp(private val preferences: SharedPreferences) : CacheData {
 
-    override fun cachePersistable(key: String, value: Persistable) =
-        preferences.edit().putPersistable(key, value).apply()
+
 
     override fun cacheString(key: String, value: String) =
         preferences.edit().putString(key, value).apply()
@@ -21,10 +20,7 @@ class CacheDataImp(private val preferences: Preferences) : CacheData {
         preferences.edit().putLong(key, value).apply()
 
     override fun cacheDouble(key: String, value: Double) =
-        preferences.edit().putDouble(key, value).apply()
-
-    override fun <T : Persistable> getPersistable(key: String): T? =
-        preferences.getPersistable(key, null)
+        preferences.edit().putString(key, value.toString()).apply()
 
     override fun getString(key: String, defaultValue: String): String =
         preferences.getString(key, defaultValue)
@@ -35,11 +31,10 @@ class CacheDataImp(private val preferences: Preferences) : CacheData {
         preferences.getLong(key, defaultValue)
 
     override fun getDouble(key: String, defaultValue: Double): Double =
-        preferences.getDouble(key, defaultValue)
+        preferences.getString(key, defaultValue.toString()).toDouble()
 }
 
 interface CacheData {
-    fun cachePersistable(key: String, value: Persistable)
 
     fun cacheString(key: String, value: String)
 
@@ -48,8 +43,6 @@ interface CacheData {
     fun cacheLong(key: String, value: Long)
 
     fun cacheDouble(key: String, value: Double)
-
-    fun <T : Persistable> getPersistable(key: String): T?
 
     fun getString(key: String, defaultValue: String = ""): String
 
