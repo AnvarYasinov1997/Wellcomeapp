@@ -22,9 +22,6 @@ class CameraActivity : BaseActivity<CameraPresenter>(),
     @ProvidePresenter
     fun providePresenter() : CameraPresenter = presenterProvider.get()
 
-    companion object {
-        const val TAG = "CameraActivity"
-    }
 }
 
 interface CameraActivityView : BaseActivityView

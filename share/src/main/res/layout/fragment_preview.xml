@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.mistreckless.support.wellcomeapp.ui.view.indy.SquareFrameLayout
+        <com.wellcome.utils.ui.custom.SquareFrameLayout
             android:id="@+id/previewLayout"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -40,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:keepScreenOn="true" />
-        </com.mistreckless.support.wellcomeapp.ui.view.indy.SquareFrameLayout>
+        </com.wellcome.utils.ui.custom.SquareFrameLayout>
 
         <ImageView
             android:id="@+id/imgTakePicture"

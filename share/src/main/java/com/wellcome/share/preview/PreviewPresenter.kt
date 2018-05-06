@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.wellcome.share.picture.PictureSettings
 import com.wellcome.utils.ui.BasePresenter
 import com.wellcome.utils.ui.PerFragment
+import com.wellcome.utils.ui.Screen
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
@@ -27,7 +28,7 @@ class PreviewPresenter @Inject constructor(
     fun pictureTaken(bytes: ByteArray?) = launch(UI) {
         if (bytes != null) {
             shareInteractor.putPhotoBytes(bytes).join()
-            router.navigateTo(PictureSettings.TAG)
+            router.navigateTo(Screen.PICTURE_SETTINGS)
         }
     }
 

@@ -4,6 +4,7 @@ import com.arellomobile.mvp.InjectViewState
 import com.wellcome.share.share.Share
 import com.wellcome.utils.ui.BasePresenter
 import com.wellcome.utils.ui.PerFragment
+import com.wellcome.utils.ui.Screen
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
@@ -29,6 +30,6 @@ class PictureSettingsPresenter @Inject constructor(private val shareInteractor: 
     }
 
     fun nextClicked() {
-        router.navigateTo(Share.TAG)
+        router.navigateTo(Screen.SHARE)
     }
 }

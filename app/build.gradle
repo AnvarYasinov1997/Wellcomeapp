@@ -58,13 +58,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
- //   implementation project(':binaryprefs')
     implementation project(':platform-android')
     implementation project(':common')
     implementation project(':android-utils')
     implementation project(':share')
+    implementation project(':event')
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
 
@@ -119,8 +117,6 @@ dependencies {
 
 kapt {
     generateStubs = true
-
-
 }
 
 apply plugin: 'com.google.gms.google-services'

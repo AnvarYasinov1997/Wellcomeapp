@@ -6,11 +6,10 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.mistreckless.support.wellcomeapp.data.auth.RxAuth
 import com.mistreckless.support.wellcomeapp.domain.auth.AuthService
-import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
-import com.mistreckless.support.wellcomeapp.ui.screen.wall.Wall
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wellcome.utils.ui.BasePresenter
 import com.wellcome.utils.ui.PerActivity
+import com.wellcome.utils.ui.Screen
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
@@ -51,7 +50,7 @@ class MainActivityPresenter @Inject constructor(
                 authService.bindToCity().join()
                 Log.e(TAG, "yeah")
                 viewState.initUi()
-                router.newRootScreen(Wall.TAG)
+                router.newRootScreen(Screen.WALL)
             }
         }
     }
@@ -76,9 +75,9 @@ class MainActivityPresenter @Inject constructor(
             })
     }
 
-    fun wallClicked() = router.newRootScreen(Wall.TAG)
+    fun wallClicked() = router.newRootScreen(Screen.WALL)
 
-    fun profileClicked() = router.navigateTo(Profile.TAG)
+    fun profileClicked() = router.navigateTo(Screen.PROFILE)
 
 
     companion object {

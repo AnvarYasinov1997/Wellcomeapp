@@ -24,7 +24,7 @@
         android:background="@color/black"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.mistreckless.support.wellcomeapp.ui.view.indy.SquareFrameLayout
+        <com.wellcome.utils.ui.custom.SquareFrameLayout
             android:id="@+id/pictureLayout"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -37,7 +37,7 @@
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </com.mistreckless.support.wellcomeapp.ui.view.indy.SquareFrameLayout>
+        </com.wellcome.utils.ui.custom.SquareFrameLayout>
 
         <Button
             android:id="@+id/btnNext"

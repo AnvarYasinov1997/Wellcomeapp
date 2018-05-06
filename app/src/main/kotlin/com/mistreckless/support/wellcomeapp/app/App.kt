@@ -18,7 +18,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 
-@RegisterMoxyReflectorPackages("com.wellcome.share")
+@RegisterMoxyReflectorPackages("com.wellcome.share", "com.wellcome.event")
 class App : Application(), HasActivityInjector {
 
     @Inject
