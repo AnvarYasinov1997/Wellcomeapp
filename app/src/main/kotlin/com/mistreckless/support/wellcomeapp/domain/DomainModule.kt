@@ -36,6 +36,12 @@ class InteractorModule {
 
     @Singleton
     @Provides
-    fun provideWallInteractor(eventRepository: EventRepository): EventInteractor = EventInteractorImpl(eventRepository)
+    fun provideWallInteractor(eventRepository: EventRepository): EventInteractor =
+        EventInteractorImpl(eventRepository)
+
+    @Singleton
+    @Provides
+    fun provideEventInteractor(eventRepository: wellcome.common.repository.EventRepository): wellcome.common.interactor.EventInteractor =
+        wellcome.common.interactor.EventInteractorImpl(eventRepository)
 
 }

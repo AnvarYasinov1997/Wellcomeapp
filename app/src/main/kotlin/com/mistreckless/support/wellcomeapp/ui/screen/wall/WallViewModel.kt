@@ -2,11 +2,9 @@ package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
 import android.arch.lifecycle.ViewModel
 import android.util.Log
-import com.mistreckless.support.wellcomeapp.data.rxfirebase.*
-import wellcome.common.entity.EventData
 import io.reactivex.Observable
-
 import io.reactivex.subjects.PublishSubject
+import wellcome.common.entity.*
 
 class WallViewModel : ViewModel() {
     private val stateSubject = PublishSubject.create<ItemState>()
@@ -14,14 +12,14 @@ class WallViewModel : ViewModel() {
 
     fun observeState(): Observable<ItemState> = stateSubject
 
-    fun putDocument(documentState: DocumentState<EventData>){
-        when(documentState){
-            is DocumentAdded ->{
-                items.add(0,documentState.data)
+    fun putDocument(eventState: EventState){
+        when(eventState){
+            is EventAdded ->{
+                items.add(0,eventState.event)
                 stateSubject.onNext(ItemInserted(0))
             }
-            is DocumentModified ->{
-                val newEvent = documentState.data
+            is EventModified ->{
+                val newEvent = eventState.event
                 val i = items.indexOfFirst { it.ref == newEvent.ref }
                 if (i > -1) {
                     val oldEvent = items[i]
@@ -31,19 +29,20 @@ class WallViewModel : ViewModel() {
                     }
                 }
             }
-            is DocumentRemoved ->{
-                val i = items.indexOfFirst { it.ref == documentState.ref.id }
+            is EventRemoved ->{
+                val i = items.indexOfFirst { it.ref == eventState.ref }
                 if (i > -1){
                     items.removeAt(i)
                     stateSubject.onNext(ItemRemoved(i))
                 }
             }
-            is DocumentError -> {
-                Log.e("document error",documentState.exception.message)
+            is EventError -> {
+                Log.e("event error",eventState.exception.message)
             }
         }
     }
     fun addItems(items: List<EventData>){
+        Log.e("viewmodel","events ${items.size}")
         this.items.addAll(items)
         stateSubject.onNext(ItemRangeInserted(this.items.size - items.size, this.items.size))
     }

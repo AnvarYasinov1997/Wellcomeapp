@@ -1,17 +1,20 @@
 package com.mistreckless.support.wellcomeapp.ui.view.event
 
+import android.support.annotation.LayoutRes
 import android.util.Log
-import wellcome.common.entity.EventData
-import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimeView
-import com.mistreckless.support.wellcomeapp.ui.view.BaseRealTimeViewHolder
+import android.view.ViewGroup
+import com.mistreckless.support.wellcomeapp.ui.view.RealTimeViewHolder
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.view_single_event.view.*
+import wellcome.common.entity.EventData
 
-class SingleEventViewHolder(val delegate: BaseRealTimeView<SingleEventPresenter, EventData, SingleEventView>) :
-    BaseRealTimeViewHolder(delegate.containerView), SingleEventView,
-    BaseRealTimeView<SingleEventPresenter, EventData, SingleEventView> by delegate {
+class SingleEventViewHolder(@LayoutRes layoutId: Int, parent: ViewGroup, presenterProvider: SingleEventPresenterProvider) :
+    RealTimeViewHolder<SingleEventPresenter, EventData, SingleEventView>(parent,layoutId, presenterProvider), SingleEventView {
+    override val view: SingleEventView
+        get() = this
 
-    override fun initUi(data: EventData) = with(containerView) {
+
+    override fun initUi(data: EventData) = with(itemView) {
         Picasso.with(context).load(data.contents.first().content).into(imgContent)
         txtDesc.text = data.contents.first().desc
         txtAddress.text = data.address
@@ -21,7 +24,7 @@ class SingleEventViewHolder(val delegate: BaseRealTimeView<SingleEventPresenter,
 
     override fun updateUi(data: EventData) {
         Log.e("updated", data.likeCount.toString())
-        containerView.txtLikeCount.text = data.likeCount.toString()
+        itemView.txtLikeCount.text = data.likeCount.toString()
     }
 }
 

@@ -2,6 +2,8 @@ package com.wellcome.utils.firebase
 
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.channels.Channel
+import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -47,53 +49,62 @@ fun <T : Any> Query.getValues(clazz: Class<T>): Deferred<List<T>> = async {
     }
 }
 
-fun <T : Any> DocumentReference.observeValue(options: DocumentListenOptions, clazz: Class<T>, parentContext: CoroutineContext) =
-    produce<DocumentState<T>>(parentContext) {
-        var registration: ListenerRegistration? = null
-        try {
-            val listener =
-                EventListener<DocumentSnapshot> { documentSnapshot, firebaseFirestoreException ->
-                    launch {
-                        when {
-                            firebaseFirestoreException != null -> send(
-                                DocumentError(
-                                    firebaseFirestoreException,
-                                    this@observeValue
-                                )
+fun <T : Any> DocumentReference.observeValue(
+    options: DocumentListenOptions,
+    clazz: Class<T>,
+    parentContext: CoroutineContext,
+    job: Job
+) = produce(parentContext, parent = job) {
+    val channel = Channel<DocumentState<T>>()
+    val listener =
+        this@observeValue.addSnapshotListener(options) { documentSnapshot, firebaseFirestoreException ->
+            launch(coroutineContext) {
+                when {
+                    firebaseFirestoreException != null -> channel.send(
+                        DocumentError(
+                            firebaseFirestoreException,
+                            this@observeValue
+                        )
+                    )
+                    documentSnapshot != null && !documentSnapshot.exists() -> channel.send(
+                        DocumentRemoved(this@observeValue)
+                    )
+                    documentSnapshot != null -> {
+                        val value = documentSnapshot.toObject(clazz)
+                        if (value == null) channel.send(
+                            DocumentError(
+                                Exception("cannot parse class " + clazz.canonicalName),
+                                documentSnapshot.reference
                             )
-                            documentSnapshot != null && !documentSnapshot.exists() -> send(
-                                DocumentRemoved(this@observeValue)
+                        )
+                        else channel.send(
+                            DocumentModified(
+                                value,
+                                documentSnapshot.metadata,
+                                documentSnapshot.reference
                             )
-                            documentSnapshot != null -> {
-                                val value = documentSnapshot.toObject(clazz)
-                                if (value == null) send(
-                                    DocumentError(
-                                        Exception("cannot parse class " + clazz.canonicalName),
-                                        documentSnapshot.reference
-                                    )
-                                )
-                                else send(
-                                    DocumentModified(
-                                        value,
-                                        documentSnapshot.metadata,
-                                        documentSnapshot.reference
-                                    )
-                                )
-                            }
-                        }
+                        )
                     }
                 }
-            registration = this@observeValue.addSnapshotListener(options, listener)
-        } finally {
-            registration?.remove()
+            }
         }
+    job.invokeOnCompletion(true, true) {
+        listener.remove()
+        channel.close()
     }
+    channel.consumeEach { send(it) }
+}
 
-fun<T: Any>Query.observeAddedValues(clazz: Class<T>,options: QueryListenOptions, parentContext: CoroutineContext) = produce<DocumentState<T>>(parentContext) {
-    var registration: ListenerRegistration? = null
-    try {
-        val listener = EventListener<QuerySnapshot> { querySnapshot, exception ->
-            launch {
+fun <T : Any> Query.observeAddedValues(
+    clazz: Class<T>,
+    options: QueryListenOptions,
+    parentContext: CoroutineContext,
+    job: Job
+) = produce(parentContext, parent = job) {
+    val channel = Channel<DocumentState<T>>()
+    val listener =
+        this@observeAddedValues.addSnapshotListener(options) { querySnapshot, exception ->
+            launch(coroutineContext) {
                 if (querySnapshot != null) when {
                     exception != null -> {
                     }
@@ -113,8 +124,9 @@ fun<T: Any>Query.observeAddedValues(clazz: Class<T>,options: QueryListenOptions,
                 }
             }
         }
-        registration = this@observeAddedValues.addSnapshotListener(options,listener)
-    }finally {
-        registration?.remove()
+    job.invokeOnCompletion(true, true) {
+        listener.remove()
+        channel.close()
     }
+    channel.consumeEach { send(it) }
 }

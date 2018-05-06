@@ -11,6 +11,7 @@ import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.consumeEach
+import kotlinx.coroutines.experimental.channels.distinct
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.launch
 import wellcome.common.cache.Cache
@@ -19,14 +20,12 @@ import wellcome.common.entity.*
 import kotlin.coroutines.experimental.CoroutineContext
 
 class EventRepository(private val cache: Cache) {
-    suspend fun uploadEvents(
-        bytes: ByteArray,
-        coroutineContext: CoroutineContext,
-        job: Job
-    ): ReceiveChannel<ShareState> {
+    suspend fun uploadEvents(bytes: ByteArray,
+                             coroutineContext: CoroutineContext,
+                             job: Job): ReceiveChannel<ShareState> {
         val path = cache.getString(CacheConst.USER_CITY, "") + System.currentTimeMillis()
         val ref = FirebaseStorage.getInstance().getReference(path)
-        val upload = ref.uploadBytesWithProgress(coroutineContext, bytes,job)
+        val upload = ref.uploadBytesWithProgress(coroutineContext, bytes, job)
         return produce(coroutineContext, parent = job) {
             upload.consumeEach { state ->
                 when (state) {
@@ -38,61 +37,52 @@ class EventRepository(private val cache: Cache) {
         }
     }
 
-    fun share(
-        contentType: ContentType,
-        url: String,
-        userReference: String,
-        addressLine: String,
-        descLine: String,
-        fromTime: Long,
-        tillTime: Long,
-        tags: List<String>
-    ): Job = launch {
+    fun share(contentType: ContentType,
+              url: String,
+              userReference: String,
+              addressLine: String,
+              descLine: String,
+              fromTime: Long,
+              tillTime: Long,
+              tags: List<String>): Job = launch {
         val ref = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT).document()
-        val post = generatePost(
-            ref.id,
+        val post = generatePost(ref.id,
             contentType,
             url,
             userReference,
             addressLine,
             descLine,
             fromTime,
-            tillTime
-        )
+            tillTime)
         ref.setValue(post)
     }
 
-    fun fetchEvents(lastTimeStamp: Long, limit: Long): Deferred<List<EventData>> = async {
-        val ref = FirebaseFirestore.getInstance()
-            .collection(FirebaseConstants.CITY)
+    fun fetchEvents(lastTimeStamp: Long, limit: Long = 10): Deferred<List<EventData>> = async {
+        val ref = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT)
         return@async when (lastTimeStamp) {
-            0L -> ref.orderBy("timestamp", Query.Direction.DESCENDING)
-                .limit(limit)
-                .getValues(EventData::class.java).await()
-            else -> ref.orderBy("timestamp", Query.Direction.DESCENDING)
-                .startAfter(lastTimeStamp)
-                .limit(limit)
-                .getValues(EventData::class.java).await()
+            0L -> ref.orderBy("timestamp", Query.Direction.DESCENDING).limit(limit).getValues(
+                EventData::class.java).await()
+            else -> ref.orderBy("timestamp",
+                Query.Direction.DESCENDING).startAfter(lastTimeStamp).limit(limit).getValues(
+                EventData::class.java).await()
         }
     }
 
 
-    fun observeEvent(
-        ref: String,
-        parentContext: CoroutineContext
-    ): ReceiveChannel<EventState> = produce(parentContext) {
+    fun observeEvent(ref: String,
+                     parentContext: CoroutineContext,
+                     job: Job): ReceiveChannel<EventState> = produce(parentContext) {
         val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT).document(ref)
-            .observeValue(
-                DocumentListenOptions().includeMetadataChanges(),
+            .observeValue(DocumentListenOptions().includeMetadataChanges(),
                 EventData::class.java,
-                parentContext
-            )
+                parentContext,
+                job)
 
         producer.consumeEach { state ->
             when (state) {
@@ -106,20 +96,18 @@ class EventRepository(private val cache: Cache) {
 
     }
 
-    fun observeAddedEvents(
-        timestamp: Long,
-        parentContext: CoroutineContext
-    ): ReceiveChannel<EventState> = produce(parentContext) {
+    fun observeAddedEvents(timestamp: Long,
+                           parentContext: CoroutineContext,
+                           job: Job): ReceiveChannel<EventState> = produce(parentContext) {
         val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT)
             .orderBy(EventData.TIMESTAMP, Query.Direction.DESCENDING)
             .whereGreaterThan(EventData.TIMESTAMP, timestamp)
-            .observeAddedValues(
-                EventData::class.java,
+            .observeAddedValues(EventData::class.java,
                 QueryListenOptions().includeQueryMetadataChanges(),
-                parentContext
-            )
+                parentContext,
+                job)
 
         producer.consumeEach { state ->
             when (state) {
@@ -130,29 +118,23 @@ class EventRepository(private val cache: Cache) {
         }
     }
 
-    private fun generatePost(
-        ref: String,
-        contentType: ContentType,
-        url: String,
-        userReference: String,
-        addressLine: String,
-        descLine: String,
-        fromTime: Long,
-        tillTime: Long
-    ): EventData {
+    private fun generatePost(ref: String,
+                             contentType: ContentType,
+                             url: String,
+                             userReference: String,
+                             addressLine: String,
+                             descLine: String,
+                             fromTime: Long,
+                             tillTime: Long): EventData {
         val postContent = ContentData(contentType, userReference, url, descLine, fromTime, tillTime)
-        return EventData(
-            ref,
+        return EventData(ref,
             mutableListOf(postContent),
-            LatLon(
-                cache.getDouble(CacheConst.TMP_LAT, 0.0),
-                cache.getDouble(CacheConst.TMP_LON, 0.0)
-            ),
+            LatLon(cache.getDouble(CacheConst.TMP_LAT, 0.0),
+                cache.getDouble(CacheConst.TMP_LON, 0.0)),
             addressLine,
             cache.getString(CacheConst.USER_CITY, ""),
             EventDataType.SINGLE,
-            fromTime
-        )
+            fromTime)
     }
 
     lateinit var byteArray: ByteArray //tmp solution
