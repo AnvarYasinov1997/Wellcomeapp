@@ -5,6 +5,7 @@ import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
 
@@ -56,8 +57,13 @@ fun <T : Any> DocumentReference.observeValue(
     job: Job
 ) = produce(parentContext, parent = job) {
     val channel = Channel<DocumentState<T>>()
+    val isFirstListener = AtomicBoolean(true)
     val listener =
         this@observeValue.addSnapshotListener(options) { documentSnapshot, firebaseFirestoreException ->
+            if (isFirstListener.get()) {
+                isFirstListener.set(false)
+                return@addSnapshotListener
+            }
             launch(coroutineContext) {
                 when {
                     firebaseFirestoreException != null -> channel.send(

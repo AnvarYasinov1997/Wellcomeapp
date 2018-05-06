@@ -89,10 +89,10 @@ dependencies {
 
 
     implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
-    implementation "com.google.firebase:firebase-auth:$playServicesVersion"
+    implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
-    implementation "com.google.firebase:firebase-storage:$playServicesVersion"
-    implementation "com.google.firebase:firebase-firestore:$playServicesVersion"
+    implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
+    implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
 
 
     implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'

@@ -79,7 +79,7 @@ class EventRepository(private val cache: Cache) {
         val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT).document(ref)
-            .observeValue(DocumentListenOptions().includeMetadataChanges(),
+            .observeValue(DocumentListenOptions(),
                 EventData::class.java,
                 parentContext,
                 job)
