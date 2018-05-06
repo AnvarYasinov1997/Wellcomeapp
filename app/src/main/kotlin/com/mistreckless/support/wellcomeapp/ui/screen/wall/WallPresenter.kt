@@ -1,5 +1,6 @@
 package com.mistreckless.support.wellcomeapp.ui.screen.wall
 
+import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.wellcome.share.CameraActivity
 import com.wellcome.utils.ui.BasePresenter
@@ -7,6 +8,7 @@ import com.wellcome.utils.ui.PerFragment
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelAndJoin
+import kotlinx.coroutines.experimental.cancelChildren
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.launch
@@ -22,6 +24,9 @@ class WallPresenter @Inject constructor(
     private val router: Router,
     private val viewModel: WallViewModel
 ) : BasePresenter<WallView>() {
+
+    private val jobs by lazy { mutableListOf<Job>() }
+
     override fun onFirstViewAttach() {
         super.onFirstViewAttach()
         viewState.initUi()
@@ -33,38 +38,56 @@ class WallPresenter @Inject constructor(
 
     fun controlWall(scrollChannel: ReceiveChannel<Int>) = launch {
         val paginatorJob = Job()
-        val addedJob = Job()
-        var timestamp = -1L
-        eventInteractor.controlPagination(scrollChannel,paginatorJob).consumeEach { launch(UI) {   viewModel.addItems(it) } }
         val eventsPaginator = eventInteractor.controlPagination(scrollChannel, paginatorJob)
-        var addedProducer: ReceiveChannel<EventState>? = null
-
-        fun controlAddedEvents(addedJob: Job) = launch(coroutineContext) {
-            val firstTimestamp = viewModel.items.firstOrNull()?.timestamp ?: 0L
-            if (timestamp < firstTimestamp) {
-                timestamp = firstTimestamp
-                addedJob.cancelAndJoin()
-                addedProducer?.cancel()
-                addedJob.start()
-                addedProducer =
-                        eventInteractor.controlAddedEvents(timestamp, coroutineContext, addedJob)
-                addedProducer?.consumeEach { event ->
-                    viewModel.putDocument(event)
-                }
-            }
-        }
-
-        eventsPaginator.consumeEach { events ->
-            viewModel.addItems(events)
-            controlAddedEvents(addedJob)
-        }
+        jobs.add(paginatorJob)
 
         paginatorJob.invokeOnCompletion {
             eventsPaginator.cancel()
-            addedProducer?.cancel()
+        }
+
+        eventsPaginator.consumeEach { events ->
+            val size = viewModel.items.size
+            launch(UI) {
+                viewModel.addItems(events)
+            }
+            if (size == 0) controlAddedEvents()
         }
     }
 
+    private fun controlAddedEvents() = launch {
+        var job = Job()
+        var producer: ReceiveChannel<EventState>? = null
+
+        var timestamp = -1L
+        var firstTimestamp = viewModel.items.firstOrNull()?.timestamp ?: 0L
+
+        job.invokeOnCompletion {
+            producer?.cancel()
+        }
+        while (isActive) {
+            if (timestamp < firstTimestamp) {
+                timestamp = firstTimestamp
+                job.cancelChildren()
+                job.cancel()
+                producer?.cancel()
+                job = Job()
+                jobs.add(job)
+                producer = eventInteractor.controlAddedEvents(timestamp, coroutineContext, job)
+                producer.consumeEach { event ->
+                    Log.e("addedProducer", "works + $event")
+                    launch(UI) {
+                        viewModel.putDocument(event)
+                        firstTimestamp = viewModel.items.first().timestamp
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        jobs.forEach { it.cancelChildren(); it.cancel() }
+    }
 
     companion object {
         const val TAG = "WallPresenter"
