@@ -23,10 +23,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.screen.camera.CameraActivity"
-            android:launchMode="singleTop" />
-
     </application>
 
 </manifest>

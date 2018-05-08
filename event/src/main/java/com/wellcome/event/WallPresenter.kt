@@ -48,8 +48,8 @@ class WallPresenter @Inject constructor(
             val size = viewModel.items.size
             launch(UI) {
                 viewModel.addItems(events)
+                if (size == 0) controlAddedEvents()
             }
-            if (size == 0) controlAddedEvents()
         }
     }
 
