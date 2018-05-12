@@ -21,6 +21,8 @@ interface EventInteractor {
     fun controlAddedEvents(timestamp: Long,
                            context: CoroutineContext,
                            job: Job): ReceiveChannel<EventState>
+
+    fun like(ref: String) : Job
 }
 
 class EventInteractorImpl(private val eventRepository: EventRepository) : EventInteractor {
@@ -47,4 +49,8 @@ class EventInteractorImpl(private val eventRepository: EventRepository) : EventI
                                     context: CoroutineContext,
                                     job: Job): ReceiveChannel<EventState> =
         eventRepository.observeAddedEvents(timestamp, context, job)
+
+    override fun like(ref: String) =
+        eventRepository.addLike(ref)
+
 }

@@ -146,4 +146,16 @@ class EventRepository(private val cache: Cache) {
     fun getTmpPicture(): Deferred<ByteArray> = async {
         byteArray
     }
+
+    fun addLike(eventRef: String) : Job{
+        val userRef = cache.getString(CacheConst.USER_REF,"")
+        val ref = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
+            .document(cache.getString(CacheConst.USER_CITY_REF,""))
+            .collection(FirebaseConstants.EVENT)
+            .document(eventRef)
+            .collection(FirebaseConstants.LIKE)
+            .document()
+        val like = Like(ref.id,userRef)
+        return ref.setValue(like)
+    }
 }

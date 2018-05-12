@@ -1,5 +1,6 @@
 package com.wellcome.utils.ui
 
+import android.annotation.SuppressLint
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
@@ -9,6 +10,8 @@ import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 fun RecyclerView.observeScroll(job: Job, initialValue: Int = 0) =
@@ -27,12 +30,15 @@ fun RecyclerView.observeScroll(job: Job, initialValue: Int = 0) =
         }
         addOnScrollListener(listener)
         job.invokeOnCompletion {
-            Log.e("recycler","canceled")
+            Log.e("recycler", "canceled")
             removeOnScrollListener(listener)
             channel.close()
         }
         launch(context = UI) {
             channel.send(initialValue)
         }
-        channel.consumeEach { Log.e("recycler","send $it");send(it) }
+        channel.consumeEach { Log.e("recycler", "send $it");send(it) }
     }
+
+@SuppressLint("SimpleDateFormat")
+fun Long.toTime() = SimpleDateFormat("HH:mm").format(Date(this))

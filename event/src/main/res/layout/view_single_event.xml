@@ -15,6 +15,7 @@
         android:layout_height="wrap_content">
 
         <com.subinkrishna.widget.CircularImageView
+            android:visibility="invisible"
             android:id="@+id/imgUser"
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -24,18 +25,20 @@
             app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
+            android:visibility="invisible"
             android:id="@+id/txtUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:text="asdasd"
             android:textColor="@color/primary_text"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgUser"
             app:layout_constraintStart_toEndOf="@+id/imgUser"
-            app:layout_constraintTop_toTopOf="@+id/imgUser" />
+            app:layout_constraintTop_toTopOf="@+id/imgUser"
+            tools:text="asdasd"/>
 
         <android.support.constraint.ConstraintLayout
+            android:visibility="invisible"
             android:id="@+id/reportLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

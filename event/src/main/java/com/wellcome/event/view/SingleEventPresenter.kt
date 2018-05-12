@@ -33,7 +33,7 @@ class SingleEventPresenter(
         launch {
             val job = Job()
             jobs.add(job)
-            val producer = eventInteractor.controlEventChanges(eventData.ref,coroutineContext,job)
+            val producer = eventInteractor.controlEventChanges(eventData.ref, coroutineContext, job)
             launch(UI) {
                 producer.consumeEach { state ->
                     wallViewModel.putDocument(state)
@@ -54,8 +54,24 @@ class SingleEventPresenter(
         }
     }
 
-    private fun handleChanges(state: EventState){
-        when(state){
+    fun clicked(click: Click) = when (click) {
+        Click.LIKE -> {
+            launch {
+                eventInteractor.like(eventData.ref).join()
+            }
+            Unit
+        }
+        Click.COMMENT -> {
+        }
+        Click.WILLCOME -> {
+        }
+        Click.ADDRESS -> {
+        }
+    }
+
+
+    private fun handleChanges(state: EventState) {
+        when (state) {
             is EventModified -> view.updateUi(state.event)
         }
     }

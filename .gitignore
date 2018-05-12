@@ -58,3 +58,5 @@ Wellcomeapp.iml
 app/build/
 binaryprefs/binaryprefs.iml
 binaryprefs/build/
+functions/.idea
+functions/functions/node_modules
