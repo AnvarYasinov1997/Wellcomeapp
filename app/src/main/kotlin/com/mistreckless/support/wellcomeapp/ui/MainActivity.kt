@@ -5,8 +5,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import com.mistreckless.support.wellcomeapp.navigation.WelcomeNavigator
-import com.wellcome.utils.ui.BaseActivity
-import com.wellcome.utils.ui.BaseActivityView
+import com.wellcome.core.ui.BaseActivity
+import com.wellcome.core.ui.BaseActivityView
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.android.SupportAppNavigator
 

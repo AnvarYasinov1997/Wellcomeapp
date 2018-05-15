@@ -59,8 +59,8 @@ android {
 
 dependencies {
     implementation project(':platform-android')
-    implementation project(':common')
-    implementation project(':android-utils')
+    implementation project(':common-core')
+    implementation project(':android-core')
     implementation project(':share')
     implementation project(':event')
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"

@@ -8,9 +8,10 @@ import com.google.android.gms.location.LocationServices
 import com.mistreckless.support.wellcomeapp.data.location.RxLocation
 import com.mistreckless.support.wellcomeapp.data.location.RxLocationImpl
 import com.mistreckless.support.wellcomeapp.data.repository.*
+import com.wellcome.core.room.StoryDao
 import dagger.Module
 import dagger.Provides
-import wellcome.common.cache.Cache
+import com.wellcome.core.Cache
 import wellcome.common.location.CoroutineLocation
 import wellcome.common.location.LocationService
 import wellcome.common.location.LocationServiceImpl
@@ -49,7 +50,7 @@ class RepositoryModule {
 
 @Singleton
 @Module
-class DataModule {
+class DataModule(private val storyDao: StoryDao) {
 
     @Singleton
     @Provides
@@ -64,7 +65,8 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideCache(preferences: SharedPreferences): Cache = Cache(preferences)
+    fun provideCache(preferences: SharedPreferences): Cache =
+        Cache(preferences)
 
     @Singleton
     @Provides
@@ -73,5 +75,9 @@ class DataModule {
     @Singleton
     @Provides
     fun provideGeocoder(context: Context, locale : Locale) : Geocoder = Geocoder(context, locale)
+
+    @Singleton
+    @Provides
+    fun provideStoryDao() = storyDao
 
 }

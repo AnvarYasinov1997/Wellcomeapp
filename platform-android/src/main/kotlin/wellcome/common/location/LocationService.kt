@@ -1,7 +1,7 @@
 package wellcome.common.location
 
-import wellcome.common.cache.Cache
-import wellcome.common.cache.CacheConst
+import com.wellcome.core.Cache
+import wellcome.common.core.CacheConst
 import wellcome.common.entity.Address
 
 interface LocationService {

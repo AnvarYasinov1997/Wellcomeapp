@@ -12,7 +12,7 @@ import com.mistreckless.support.wellcomeapp.ui.MainActivityModule
 import com.wellcome.share.CameraActivity
 import com.wellcome.share.CameraActivityFragmentProvider
 import com.wellcome.share.CameraModule
-import com.wellcome.utils.ui.PerActivity
+import com.wellcome.core.ui.PerActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module

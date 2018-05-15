@@ -4,7 +4,7 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wellcome.share.picture.PictureSettings
 import com.wellcome.share.preview.Preview
 import com.wellcome.share.share.Share
-import com.wellcome.utils.ui.PerFragment
+import com.wellcome.core.ui.PerFragment
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector

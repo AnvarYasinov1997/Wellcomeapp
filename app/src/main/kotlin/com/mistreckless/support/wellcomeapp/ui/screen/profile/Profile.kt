@@ -4,8 +4,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.mistreckless.support.wellcomeapp.R
 import wellcome.common.entity.UserData
-import com.wellcome.utils.ui.BaseFragment
-import com.wellcome.utils.ui.BaseFragmentView
+import com.wellcome.core.ui.BaseFragment
+import com.wellcome.core.ui.BaseFragmentView
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_profile.*
 

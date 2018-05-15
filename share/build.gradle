@@ -35,8 +35,8 @@ android {
 dependencies {
     implementation project(':binaryprefs')
     implementation project(':platform-android')
-    implementation project(':common')
-    implementation project(':android-utils')
+    implementation project(':common-core')
+    implementation project(':android-core')
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"

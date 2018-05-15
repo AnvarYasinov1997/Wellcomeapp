@@ -5,8 +5,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.tbruyelle.rxpermissions2.RxPermissions
-import com.wellcome.utils.ui.BasePresenter
-import com.wellcome.utils.ui.PerFragment
+import com.wellcome.core.ui.BasePresenter
+import com.wellcome.core.ui.PerFragment
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelAndJoin

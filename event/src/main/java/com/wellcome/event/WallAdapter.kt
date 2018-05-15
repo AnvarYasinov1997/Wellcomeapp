@@ -4,8 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.wellcome.event.view.SingleEventPresenterProvider
 import com.wellcome.event.view.SingleEventViewHolder
-import com.wellcome.utils.ui.RealTimeAdapter
-import com.wellcome.utils.ui.RealTimeViewHolder
+import com.wellcome.core.ui.RealTimeAdapter
+import com.wellcome.core.ui.RealTimeViewHolder
 
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class WallAdapter(

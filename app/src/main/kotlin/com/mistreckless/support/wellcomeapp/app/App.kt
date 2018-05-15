@@ -11,6 +11,7 @@ import com.mistreckless.support.wellcomeapp.data.RepositoryModule
 import com.mistreckless.support.wellcomeapp.domain.InteractorModule
 import com.mistreckless.support.wellcomeapp.navigation.NavigationModule
 import com.squareup.picasso.Picasso
+import com.wellcome.core.room.buildWellcomeDb
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasActivityInjector
 import okhttp3.Cache
@@ -26,9 +27,11 @@ class App : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
+        val db = buildWellcomeDb(this,"wellcomedb")
+        val storyDao = db.storyDao()
         DaggerAppComponent.builder()
                 .application(this)
-                .dataModule(DataModule())
+                .dataModule(DataModule(storyDao))
                 .repositoryModule(RepositoryModule())
                 .interactorModule(InteractorModule())
                 .navigationModule(NavigationModule())
@@ -62,4 +65,5 @@ class App : Application(), HasActivityInjector {
         val settings = FirebaseFirestoreSettings.Builder().setPersistenceEnabled(false).build()
         FirebaseFirestore.getInstance().firestoreSettings = settings
     }
+
 }

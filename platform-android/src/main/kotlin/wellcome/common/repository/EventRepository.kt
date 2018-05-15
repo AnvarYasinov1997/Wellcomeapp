@@ -5,17 +5,17 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QueryListenOptions
 import com.google.firebase.storage.FirebaseStorage
-import com.wellcome.utils.firebase.*
+import com.wellcome.core.firebase.*
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.consumeEach
-import kotlinx.coroutines.experimental.channels.distinct
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.launch
-import wellcome.common.cache.Cache
-import wellcome.common.cache.CacheConst
+import wellcome.common.core.FirebaseConstants
+import com.wellcome.core.Cache
+import wellcome.common.core.CacheConst
 import wellcome.common.entity.*
 import kotlin.coroutines.experimental.CoroutineContext
 
@@ -154,8 +154,8 @@ class EventRepository(private val cache: Cache) {
             .collection(FirebaseConstants.EVENT)
             .document(eventRef)
             .collection(FirebaseConstants.LIKE)
-            .document()
-        val like = Like(ref.id,userRef)
+            .document(userRef)
+        val like = Like(userRef)
         return ref.setValue(like)
     }
 }

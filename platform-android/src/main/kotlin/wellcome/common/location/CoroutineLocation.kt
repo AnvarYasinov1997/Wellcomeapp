@@ -5,8 +5,8 @@ package wellcome.common.location
 import android.annotation.SuppressLint
 import android.location.Geocoder
 import com.google.android.gms.location.FusedLocationProviderClient
-import wellcome.common.coroutines.Deferred
-import wellcome.common.coroutines.async
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.async
 import wellcome.common.entity.Address
 import kotlin.coroutines.experimental.coroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine

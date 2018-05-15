@@ -9,14 +9,16 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.wellcome.utils.firebase.*
+import com.wellcome.core.firebase.*
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
-import wellcome.common.cache.Cache
-import wellcome.common.cache.CacheConst
+import wellcome.common.core.FirebaseConstants
+import com.wellcome.core.Cache
+import wellcome.common.core.CacheConst
 import wellcome.common.entity.CityData
+import wellcome.common.entity.Story
 import wellcome.common.entity.UserData
 import wellcome.common.location.LocationService
 
@@ -24,7 +26,8 @@ interface AuthService {
     suspend fun signInWithGoogle(account: GoogleSignInAccount): Deferred<FirebaseUser>
     suspend fun checkUserExist(firebaseUser: FirebaseUser): Deferred<Boolean>
     suspend fun bindToCity(): Job
-    suspend fun registryNewUser(firebaseUser: FirebaseUser) : Job
+    suspend fun registryNewUser(firebaseUser: FirebaseUser): Job
+    fun getStory(): Deferred<List<Story>>
     fun isAuthenticated(): Boolean
 }
 
@@ -54,7 +57,7 @@ class GoogleAuthService(
         if (cities.isNotEmpty()) cache.cacheString(CacheConst.USER_CITY_REF, cities[0].ref)
         else with(collection.document()) {
             setValue(CityData(id, cityName)).join()
-            cache.cacheString(CacheConst.USER_CITY_REF,id)
+            cache.cacheString(CacheConst.USER_CITY_REF, id)
         }
         updateUserCity(cityName)
     }
@@ -77,9 +80,14 @@ class GoogleAuthService(
         cacheUserData(user)
     }
 
-    private suspend fun updateUserCity(cityName: String)  {
-        val userRef = cache.getString(CacheConst.USER_REF,"")
-        val document = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document(userRef)
+    override fun getStory() = async {
+       listOf<Story>()
+    }
+
+    private suspend fun updateUserCity(cityName: String) {
+        val userRef = cache.getString(CacheConst.USER_REF, "")
+        val document =
+            FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document(userRef)
         val user = document.getValue(UserData::class.java).await()
         if (user.cityName != cityName) document.updateFields(mapOf(UserData.CITY_NAME to cityName))
     }

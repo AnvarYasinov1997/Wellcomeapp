@@ -12,6 +12,7 @@ buildscript {
         binaryPrefsVersion = '1.0.0-BETA-2'
         coroutinesCoreVersion = '0.22.5'
         moxyVersion = '1.5.3'
+        roomVersion = '1.1.0'
         compileSdk = 27
         minSdk = 21
     }

@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager
 import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.wellcome.event.Wall
 import com.wellcome.share.CameraActivity
-import com.wellcome.utils.ui.Screen
+import com.wellcome.core.ui.Screen
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 class WelcomeNavigator(

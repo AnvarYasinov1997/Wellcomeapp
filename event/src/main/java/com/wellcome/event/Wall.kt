@@ -4,10 +4,10 @@ import android.support.v7.widget.LinearLayoutManager
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.wellcome.event.view.SingleEventPresenterProvider
-import com.wellcome.utils.ui.BaseFragment
-import com.wellcome.utils.ui.BaseFragmentView
-import com.wellcome.utils.ui.RealTimeAdapterDelegate
-import com.wellcome.utils.ui.observeScroll
+import com.wellcome.core.ui.BaseFragment
+import com.wellcome.core.ui.BaseFragmentView
+import com.wellcome.core.ui.RealTimeAdapterDelegate
+import com.wellcome.core.ui.observeScroll
 import kotlinx.android.synthetic.main.fragment_wall.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch

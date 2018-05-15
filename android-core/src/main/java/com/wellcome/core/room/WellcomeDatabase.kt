@@ -1,4 +1,4 @@
-package com.wellcome.utils.room
+package com.wellcome.core.room
 
 import android.app.Application
 import android.arch.persistence.room.Database

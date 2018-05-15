@@ -30,9 +30,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    expectedBy project(":common")
+    expectedBy project(':common-core')
 //    implementation project(":binaryprefs")
-    implementation project(":android-utils")
+    implementation project(':android-core')
 
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"

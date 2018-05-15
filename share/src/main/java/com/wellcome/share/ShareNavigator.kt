@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager
 import com.wellcome.share.picture.PictureSettings
 import com.wellcome.share.preview.Preview
 import com.wellcome.share.share.Share
-import com.wellcome.utils.ui.Screen
+import com.wellcome.core.ui.Screen
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 class ShareNavigator(private val activity: FragmentActivity,

@@ -2,8 +2,8 @@ package com.wellcome.share
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.wellcome.utils.ui.BaseActivity
-import com.wellcome.utils.ui.BaseActivityView
+import com.wellcome.core.ui.BaseActivity
+import com.wellcome.core.ui.BaseActivityView
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 /**

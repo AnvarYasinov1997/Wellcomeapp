@@ -1,7 +1,7 @@
 package com.wellcome.event
 
 import android.arch.lifecycle.ViewModelProviders
-import com.wellcome.utils.ui.PerFragment
+import com.wellcome.core.ui.PerFragment
 import dagger.Module
 import dagger.Provides
 

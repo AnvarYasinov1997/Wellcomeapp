@@ -2,9 +2,9 @@ package com.wellcome.event
 
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.wellcome.utils.ui.BasePresenter
-import com.wellcome.utils.ui.PerFragment
-import com.wellcome.utils.ui.Screen
+import com.wellcome.core.ui.BasePresenter
+import com.wellcome.core.ui.PerFragment
+import com.wellcome.core.ui.Screen
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelChildren

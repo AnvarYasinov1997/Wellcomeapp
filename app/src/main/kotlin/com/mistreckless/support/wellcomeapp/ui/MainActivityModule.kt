@@ -8,11 +8,11 @@ import com.mistreckless.support.wellcomeapp.ui.screen.profile.Profile
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wellcome.event.Wall
 import com.wellcome.event.WallModule
-import com.wellcome.utils.ui.PerFragment
+import com.wellcome.core.ui.PerFragment
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
-import wellcome.common.cache.Cache
+import com.wellcome.core.Cache
 import wellcome.common.location.LocationService
 
 @Module
@@ -37,5 +37,5 @@ class MainActivityModule {
     fun provideRxAuth(activity: MainActivity): RxAuth = RxAuth(activity)
 
     @Provides
-    fun provideAuthService(context: Context,cache: Cache, locationService: LocationService): AuthService = GoogleAuthService(context,cache, locationService)
+    fun provideAuthService(context: Context, cache: Cache, locationService: LocationService): AuthService = GoogleAuthService(context,cache, locationService)
 }

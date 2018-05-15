@@ -1,1 +1,1 @@
-include ':app', ':binaryprefs', ':stub-android', ':cicerone', ':common', ':platform-android', ':android-utils', ':share', ':share', ':instantapp', ':share', ':event'
+include ':app', ':binaryprefs', ':stub-android', ':cicerone', ':common-core', ':platform-android', ':android-core', ':share', ':share', ':instantapp', ':share', ':event'

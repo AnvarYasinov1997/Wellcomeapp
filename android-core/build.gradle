@@ -37,13 +37,15 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
 
+    implementation project(":common-core")
+
 
     implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
 
-    implementation "android.arch.persistence.room:runtime:$roomVersion"
+    api "android.arch.persistence.room:runtime:$roomVersion"
     kapt "android.arch.persistence.room:compiler:$roomVersion"
 
     implementation "com.arello-mobile:moxy:$moxyVersion"

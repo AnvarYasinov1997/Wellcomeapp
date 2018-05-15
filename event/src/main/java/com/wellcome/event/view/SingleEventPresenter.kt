@@ -2,8 +2,8 @@ package com.wellcome.event.view
 
 import android.util.Log
 import com.wellcome.event.WallViewModel
-import com.wellcome.utils.ui.BaseRealTimePresenterProvider
-import com.wellcome.utils.ui.RealTimePresenter
+import com.wellcome.core.ui.BaseRealTimePresenterProvider
+import com.wellcome.core.ui.RealTimePresenter
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelChildren

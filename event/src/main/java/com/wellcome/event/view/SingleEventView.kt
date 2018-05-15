@@ -4,9 +4,9 @@ import android.annotation.SuppressLint
 import android.support.annotation.LayoutRes
 import android.util.Log
 import android.view.ViewGroup
-import com.wellcome.utils.ui.RealTimeViewHolder
+import com.wellcome.core.ui.RealTimeViewHolder
 import com.squareup.picasso.Picasso
-import com.wellcome.utils.ui.toTime
+import com.wellcome.core.ui.toTime
 import kotlinx.android.synthetic.main.view_single_event.view.*
 import wellcome.common.entity.Address
 import wellcome.common.entity.EventData
