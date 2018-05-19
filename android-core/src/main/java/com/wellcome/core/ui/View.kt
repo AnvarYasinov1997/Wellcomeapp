@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
+import kotlinx.coroutines.experimental.delay
 import kotlinx.coroutines.experimental.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,5 +42,23 @@ fun RecyclerView.observeScroll(job: Job, initialValue: Int = 0) =
         channel.consumeEach { Log.e("recycler", "send $it");send(it) }
     }
 
+inline fun View.setDelayedClickListener(millis: Long, crossinline block: ()-> Unit){
+    var isEnabled = true
+    this@setDelayedClickListener.setOnClickListener {
+        launch {
+            if (isEnabled) {
+                val job = launch(UI) {
+                    block.invoke()
+                }
+                isEnabled = false
+                job.join()
+                delay(millis)
+                isEnabled = true
+            }
+        }
+    }
+}
+
 @SuppressLint("SimpleDateFormat")
 fun Long.toTime() = SimpleDateFormat("HH:mm").format(Date(this))
+

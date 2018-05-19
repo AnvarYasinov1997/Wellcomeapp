@@ -12,10 +12,21 @@ data class Story(@PrimaryKey var eventRef: String = "",
 interface StoryDao {
 
     @Query("select * from story")
-    fun getAllStories() : List<Story>
+    fun getAllStories() : List<Story>?
 
     @Query("select * from story where eventRef = :eventRef limit 1")
-    fun getStory(eventRef: String): Story
+    fun getStory(eventRef: String): Story?
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addStory(story: Story)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addStories(stories: List<Story>)
+
+    @Update
+    fun updateStory(story: Story)
+
+    @Update
+    fun updateStories(stories: List<Story>)
 
 }

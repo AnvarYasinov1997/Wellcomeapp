@@ -6,6 +6,9 @@ class StateProgress(val progress: Int = 0) : ShareState()
 class StateUploaded(val url: String) : ShareState()
 class StateError(val exception: Exception) : ShareState()
 
+data class Event(val data: EventData,
+                 val isLiked: Boolean = false,
+                 val isWillcomed: Boolean = false)
 
 data class EventData(val ref: String = "",
                      val contents: MutableList<ContentData> = mutableListOf(),
@@ -45,7 +48,7 @@ data class LatLon(val lat: Double = 0.0,
                   val lon: Double = 0.0)
 
 sealed class EventState
-data class EventAdded(val event: EventData): EventState()
-data class EventModified(val event: EventData): EventState()
+data class EventAdded(val event: Event): EventState()
+data class EventModified(val event: Event): EventState()
 data class EventRemoved(val ref: String): EventState()
 data class EventError(val exception: Exception): EventState()

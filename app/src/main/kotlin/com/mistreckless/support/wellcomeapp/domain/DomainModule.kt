@@ -5,6 +5,7 @@ import com.mistreckless.support.wellcomeapp.domain.interactor.DataInteractor
 import com.mistreckless.support.wellcomeapp.domain.interactor.DataInteractorImpl
 import com.mistreckless.support.wellcomeapp.domain.interactor.ProfileInteractor
 import com.mistreckless.support.wellcomeapp.domain.interactor.ProfileInteractorImpl
+import com.wellcome.core.service.StoryService
 import dagger.Module
 import dagger.Provides
 import wellcome.common.interactor.EventInteractor
@@ -39,8 +40,7 @@ class InteractorModule {
         eventRepository: wellcome.common.repository.EventRepository
     ): ShareInteractor = ShareInteractorImpl(locationService, userRepository, eventRepository)
 
-    @Singleton
     @Provides
-    fun provideEventInteractor(eventRepository: EventRepository): EventInteractor = EventInteractorImpl(eventRepository)
+    fun provideEventInteractor(eventRepository: EventRepository, storyService: StoryService): EventInteractor = EventInteractorImpl(eventRepository, storyService)
 
 }

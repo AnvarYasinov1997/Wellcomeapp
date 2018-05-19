@@ -12,6 +12,8 @@ import com.wellcome.core.room.StoryDao
 import dagger.Module
 import dagger.Provides
 import com.wellcome.core.Cache
+import com.wellcome.core.service.StoryService
+import com.wellcome.core.service.WellcomeStoryService
 import wellcome.common.location.CoroutineLocation
 import wellcome.common.location.LocationService
 import wellcome.common.location.LocationServiceImpl
@@ -78,6 +80,10 @@ class DataModule(private val storyDao: StoryDao) {
 
     @Singleton
     @Provides
-    fun provideStoryDao() = storyDao
+    fun provideStoryDao(): StoryDao = storyDao
+
+    @Singleton
+    @Provides
+    fun provideStoryService(storyDao: StoryDao, cache: Cache): StoryService = WellcomeStoryService(storyDao, cache)
 
 }

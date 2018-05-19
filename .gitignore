@@ -58,7 +58,7 @@ Wellcomeapp.iml
 app/build/
 binaryprefs/binaryprefs.iml
 binaryprefs/build/android-utils/libs/
-app/src/androidTest/java/com/mistreckless/support/wellcomeapp/data/
+app/src/androidTest/java/com/mistreckless/support/wellcomeapp/dataList/
 cloud/firestore/.firebaserc
 cloud/firestore/firebase.json
 cloud/firestore/functions/etc/
@@ -277,7 +277,7 @@ cloud/firestore/functions/node_modules/follow-redirects/
 cloud/firestore/functions/node_modules/for-in/
 cloud/firestore/functions/node_modules/foreach/
 cloud/firestore/functions/node_modules/forever-agent/
-cloud/firestore/functions/node_modules/form-data/
+cloud/firestore/functions/node_modules/form-dataList/
 cloud/firestore/functions/node_modules/forwarded/
 cloud/firestore/functions/node_modules/fragment-cache/
 cloud/firestore/functions/node_modules/fresh/
@@ -552,7 +552,7 @@ cloud/firestore/functions/node_modules/invert-kv/
 cloud/firestore/functions/node_modules/ipaddr.js/
 cloud/firestore/functions/node_modules/is-accessor-descriptor/
 cloud/firestore/functions/node_modules/is-buffer/
-cloud/firestore/functions/node_modules/is-data-descriptor/
+cloud/firestore/functions/node_modules/is-dataList-descriptor/
 cloud/firestore/functions/node_modules/is-descriptor/
 cloud/firestore/functions/node_modules/is-extendable/
 cloud/firestore/functions/node_modules/is-extglob/
@@ -744,7 +744,7 @@ cloud/firestore/functions/node_modules/sshpk/man/
 cloud/firestore/functions/node_modules/sshpk/package.json
 cloud/firestore/functions/node_modules/static-extend/
 cloud/firestore/functions/node_modules/statuses/
-cloud/firestore/functions/node_modules/stream-events/
+cloud/firestore/functions/node_modules/stream-dataList/
 cloud/firestore/functions/node_modules/stream-shift/
 cloud/firestore/functions/node_modules/string-format-obj/
 cloud/firestore/functions/node_modules/string-width/

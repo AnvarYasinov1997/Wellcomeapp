@@ -18,7 +18,6 @@ import wellcome.common.core.FirebaseConstants
 import com.wellcome.core.Cache
 import wellcome.common.core.CacheConst
 import wellcome.common.entity.CityData
-import wellcome.common.entity.Story
 import wellcome.common.entity.UserData
 import wellcome.common.location.LocationService
 
@@ -27,7 +26,6 @@ interface AuthService {
     suspend fun checkUserExist(firebaseUser: FirebaseUser): Deferred<Boolean>
     suspend fun bindToCity(): Job
     suspend fun registryNewUser(firebaseUser: FirebaseUser): Job
-    fun getStory(): Deferred<List<Story>>
     fun isAuthenticated(): Boolean
 }
 
@@ -78,10 +76,6 @@ class GoogleAuthService(
         )
         userRef.setValue(user).join()
         cacheUserData(user)
-    }
-
-    override fun getStory() = async {
-       listOf<Story>()
     }
 
     private suspend fun updateUserCity(cityName: String) {

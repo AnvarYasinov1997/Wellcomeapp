@@ -58,7 +58,7 @@ class WallPresenter @Inject constructor(
         var producer: ReceiveChannel<EventState>? = null
 
         var timestamp = -1L
-        var firstTimestamp = viewModel.items.firstOrNull()?.timestamp ?: 0L
+        var firstTimestamp = viewModel.items.firstOrNull()?.data?.timestamp ?: 0L
 
         job.invokeOnCompletion {
             producer?.cancel()
@@ -76,7 +76,7 @@ class WallPresenter @Inject constructor(
                     Log.e("addedProducer", "works + $event")
                     launch(UI) {
                         viewModel.putDocument(event)
-                        firstTimestamp = viewModel.items.first().timestamp
+                        firstTimestamp = viewModel.items.first().data.timestamp
                     }
                 }
             }

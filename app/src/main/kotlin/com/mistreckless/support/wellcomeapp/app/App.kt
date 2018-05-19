@@ -38,6 +38,7 @@ class App : Application(), HasActivityInjector {
                 .build()
                 .inject(this)
         initPicasso()
+        initFirebase()
     }
 
     override fun activityInjector() = activityDispatchAndroidInjector

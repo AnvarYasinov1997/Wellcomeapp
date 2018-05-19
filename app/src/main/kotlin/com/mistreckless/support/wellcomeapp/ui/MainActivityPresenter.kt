@@ -14,6 +14,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
 import com.wellcome.core.Cache
+import com.wellcome.core.service.StoryService
 import wellcome.common.core.CacheConst
 import javax.inject.Inject
 import javax.inject.Provider
@@ -26,6 +27,7 @@ class MainActivityPresenter @Inject constructor(
     private val rxPermissions: Provider<RxPermissions>,
     private val rxAuth: Provider<RxAuth>,
     private val authService: AuthService,
+    private val storyService: StoryService,
     private val router: Router,
     private val cache: Cache
 ) : BasePresenter<MainActivityView>() {
@@ -49,6 +51,7 @@ class MainActivityPresenter @Inject constructor(
             if (isGranted || requestAccess()) {
                 authService.bindToCity().join()
                 Log.e(TAG, "yeah")
+                storyService.startListen()
                 viewState.initUi()
                 router.newRootScreen(Screen.WALL)
             }

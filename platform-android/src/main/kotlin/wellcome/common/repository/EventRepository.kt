@@ -1,9 +1,6 @@
 package wellcome.common.repository
 
-import com.google.firebase.firestore.DocumentListenOptions
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QueryListenOptions
+import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 import com.wellcome.core.firebase.*
 import kotlinx.coroutines.experimental.Deferred
@@ -75,7 +72,7 @@ class EventRepository(private val cache: Cache) {
 
     fun observeEvent(ref: String,
                      parentContext: CoroutineContext,
-                     job: Job): ReceiveChannel<EventState> = produce(parentContext) {
+                     job: Job): ReceiveChannel<DocumentState<EventData>> = produce(parentContext) {
         val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
             .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT).document(ref)
@@ -84,39 +81,25 @@ class EventRepository(private val cache: Cache) {
                 parentContext,
                 job)
 
-        producer.consumeEach { state ->
-            when (state) {
-                is DocumentAdded -> {
-                }
-                is DocumentModified -> send(EventModified(state.data))
-                is DocumentRemoved -> send(EventRemoved(state.ref.id))
-                is DocumentError -> send(EventError(state.exception))
-            }
-        }
-
+        producer.consumeEach { state -> send(state) }
     }
 
     fun observeAddedEvents(timestamp: Long,
                            parentContext: CoroutineContext,
-                           job: Job): ReceiveChannel<EventState> = produce(parentContext) {
-        val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
-            .document(cache.getString(CacheConst.USER_CITY_REF, ""))
-            .collection(FirebaseConstants.EVENT)
-            .orderBy(EventData.TIMESTAMP, Query.Direction.DESCENDING)
-            .whereGreaterThan(EventData.TIMESTAMP, timestamp)
-            .observeAddedValues(EventData::class.java,
-                QueryListenOptions().includeQueryMetadataChanges(),
-                parentContext,
-                job)
+                           job: Job): ReceiveChannel<DocumentState<EventData>> =
+        produce(parentContext) {
+            val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
+                .document(cache.getString(CacheConst.USER_CITY_REF, ""))
+                .collection(FirebaseConstants.EVENT)
+                .orderBy(EventData.TIMESTAMP, Query.Direction.DESCENDING)
+                .whereGreaterThan(EventData.TIMESTAMP, timestamp)
+                .observeAddedValues(EventData::class.java,
+                    QueryListenOptions().includeQueryMetadataChanges(),
+                    parentContext,
+                    job)
 
-        producer.consumeEach { state ->
-            when (state) {
-                is DocumentAdded -> send(EventAdded(state.data))
-                else -> {
-                }
-            }
+            producer.consumeEach { state -> send(state) }
         }
-    }
 
     private fun generatePost(ref: String,
                              contentType: ContentType,
@@ -147,15 +130,22 @@ class EventRepository(private val cache: Cache) {
         byteArray
     }
 
-    fun addLike(eventRef: String) : Job{
-        val userRef = cache.getString(CacheConst.USER_REF,"")
-        val ref = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
-            .document(cache.getString(CacheConst.USER_CITY_REF,""))
+    fun addLike(eventRef: String): Job {
+        val userRef = cache.getString(CacheConst.USER_REF, "")
+        val ref = getUserLikeRef(eventRef, userRef)
+        val like = Like(userRef)
+        return ref.setValue(like)
+    }
+
+    fun removeLike(eventRef: String) =
+        getUserLikeRef(eventRef, cache.getString(CacheConst.USER_REF, "")).removeValue()
+
+    private fun getUserLikeRef(eventRef: String, userRef: String): DocumentReference {
+        return FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
+            .document(cache.getString(CacheConst.USER_CITY_REF, ""))
             .collection(FirebaseConstants.EVENT)
             .document(eventRef)
             .collection(FirebaseConstants.LIKE)
             .document(userRef)
-        val like = Like(userRef)
-        return ref.setValue(like)
     }
 }

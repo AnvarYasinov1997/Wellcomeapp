@@ -1,11 +1,13 @@
 package com.wellcome.core.firebase
 
-import android.util.Log
 import com.google.firebase.firestore.*
-import kotlinx.coroutines.experimental.*
+import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
+import kotlinx.coroutines.experimental.launch
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.experimental.CoroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -13,6 +15,15 @@ import kotlin.coroutines.experimental.suspendCoroutine
 fun <T : Any> DocumentReference.setValue(value: T): Job = launch {
     suspendCoroutine<Unit> { cont ->
         this@setValue.set(value).addOnCompleteListener { task ->
+            if (task.isSuccessful) cont.resume(Unit)
+            else cont.resumeWithException(task.exception!!)
+        }
+    }
+}
+
+fun DocumentReference.removeValue(): Job = launch {
+    suspendCoroutine<Unit> { cont ->
+        this@removeValue.delete().addOnCompleteListener { task ->
             if (task.isSuccessful) cont.resume(Unit)
             else cont.resumeWithException(task.exception!!)
         }
@@ -138,24 +149,32 @@ fun <T : Any> Query.observeAddedValues(
     channel.consumeEach { send(it) }
 }
 
-fun <T: Any> CollectionReference.observeValues(
+fun <T : Any> CollectionReference.observeValues(
     clazz: Class<T>,
     options: QueryListenOptions,
     parentContext: CoroutineContext,
     job: Job
-) = produce(parentContext,parent = job) {
+) = produce(parentContext, parent = job) {
     val channel = Channel<DocumentState<T>>()
-    val listener = this@observeValues.addSnapshotListener(options){querySnapshot, exception ->
+    val isFirstListener = AtomicBoolean(true)
+    val listener = this@observeValues.addSnapshotListener(options) { querySnapshot, exception ->
+        if (isFirstListener.get()) {
+            isFirstListener.set(false)
+            return@addSnapshotListener
+        }
         launch(coroutineContext) {
-            if (exception != null || querySnapshot == null) channel.send(DocumentError(exception ?: Exception("null ebat"),null))
-            else for (change in querySnapshot.documentChanges) when(change.type){
-                DocumentChange.Type.ADDED -> channel.send(DocumentAdded(change.document.toObject(clazz), querySnapshot.metadata, change.document.reference))
-                DocumentChange.Type.MODIFIED -> channel.send(DocumentModified(change.document.toObject(clazz),querySnapshot.metadata,change.document.reference))
+            if (exception != null || querySnapshot == null) channel.send(DocumentError(exception
+                    ?: Exception("null ebat"), null))
+            else for (change in querySnapshot.documentChanges) when (change.type) {
+                DocumentChange.Type.ADDED -> channel.send(DocumentAdded(change.document.toObject(
+                    clazz), querySnapshot.metadata, change.document.reference))
+                DocumentChange.Type.MODIFIED -> channel.send(DocumentModified(change.document.toObject(
+                    clazz), querySnapshot.metadata, change.document.reference))
                 DocumentChange.Type.REMOVED -> channel.send(DocumentRemoved(change.document.reference))
             }
         }
     }
-    job.invokeOnCompletion(true,true) {
+    job.invokeOnCompletion(true, true) {
         listener.remove()
         channel.close()
     }

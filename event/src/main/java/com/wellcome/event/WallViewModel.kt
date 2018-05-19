@@ -8,7 +8,7 @@ import wellcome.common.entity.*
 
 class WallViewModel : ViewModel() {
     private val stateSubject = PublishSubject.create<ItemState>()
-    val items by lazy { mutableListOf<EventData>() }
+    val items by lazy { mutableListOf<Event>() }
 
     fun observeState(): Observable<ItemState> = stateSubject
 
@@ -20,17 +20,17 @@ class WallViewModel : ViewModel() {
             }
             is EventModified ->{
                 val newEvent = eventState.event
-                val i = items.indexOfFirst { it.ref == newEvent.ref }
+                val i = items.indexOfFirst { it.data.ref == newEvent.data.ref }
                 if (i > -1) {
                     val oldEvent = items[i]
                     items[i] = newEvent
-                    if (newEvent.eventDataType != oldEvent.eventDataType) {
+                    if (newEvent.data.eventDataType != oldEvent.data.eventDataType) {
                         stateSubject.onNext(ItemChanged(i))
                     }
                 }
             }
             is EventRemoved ->{
-                val i = items.indexOfFirst { it.ref == eventState.ref }
+                val i = items.indexOfFirst { it.data.ref == eventState.ref }
                 if (i > -1){
                     items.removeAt(i)
                     stateSubject.onNext(ItemRemoved(i))
@@ -41,7 +41,7 @@ class WallViewModel : ViewModel() {
             }
         }
     }
-    fun addItems(items: List<EventData>){
+    fun addItems(items: List<Event>){
         Log.e("viewmodel","events ${items.size}")
         this.items.addAll(items)
         stateSubject.onNext(ItemRangeInserted(this.items.size - items.size,

@@ -11,7 +11,7 @@
     <style name="ActionLayout">
         <item name="android:focusable">true</item>
         <item name="android:clickable">true</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
 
 </resources>
