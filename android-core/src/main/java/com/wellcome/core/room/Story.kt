@@ -17,6 +17,9 @@ interface StoryDao {
     @Query("select * from story where eventRef = :eventRef limit 1")
     fun getStory(eventRef: String): Story?
 
+    @Query("select count(*) from story")
+    fun getStoriesCount(): Int
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addStory(story: Story)
 
@@ -28,5 +31,6 @@ interface StoryDao {
 
     @Update
     fun updateStories(stories: List<Story>)
+
 
 }

@@ -15,6 +15,7 @@ import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
 import com.wellcome.core.Cache
 import com.wellcome.core.service.StoryService
+import kotlinx.coroutines.experimental.Job
 import wellcome.common.core.CacheConst
 import javax.inject.Inject
 import javax.inject.Provider
@@ -49,7 +50,7 @@ class MainActivityPresenter @Inject constructor(
             val isGranted =
                 rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
             if (isGranted || requestAccess()) {
-                authService.bindToCity().join()
+                listOf(authService.bindToCity(),storyService.fetchStoriesIfNotExists()).forEach { it.join() }
                 Log.e(TAG, "yeah")
                 storyService.startListen()
                 viewState.initUi()

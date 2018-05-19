@@ -14,6 +14,7 @@ import wellcome.common.core.FirebaseConstants
 import wellcome.common.entity.StoryData
 
 interface StoryService {
+    fun fetchStoriesIfNotExists(): Job
     fun startListen()
     fun stopListen()
     fun getStory(eventRef: String): Deferred<Story>
@@ -23,6 +24,19 @@ class WellcomeStoryService(private val storyDao: StoryDao,
                            private val cache: Cache) : StoryService {
     private val job by lazy { Job() }
 
+    override fun fetchStoriesIfNotExists() = launch {
+        val count = storyDao.getStoriesCount()
+        if (count == 0) {
+            val data = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER)
+                .document(cache.getString(CacheConst.USER_REF, ""))
+                .collection(FirebaseConstants.STORY)
+                .getValues(StoryData::class.java).await()
+            val stories = List(data.size){i ->
+                Story(data[i].eventRef, data[i].timestamp,data[i].liked,data[i].willcomed)
+            }
+            storyDao.addStories(stories)
+        }
+    }
 
     override fun getStory(eventRef: String): Deferred<Story> = async{
         storyDao.getStory(eventRef) ?: Story()
