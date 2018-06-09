@@ -3,6 +3,10 @@ apply plugin: 'kotlin-platform-jvm'
 apply plugin: 'war'
 //apply plugin: 'org.akhikhl.gretty'
 apply plugin: 'com.google.cloud.tools.appengine'
+apply plugin: 'application'
+
+mainClassName = 'com.wellcomeapp.MainKt'
+
 
 dependencies {
     expectedBy project(":common-core")
