@@ -7,8 +7,6 @@ apply plugin: 'kotlin-platform-android'
 android {
     compileSdkVersion compileSdk
 
-
-
     defaultConfig {
         minSdkVersion minSdk
         targetSdkVersion compileSdk
@@ -34,7 +32,6 @@ kotlin {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
 
@@ -43,7 +40,6 @@ dependencies {
 
     implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
-    implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
 
     api "android.arch.persistence.room:runtime:$roomVersion"

@@ -9,13 +9,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.wellcome.core.firebase.*
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import wellcome.common.core.FirebaseConstants
 import com.wellcome.core.Cache
+import com.wellcome.core.firebase.*
 import wellcome.common.core.CacheConst
 import wellcome.common.entity.CityData
 import wellcome.common.entity.UserData

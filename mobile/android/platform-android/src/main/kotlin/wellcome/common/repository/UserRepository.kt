@@ -7,13 +7,11 @@ import com.wellcome.core.firebase.DocumentAdded
 import com.wellcome.core.firebase.DocumentModified
 import com.wellcome.core.firebase.observeValue
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import wellcome.common.core.CacheConst
 import wellcome.common.core.FirebaseConstants
 import wellcome.common.entity.UserData
-import kotlin.coroutines.experimental.CoroutineContext
 
 class UserRepository(private val cache: Cache) {
     fun getUserReference(): String = cache.getString(CacheConst.USER_REF, "")

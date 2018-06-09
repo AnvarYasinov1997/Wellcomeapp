@@ -1,1 +1,3 @@
-include ':app', ':binaryprefs', ':stub-android', ':cicerone', ':common-core', ':platform-android', ':android-core', ':share', ':share', ':instantapp', ':share', ':event'
+include ':app', ':common-core', ':platform-android', ':android-core', ':share', ':event'
+
+project(':common-core').projectDir = new File(settingsDir, "../../common/common-core")

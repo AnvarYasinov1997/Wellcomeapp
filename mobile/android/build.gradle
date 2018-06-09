@@ -9,7 +9,6 @@ buildscript {
         firebaseFirestoreVersion = '15.0.0'
         firebaseStorageVersion = '15.0.0'
         firebaseAuthVersion = '15.0.0'
-        binaryPrefsVersion = '1.0.0-BETA-2'
         coroutinesCoreVersion = '0.22.5'
         moxyVersion = '1.5.3'
         roomVersion = '1.1.0'
@@ -26,7 +25,7 @@ buildscript {
 
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.2.0-alpha17'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:0.7-dev-1613"
 

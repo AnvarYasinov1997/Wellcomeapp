@@ -33,7 +33,6 @@ android {
 }
 
 dependencies {
-    implementation project(':binaryprefs')
     implementation project(':platform-android')
     implementation project(':common-core')
     implementation project(':android-core')
