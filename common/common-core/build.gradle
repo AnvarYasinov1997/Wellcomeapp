@@ -1,4 +1,4 @@
-apply plugin: 'org.jetbrains.kotlin.platform.common'
+apply plugin: 'kotlin-platform-common'
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"

@@ -1,2 +1,6 @@
-rootProject.name = 'com.wellcomeapp'
+rootProject.name = 'timer'
+include ':common-core'
+
+project(':common-core').projectDir = new File(settingsDir,"../../common/common-core")
+include 'app'
 
