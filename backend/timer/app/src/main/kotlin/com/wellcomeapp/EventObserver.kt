@@ -9,11 +9,12 @@ import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.launch
 import wellcome.common.core.FirebaseConstants
+import wellcome.common.entity.CityData
 import wellcome.common.entity.EventData
 
-sealed class Message
-data class MessageAdd(val ref: String, val deleteTime: Long) : Message()
-data class MessageRemove(val ref: String) : Message()
+private sealed class EventState
+private data class EventAdded(val refPath: String, val deleteTime: Long): EventState()
+private data class EventRemoved(val refPath: String): EventState()
 
 fun startObserve(message: suspend (state: Message) -> Unit) = launch {
     val job = Job()
@@ -25,30 +26,41 @@ fun startObserve(message: suspend (state: Message) -> Unit) = launch {
         cityProducer.cancel()
     }
 
-    cityProducer.consumeEach { cityRef ->
+    cityProducer.consumeEach { city ->
         launch {
-            val eventProducer = db.document(cityRef).collection(FirebaseConstants.EVENT).listenEvents(job)
+            val eventProducer = db
+                .collection(FirebaseConstants.CITY)
+                .document(city.ref)
+                .collection(FirebaseConstants.EVENT)
+                .listenEvents(job)
+
             job.invokeOnCompletion {
                 println("eventProducer close")
                 eventProducer.cancel()
             }
-            eventProducer.consumeEach {
-                println("producer $it")
-                message(it)
+            eventProducer.consumeEach {state ->
+                println("producer $state")
+                when(state){
+                    is EventAdded -> message(MessageAdd(state.refPath, state.deleteTime, city.zoneId))
+                    is EventRemoved -> message(MessageRemove(state.refPath))
+                }
             }
         }
     }
 }
 
 private suspend fun CollectionReference.listenCities(parentJob: Job) = produce(parent = parentJob) {
-    val channel = Channel<String>()
+    val channel = Channel<CityData>()
     val listener = this@listenCities.addSnapshotListener { snapshot, error ->
         launch {
             when {
                 error != null -> println("ERROR listenCities ${error.message}")
                 snapshot != null && snapshot.documentChanges.isNotEmpty() -> snapshot.documentChanges.forEach { change ->
                     when (change.type) {
-                        DocumentChange.Type.ADDED -> channel.send(change.document.reference.path)
+                        DocumentChange.Type.ADDED -> {
+                            val city = change.document.toObject(CityData::class.java)
+                            channel.send(city)
+                        }
                         DocumentChange.Type.MODIFIED -> println("MODIFIED CITY ${change.document.reference}")
                         DocumentChange.Type.REMOVED -> println("REMOVE CITY ${change.document.reference}")
                     }
@@ -71,7 +83,7 @@ private suspend fun CollectionReference.listenCities(parentJob: Job) = produce(p
 }
 
 private suspend fun CollectionReference.listenEvents(parentJob: Job) = produce(parent = parentJob) {
-    val channel = Channel<Message>()
+    val channel = Channel<EventState>()
     val listener = this@listenEvents.addSnapshotListener { snapshot, error ->
         launch {
             if (snapshot != null) when {
@@ -83,18 +95,18 @@ private suspend fun CollectionReference.listenEvents(parentJob: Job) = produce(p
                         DocumentChange.Type.ADDED -> {
                             val event = change.document.toObject(EventData::class.java)
                             println("event $event")
-                            channel.send(MessageAdd(event.ref, event.contents.last().deleteTime))
+                            channel.send(EventAdded(change.document.reference.path, event.contents.last().deleteTime))
                         }
                         DocumentChange.Type.REMOVED -> {
                             val event = change.document.toObject(EventData::class.java)
                             println("event $event")
-                            channel.send(MessageRemove(event.ref))
+                            channel.send(EventRemoved(change.document.reference.path))
                         }
                         DocumentChange.Type.MODIFIED -> {
                         }
                     }
                 }
-            } else kotlin.io.println("snapshot null")
+            } else println("snapshot null")
         }
     }
     parentJob.invokeOnCompletion {
