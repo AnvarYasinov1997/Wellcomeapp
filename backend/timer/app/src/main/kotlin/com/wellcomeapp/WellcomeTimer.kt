@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.concurrent.ConcurrentHashMap
+import java.util.logging.Logger
 import kotlin.concurrent.timer
 
 sealed class Message
@@ -15,6 +16,7 @@ data class MessageAdd(val refPath: String, val deleteTime: Long, val zoneId: Str
 data class MessageRemove(val refPath: String) : Message()
 
 class WellcomeTimer(private val remover: EventRemover) {
+
     init {
         startTimer()
     }
@@ -31,7 +33,6 @@ class WellcomeTimer(private val remover: EventRemover) {
         timer("timer", period = 1000 * 60) {
             runBlocking {
                 val instant = Instant.now()
-                println("eventMapSize ${eventMap.size}")
                 eventMap.forEach { refPath, pair ->
                     val localDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(pair.first),pair.second)
                     val zonedDateTime = ZonedDateTime.of(localDateTime,pair.second)

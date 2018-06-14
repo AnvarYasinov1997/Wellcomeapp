@@ -5,43 +5,42 @@ package com.wellcomeapp
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
+import com.google.firebase.cloud.FirestoreClient
 import kotlinx.coroutines.experimental.runBlocking
-import java.io.File
-import java.io.FileInputStream
-import javax.servlet.ServletContextEvent
-import javax.servlet.ServletContextListener
-import javax.servlet.annotation.WebListener
+import wellcome.common.core.FirebaseConstants
+import wellcome.common.entity.CityData
+import java.util.logging.FileHandler
+import java.util.logging.Logger
+import java.util.logging.SimpleFormatter
 
-//for local run
-fun main(args: Array<String>) = runBlocking {
-    init()
-    val timer = WellcomeTimer(EventRemover())
-    val actor = timer.timerActor()
-    startObserve { actor.send(it) }.join()
+val fileHandler by lazy {
+    FileHandler("Logs.txt").apply { formatter = JsonFormatter()}
 }
 
-val playServicesStream = WellcomeInitializer::class.java.classLoader.getResourceAsStream("wellcomeapp-cc11e-30f446861838.json")/*"${File(System.getProperty("user.dir")).parent}/wellcomeapp-cc11e-30f446861838.json"*/
-
-fun init() {
-    val credentials = GoogleCredentials.fromStream(playServicesStream)
-    val options = FirebaseOptions.Builder()
-            .setCredentials(credentials)
-            .build()
-    FirebaseApp.initializeApp(options)
-
+private val logger by lazy {
+    Logger.getLogger("main").apply { addHandler(fileHandler) }
 }
 
-@WebListener
-class WellcomeInitializer : ServletContextListener{
-    override fun contextInitialized(sce: ServletContextEvent?) = runBlocking {
+val playServicesStream by lazy {
+    WellcomeTimer::class.java.classLoader.getResourceAsStream("wellcomeapp-cc11e-30f446861838.json")
+}
+
+fun main(args: Array<String>) {
+    println("!!!!")
+    runBlocking {
+        logger.info("init")
         init()
         val timer = WellcomeTimer(EventRemover())
         val actor = timer.timerActor()
         startObserve { actor.send(it) }.join()
     }
-
-    override fun contextDestroyed(sce: ServletContextEvent?) {
-    }
-
 }
 
+fun init() {
+    val credentials = GoogleCredentials.fromStream(playServicesStream)
+    logger.info("credentials $credentials")
+    val options = FirebaseOptions.Builder().setCredentials(credentials).build()
+    logger.info("options $options")
+    FirebaseApp.initializeApp(options)
+    logger.info("initialized")
+}

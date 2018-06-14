@@ -11,36 +11,41 @@ import kotlinx.coroutines.experimental.launch
 import wellcome.common.core.FirebaseConstants
 import wellcome.common.entity.CityData
 import wellcome.common.entity.EventData
+import java.util.logging.Level
+import java.util.logging.Logger
+
+private val logger by lazy {
+    Logger.getLogger("EventObserver").apply { addHandler(fileHandler) }
+}
 
 private sealed class EventState
-private data class EventAdded(val refPath: String, val deleteTime: Long): EventState()
-private data class EventRemoved(val refPath: String): EventState()
+private data class EventAdded(val refPath: String, val deleteTime: Long) : EventState()
+private data class EventRemoved(val refPath: String) : EventState()
 
 fun startObserve(message: suspend (state: Message) -> Unit) = launch {
+    logger.info("start observe")
     val job = Job()
     val db = FirestoreClient.getFirestore()
 
     val cityProducer = db.collection(FirebaseConstants.CITY).listenCities(job)
     job.invokeOnCompletion {
-        println("cityProducer close")
+        logger.info("cityProducer close")
         cityProducer.cancel()
     }
 
     cityProducer.consumeEach { city ->
         launch {
-            val eventProducer = db
-                .collection(FirebaseConstants.CITY)
-                .document(city.ref)
-                .collection(FirebaseConstants.EVENT)
-                .listenEvents(job)
+            val eventProducer =
+                db.collection(FirebaseConstants.CITY).document(city.ref).collection(FirebaseConstants.EVENT)
+                    .listenEvents(job)
 
             job.invokeOnCompletion {
-                println("eventProducer close")
+                logger.info("eventProducer close")
                 eventProducer.cancel()
             }
-            eventProducer.consumeEach {state ->
-                println("producer $state")
-                when(state){
+            eventProducer.consumeEach { state ->
+                logger.info("producer $state")
+                when (state) {
                     is EventAdded -> message(MessageAdd(state.refPath, state.deleteTime, city.zoneId))
                     is EventRemoved -> message(MessageRemove(state.refPath))
                 }
@@ -52,32 +57,33 @@ fun startObserve(message: suspend (state: Message) -> Unit) = launch {
 private suspend fun CollectionReference.listenCities(parentJob: Job) = produce(parent = parentJob) {
     val channel = Channel<CityData>()
     val listener = this@listenCities.addSnapshotListener { snapshot, error ->
+        logger.info("city changed")
         launch {
             when {
-                error != null -> println("ERROR listenCities ${error.message}")
+                error != null -> logger.severe("ERROR listenCities ${error.message}")
                 snapshot != null && snapshot.documentChanges.isNotEmpty() -> snapshot.documentChanges.forEach { change ->
                     when (change.type) {
                         DocumentChange.Type.ADDED -> {
                             val city = change.document.toObject(CityData::class.java)
                             channel.send(city)
                         }
-                        DocumentChange.Type.MODIFIED -> println("MODIFIED CITY ${change.document.reference}")
-                        DocumentChange.Type.REMOVED -> println("REMOVE CITY ${change.document.reference}")
+                        DocumentChange.Type.MODIFIED -> logger.info("MODIFIED CITY ${change.document.reference}")
+                        DocumentChange.Type.REMOVED -> logger.info("REMOVE CITY ${change.document.reference}")
                     }
                 }
-                else -> println("CITY snapshot null!")
+                else -> logger.severe("CITY snapshot null!")
             }
         }
     }
 
     parentJob.invokeOnCompletion {
-        println("listenCities close")
+        logger.info("listenCities close")
         listener.remove()
         channel.close()
     }
 
     channel.consumeEach {
-        println("channel $it")
+        logger.info("channel $it")
         send(it)
     }
 }
@@ -85,37 +91,38 @@ private suspend fun CollectionReference.listenCities(parentJob: Job) = produce(p
 private suspend fun CollectionReference.listenEvents(parentJob: Job) = produce(parent = parentJob) {
     val channel = Channel<EventState>()
     val listener = this@listenEvents.addSnapshotListener { snapshot, error ->
+        logger.info("event changed")
         launch {
             if (snapshot != null) when {
                 error != null -> {
-                    println("ERROR listenEvents ${error.message}")
+                    logger.severe("ERROR listenEvents ${error.message}")
                 }
                 else -> snapshot.documentChanges.forEach { change ->
                     when (change.type) {
                         DocumentChange.Type.ADDED -> {
                             val event = change.document.toObject(EventData::class.java)
-                            println("event $event")
+                            logger.info("event $event")
                             channel.send(EventAdded(change.document.reference.path, event.contents.last().deleteTime))
                         }
                         DocumentChange.Type.REMOVED -> {
                             val event = change.document.toObject(EventData::class.java)
-                            println("event $event")
+                            logger.info("event $event")
                             channel.send(EventRemoved(change.document.reference.path))
                         }
                         DocumentChange.Type.MODIFIED -> {
                         }
                     }
                 }
-            } else println("snapshot null")
+            } else logger.severe("snapshot null")
         }
     }
     parentJob.invokeOnCompletion {
-        println("listenEvents close")
+        logger.info("listenEvents close")
         listener.remove()
         channel.close()
     }
     channel.consumeEach {
-        println("channel $it")
+        logger.info("channel $it")
         send(it)
     }
 }

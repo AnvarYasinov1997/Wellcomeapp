@@ -14,6 +14,7 @@ import wellcome.common.entity.EventModified
 import wellcome.common.entity.EventState
 import wellcome.common.interactor.EventInteractor
 import wellcome.common.interactor.UserInteractor
+import java.util.*
 import javax.inject.Inject
 
 class SingleEventPresenter(
@@ -29,6 +30,7 @@ class SingleEventPresenter(
         event = item
         view.initUi(event)
         Log.e(event.data.ref, event.isLiked.toString())
+        Log.e("TIME",Date(event.data.contents.first().createTime).toString())
     }
 
     override fun viewAttached() {
