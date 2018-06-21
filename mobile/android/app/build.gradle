@@ -14,12 +14,12 @@ apply plugin: 'maven'
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion compileSdk
     buildToolsVersion '27.0.3'
     defaultConfig {
         applicationId "com.mistreckless.support.wellcomeapp"
-        minSdkVersion 21
-        targetSdkVersion 27
+        minSdkVersion minSdk
+        targetSdkVersion compileSdk
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -63,21 +63,16 @@ dependencies {
     implementation project(':android-core')
     implementation project(':share')
     implementation project(':event')
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
+    implementation project(':profile')
+    implementation project(':main')
 
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$supportLibVersion"
     implementation "com.android.support:design:$supportLibVersion"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    implementation 'com.subinkrishna:circularimageview:1.2.2'
-    implementation "com.android.support:cardview-v7:$supportLibVersion"
     implementation "android.arch.lifecycle:extensions:1.1.1"
-
 
     implementation "com.google.dagger:dagger:$daggerVersion"
     implementation "com.google.dagger:dagger-android:$daggerVersion"
@@ -86,37 +81,27 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
 
+    implementation "com.arello-mobile:moxy:$moxyVersion"
+    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
+    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
+
     implementation "com.google.android.gms:play-services-auth:$playServicesVersion"
     implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
     implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
 
-
-    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding-support-v4:2.0.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding-appcompat-v7:2.0.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding-design:2.0.0'
-    implementation 'com.jakewharton.rx2:replaying-share-kotlin:2.0.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-
-
-    implementation "com.arello-mobile:moxy:$moxyVersion"
-    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
-    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
-
-    implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
-}
-
-kapt {
-    generateStubs = true
 }
 
 apply plugin: 'com.google.gms.google-services'

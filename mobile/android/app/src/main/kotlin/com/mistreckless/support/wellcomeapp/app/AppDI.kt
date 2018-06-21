@@ -2,17 +2,15 @@ package com.mistreckless.support.wellcomeapp.app
 
 import android.app.Application
 import android.content.Context
-import com.mistreckless.support.wellcomeapp.data.DataModule
-import com.mistreckless.support.wellcomeapp.data.RepositoryModule
-import com.mistreckless.support.wellcomeapp.domain.InteractorModule
 import com.mistreckless.support.wellcomeapp.navigation.NavigationModule
-import com.mistreckless.support.wellcomeapp.ui.MainActivity
-import com.mistreckless.support.wellcomeapp.ui.MainActivityFragmentProvider
-import com.mistreckless.support.wellcomeapp.ui.MainActivityModule
-import com.wellcome.share.CameraActivity
-import com.wellcome.share.CameraActivityFragmentProvider
-import com.wellcome.share.CameraModule
 import com.wellcome.core.ui.PerActivity
+import com.wellcome.share.CameraActivity
+import com.wellcome.share.CameraModule
+import com.wellcomeapp.main.MainActivity
+import com.wellcomeapp.main.MainActivityModule
+import com.wellcomeapp.main.data.DataModule
+import com.wellcomeapp.main.data.RepositoryModule
+import com.wellcomeapp.main.domain.InteractorModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module

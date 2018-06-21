@@ -2,25 +2,23 @@ package com.wellcome.share
 
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
+import com.wellcome.core.navigation.NavigatorProvider
 import com.wellcome.core.ui.BaseActivity
 import com.wellcome.core.ui.BaseActivityView
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
-/**
- * Created by @mistreckless on 03.09.2017. !
- */
-
 class CameraActivity : BaseActivity<CameraPresenter>(),
-    CameraActivityView {
+        CameraActivityView {
     override val layoutId: Int
         get() = R.layout.activity_camera
     override val navigator: SupportAppNavigator
-        get() = ShareNavigator(this,supportFragmentManager,R.id.cameraContainer)
+        get() = (application as NavigatorProvider).getShareNavigator(this, R.id.cameraContainer)
 
     @InjectPresenter
-    override lateinit var presenter : CameraPresenter
+    override lateinit var presenter: CameraPresenter
+
     @ProvidePresenter
-    fun providePresenter() : CameraPresenter = presenterProvider.get()
+    fun providePresenter(): CameraPresenter = presenterProvider.get()
 
 }
 
