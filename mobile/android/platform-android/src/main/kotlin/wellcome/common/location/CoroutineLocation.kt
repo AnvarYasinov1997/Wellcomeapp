@@ -23,7 +23,7 @@ import kotlin.coroutines.experimental.suspendCoroutine
         }
     }
 
-     suspend fun getAddressesFromLocation(
+     fun getAddressesFromLocation(
         lat: Double,
         lon: Double,
         maxResult: Int

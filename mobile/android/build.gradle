@@ -12,8 +12,10 @@ buildscript {
         coroutinesCoreVersion = '0.22.5'
         moxyVersion = '1.5.3'
         roomVersion = '1.1.1'
+        okhttpVersion = '3.10.0'
         compileSdk = 27
         minSdk = 21
+        retrofitVersion = '2.4.0'
     }
 
     repositories {
