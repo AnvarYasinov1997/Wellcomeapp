@@ -13,6 +13,7 @@
 @file:JsModule("firebase-functions")
 package js.externals.firebase.functions.providers.https
 
+import js.externals.firebase.admin.auth.DecodedIdToken
 import kotlin.js.*
 import kotlin.js.Json
 import org.khronos.webgl.*
@@ -43,7 +44,7 @@ external open class HttpsError(code: dynamic /* String /* "ok" */ | String /* "c
 }
 external interface `T$0` {
     var uid: String
-    // var token: firebase.auth.DecodedIdToken
+    var token: DecodedIdToken
 }
 external interface CallableContext {
     var auth: `T$0`? get() = definedExternally; set(value) = definedExternally

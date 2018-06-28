@@ -114,10 +114,10 @@ external open class QueryDocumentSnapshot : DocumentSnapshot {
 external open class Query {
     open var firestore: Firestore = definedExternally
     open fun where(fieldPath: String, opStr: String /* "<" */, value: Any): Query = definedExternally
-    open fun where(fieldPath: String, opStr: String /* "<=" */, value: Any): Query = definedExternally
-    open fun where(fieldPath: String, opStr: String /* "==" */, value: Any): Query = definedExternally
-    open fun where(fieldPath: String, opStr: String /* ">=" */, value: Any): Query = definedExternally
-    open fun where(fieldPath: String, opStr: String /* ">" */, value: Any): Query = definedExternally
+//    open fun where(fieldPath: String, opStr: String /* "<=" */, value: Any): Query = definedExternally
+//    open fun where(fieldPath: String, opStr: String /* "==" */, value: Any): Query = definedExternally
+//    open fun where(fieldPath: String, opStr: String /* ">=" */, value: Any): Query = definedExternally
+//    open fun where(fieldPath: String, opStr: String /* ">" */, value: Any): Query = definedExternally
     open fun where(fieldPath: FieldPath, opStr: String /* "<" */, value: Any): Query = definedExternally
     open fun where(fieldPath: FieldPath, opStr: String /* "<=" */, value: Any): Query = definedExternally
     open fun where(fieldPath: FieldPath, opStr: String /* "==" */, value: Any): Query = definedExternally
