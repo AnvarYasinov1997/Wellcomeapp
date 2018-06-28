@@ -1,12 +1,12 @@
 import kotlin.js.Promise
 
-inline fun promiseTimezone(mapClient: dynamic, params: dynamic): Promise<TimezoneType> =
+fun promiseTimezone(mapClient: dynamic, params: dynamic): Promise<TimezoneType> =
     mapClient.timezone(params).asPromise().then { response ->
         console.log(response.json)
         return@then TimezoneType(response.json.timeZoneId)
     } as Promise<TimezoneType>
 
-inline fun promiseLocality(mapClient: dynamic, params: dynamic): Promise<LocalityType> =
+fun promiseLocality(mapClient: dynamic, params: dynamic): Promise<LocalityType> =
     mapClient.reverseGeocode(params).asPromise().then { response ->
         val t = JSON.parse<Res>(JSON.stringify(response.json))
         for (item in t.results) {
