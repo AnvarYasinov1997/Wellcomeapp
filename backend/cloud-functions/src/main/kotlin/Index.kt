@@ -1,6 +1,7 @@
 @file:Suppress("UNCHECKED_CAST_TO_EXTERNAL_INTERFACE")
 
 import js.externals.firebase.admin.FirebaseFirestore.*
+import js.externals.firebase.admin.initializeApp
 import js.externals.firebase.functions.providers.https.CallableContext
 import wellcome.common.core.FirebaseConstants
 import wellcome.common.entity.CityData
@@ -13,18 +14,19 @@ external val exports: dynamic
 
 val map: dynamic = object {}
 
-val admin = require("firebase-admin")
+//val admin = require("firebase-admin")
 val functions = require("firebase-functions")
 val mapClient by lazy {
     map["key"] = apiKey
     map["Promise"] = Promise
     require("@google/maps").createClient(map)
 }
-val db by lazy { admin.firestore() as Firestore}
+
 
 
 fun main(args: Array<String>) {
-    admin.initializeApp()
+    Admin.initializeApp(functions.config().firebase)
+    val db = Admin.firestore()
 
     exports.initCity = functions.https.onCall { data: LatLon, context: CallableContext ->
         console.log(data)
@@ -49,7 +51,6 @@ fun main(args: Array<String>) {
                     val userSnapshot = snapshots[0]
                     val citySnapshot = snapshots[1]
                     val userRef = userSnapshot.docs.first().ref
-                    val user = userSnapshot.docs.first().data()
 
                     if (citySnapshot.empty){
                         val timezoneParams: dynamic = object {}
@@ -63,15 +64,21 @@ fun main(args: Array<String>) {
                             batch.set(cityRef, JSON.parse(JSON.stringify(cityData)))
                             batch.update(userRef, UserData.CITY_NAME, cityName, js("{merge: true}"))
                             return@snapshot Promise.all(arrayOf(Promise.resolve(cityData), batch.commit()))
-                        }.then save@{ return@save it[0] as CityData}
+                        }.then save@{
+                            console.log(it)
+                            return@save JSON.parse<CityData>(JSON.stringify(it[0]))
+                        }
                     }else {
                         val documentData = citySnapshot.docs.first().data()
                         console.log(documentData)
-                        val cityData = documentData as CityData
+                        val cityData = JSON.parse<CityData>(JSON.stringify(documentData))
                         console.log(cityData)
 
                         return@city userRef.update(UserData.CITY_NAME, cityName, js("{merge: true}"))
-                            .then save@{ return@save cityData }
+                            .then save@{
+                                console.log(it)
+                                return@save cityData
+                            }
                     }
                 }
 
@@ -100,7 +107,7 @@ fun main(args: Array<String>) {
                 }else{
                     val documentData = snapshot.docs.first().data()
                     console.log(documentData)
-                    val userData = documentData as UserData
+                    val userData = JSON.parse<UserData>(JSON.stringify(documentData))
                     console.log(userData)
                     return@user userData
                 }
@@ -108,6 +115,14 @@ fun main(args: Array<String>) {
                 console.log(err)
                 throw err
             }
+    }
+
+    exports.test = functions.https.onRequest { req, resp ->
+        val userData = UserData()
+        console.log(userData.toString())
+        console.log(JSON.stringify(userData))
+        console.log(JSON.parse(userData.toString()))
+        resp.send("ok")
     }
 
 //    exports.helloWorld = functions.https.onRequest { req, resp ->

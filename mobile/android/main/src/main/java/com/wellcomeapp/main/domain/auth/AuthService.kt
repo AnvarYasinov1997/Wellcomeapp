@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.functions.FirebaseFunctions
 import com.wellcome.core.Cache
 import com.wellcome.core.firebase.*
 import kotlinx.coroutines.experimental.Deferred
@@ -23,10 +24,9 @@ import wellcome.common.location.LocationService
 
 interface AuthService {
     suspend fun signInWithGoogle(account: GoogleSignInAccount): Deferred<FirebaseUser>
-    suspend fun checkUserExist(firebaseUser: FirebaseUser): Deferred<Boolean>
     suspend fun bindToCity(): Job
-    suspend fun registryNewUser(firebaseUser: FirebaseUser): Job
     fun isAuthenticated(): Boolean
+    fun bindUser(firebaseUser: FirebaseUser): Job
 }
 
 class GoogleAuthService(
@@ -39,25 +39,20 @@ class GoogleAuthService(
         FirebaseAuth.getInstance().signIn(credential).await()
     }
 
-    override suspend fun checkUserExist(firebaseUser: FirebaseUser): Deferred<Boolean> = async {
-        val users = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER)
-                .whereEqualTo(UserData.ID, firebaseUser.uid)
-                .getValues(UserData::class.java).await()
-        if (users.isNotEmpty()) cacheUserData(users[0])
-        users.isNotEmpty()
+    override fun bindUser(firebaseUser: FirebaseUser): Job = launch {
+        val user = FirebaseFunctions.getInstance()
+                .getHttpsCallable("initUser")
+                .request<UserData>().await()
+        cacheUserData(user)
     }
 
     override suspend fun bindToCity() = launch {
-        val cityName = locationService.getCurrentCity()
-        val collection = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
-        val cities = collection.whereEqualTo(CityData.NAME, cityName)
-                .getValues(CityData::class.java).await()
-        if (cities.isNotEmpty()) cache.cacheString(CacheConst.USER_CITY_REF, cities[0].ref)
-        else with(collection.document()) {
-            setValue(CityData(id, cityName)).join()
-            cache.cacheString(CacheConst.USER_CITY_REF, id)
-        }
-        updateUserCity(cityName)
+        val latLon = locationService.getLastKnownLocation()
+        val params = mapOf("lat" to latLon.lat, "lon" to latLon.lon)
+        val city = FirebaseFunctions.getInstance()
+                .getHttpsCallable("initCity")
+                .request<CityData>(params).await()
+        cacheUserCity(city)
     }
 
     override fun isAuthenticated(): Boolean =
@@ -65,26 +60,6 @@ class GoogleAuthService(
                     && FirebaseAuth.getInstance().currentUser != null
                     && GoogleSignIn.getLastSignedInAccount(context) != null
 
-    override suspend fun registryNewUser(firebaseUser: FirebaseUser) = launch {
-        val userRef = FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document()
-        val cityName = cache.getString(CacheConst.USER_CITY, "")
-        val user = UserData(
-                firebaseUser.uid,
-                userRef.id,
-                cityName,
-                firebaseUser.displayName ?: "Anonymous"
-        )
-        userRef.setValue(user).join()
-        cacheUserData(user)
-    }
-
-    private suspend fun updateUserCity(cityName: String) {
-        val userRef = cache.getString(CacheConst.USER_REF, "")
-        val document =
-                FirebaseFirestore.getInstance().collection(FirebaseConstants.USER).document(userRef)
-        val user = document.getValue(UserData::class.java).await()
-        if (user.cityName != cityName) document.updateFields(mapOf(UserData.CITY_NAME to cityName))
-    }
 
     private fun cacheUserData(userData: UserData) {
         cache.cacheString(CacheConst.USER_REF, userData.ref)
@@ -97,4 +72,8 @@ class GoogleAuthService(
             cache.cacheString(CacheConst.USER_PHOTO, photoUrl)
     }
 
+    private fun cacheUserCity(cityData: CityData){
+        cache.cacheString(CacheConst.USER_CITY, cityData.name)
+        cache.cacheString(CacheConst.USER_CITY_REF, cityData.ref)
+    }
 }

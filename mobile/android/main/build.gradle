@@ -61,7 +61,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
     implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
-    implementation "com.google.firebase:firebase-functions:$firebaseAuthVersion"
+    implementation "com.google.firebase:firebase-functions:$firebaseFunctionsVersion"
 
     implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'

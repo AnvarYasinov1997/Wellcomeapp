@@ -9,6 +9,7 @@ buildscript {
         firebaseFirestoreVersion = '15.0.0'
         firebaseStorageVersion = '15.0.0'
         firebaseAuthVersion = '15.0.0'
+        firebaseFunctionsVersion = '15.0.0'
         coroutinesCoreVersion = '0.22.5'
         moxyVersion = '1.5.3'
         roomVersion = '1.1.1'

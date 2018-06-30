@@ -8,16 +8,17 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
 import wellcome.common.entity.Address
+import wellcome.common.entity.LatLon
 import kotlin.coroutines.experimental.coroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
 
  class CoroutineLocation(private val fusedLocationProviderClient: FusedLocationProviderClient, private val geocoder: Geocoder){
     @SuppressLint("MissingPermission")
-     suspend fun getLastKnownLocation(): Deferred<Pair<Double, Double>> = async(coroutineContext) {
-        suspendCoroutine<Pair<Double,Double>> { cont->
+     suspend fun getLastKnownLocation(): Deferred<LatLon> = async(coroutineContext) {
+        suspendCoroutine<LatLon> { cont->
             fusedLocationProviderClient.lastLocation.addOnCompleteListener { task ->
                 val location = task.result
-                if (location != null) cont.resume(Pair(location.latitude,location.longitude))
+                if (location != null) cont.resume(LatLon(location.latitude,location.longitude))
                 else cont.resumeWithException(task.exception!!)
             }
         }

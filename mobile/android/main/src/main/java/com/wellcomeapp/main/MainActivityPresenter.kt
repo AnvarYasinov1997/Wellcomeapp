@@ -18,9 +18,6 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
 import wellcome.common.core.CacheConst
-import wellcome.common.core.InitCityReq
-import wellcome.common.entity.CityData
-import wellcome.common.entity.LatLon
 import javax.inject.Inject
 import javax.inject.Provider
 import kotlin.coroutines.experimental.suspendCoroutine
@@ -39,40 +36,39 @@ class MainActivityPresenter @Inject constructor(
 ) : BasePresenter<MainActivityView>() {
 
     override fun onFirstViewAttach() {
-//        launch {
-//            val city = cache.getString(CacheConst.USER_CITY, "")
-//            Log.e(TAG, city)
-//        }
-//        launch(UI) {
-//            val isAuth = authService.isAuthenticated()
-//            if (!isAuth) {
-//                val account = auth()
-//                val firebaseUser = authService.signInWithGoogle(account).await()
-//                if (!authService.checkUserExist(firebaseUser).await())
-//                    authService.registryNewUser(firebaseUser).join()
-//            }
-//
-//            val isGranted =
-//                    rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
-//            if (isGranted || requestAccess()) {
-//                listOf(authService.bindToCity(), storyService.fetchStoriesIfNotExists()).forEach { it.join() }
-//                Log.e(TAG, "yeah")
-//                storyService.startListen()
-//                viewState.initUi()
-//                router.newRootScreen(Screen.WALL)
-//            }
-//        }
         launch {
-            //            val city = testApi.helloWorld("52.520008,13.404954", "Berlin").await()
-//            Log.e("citytest",city.toString())
-            val map = mapOf("lat" to 52.52008, "lon" to 13.404954, "name" to "Berlin")
-            FirebaseFunctions.getInstance().getHttpsCallable("initCity")
-                    .call(map)
-                    .continueWith { task ->
-                        if (task.isSuccessful) Log.e("tast", task.result.data.toString() + "suk")
-                        else Log.e("err", task.exception?.message)
-                    }
+            val city = cache.getString(CacheConst.USER_CITY, "")
+            Log.e(TAG, city)
         }
+        launch(UI) {
+            val isAuth = authService.isAuthenticated()
+            if (!isAuth) {
+                val account = auth()
+                val firebaseUser = authService.signInWithGoogle(account).await()
+                authService.bindUser(firebaseUser).join()
+            }
+
+            val isGranted =
+                    rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
+            if (isGranted || requestAccess()) {
+                listOf(authService.bindToCity(), storyService.fetchStoriesIfNotExists()).forEach { it.join() }
+                Log.e(TAG, "yeah")
+                storyService.startListen()
+                viewState.initUi()
+                router.newRootScreen(Screen.WALL)
+            }
+        }
+//        launch {
+//            //            val city = testApi.helloWorld("52.520008,13.404954", "Berlin").await()
+////            Log.e("citytest",city.toString())
+//            val map = mapOf("lat" to 52.52008, "lon" to 13.404954, "name" to "Berlin")
+//            FirebaseFunctions.getInstance().getHttpsCallable("initCity")
+//                    .call(map)
+//                    .continueWith { task ->
+//                        if (task.isSuccessful) Log.e("tast", task.result.data.toString() + "suk")
+//                        else Log.e("err", task.exception?.message)
+//                    }
+//        }
     }
 
     private suspend fun requestAccess() = suspendCoroutine<Boolean> { cont ->
