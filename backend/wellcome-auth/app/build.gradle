@@ -6,12 +6,22 @@ apply plugin: 'com.google.cloud.tools.appengine'
 group 'wellcome-auth'
 version '1.0-SNAPSHOT'
 
+appengine {
+    deploy {
+        version = "GCLOUD_CONFIG"
+        project = "GCLOUD_CONFIG"
+    }
+}
+
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "io.ktor:ktor-server-servlet:$ktor_version"
+
     providedCompile 'com.google.appengine:appengine:+'
     expectedBy project(":common-core")
     implementation project(":common-core")
 }
+kotlin.experimental.coroutines = 'enable'
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
