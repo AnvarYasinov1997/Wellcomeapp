@@ -1,3 +1,4 @@
+
 subprojects {
     buildscript {
         ext.kotlin_version = '1.2.51'
@@ -8,12 +9,13 @@ subprojects {
             jcenter()
             maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
             maven { url "https://kotlin.bintray.com/kotlinx" }
-
-
+            maven { url 'https://maven-central.storage.googleapis.com' }
         }
+
         dependencies {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
             classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:0.7-dev-1613"
+            classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
         }
     }
 

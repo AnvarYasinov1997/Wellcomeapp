@@ -12,13 +12,12 @@ data class UserData(
     val additionalPoints: Long = 0,
     val generalRating: Long = 0
 ){
-    override fun toString(): String {
-        return "{ " +
-                if (id.isNotEmpty()) "\"$ID\":$id," else "\"$ID\":\"\"," +
-                if (ref.isNotEmpty()) "\"$REF\":$ref," else "\"$REF\":\"\"," +
-                if (cityName.isNotEmpty()) "\"$CITY_NAME\":$cityName," else "\"$CITY_NAME\":\"\"," +
-                if (displayedName.isNotEmpty()) "\"$DISPLAYED_NAME\":$displayedName," else "\"$DISPLAYED_NAME\":\"\"," +
-                if (photoUrl?.isNotEmpty() == true)"\"$PHOTO_URL\":$photoUrl," else "\"$PHOTO_URL\":\"\","+
+    override fun toString() = "{ " +
+                "\"$ID\":\"$id\"," +
+                "\"$REF\":\"$ref\"," +
+                "\"$CITY_NAME\":\"$cityName\"," +
+                "\"$DISPLAYED_NAME\":\"$displayedName\"," +
+                "\"$PHOTO_URL\":\"$photoUrl\"," +
                 "\"$LIKE_COUNT\":$likeCount," +
                 "\"$POST_COUNT\":$postCount," +
                 "\"$WILLCOME_COUNT\":$willComeCount," +
@@ -26,7 +25,7 @@ data class UserData(
                 "\"$GENERAL_RATING\":$generalRating" +
                 "}"
 
-    }
+
     companion object {
         const val ID="id"
         const val REF = "ref"

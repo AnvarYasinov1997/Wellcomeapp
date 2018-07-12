@@ -85,10 +85,10 @@ external open class DocumentReference {
     open fun collection(collectionPath: String): CollectionReference = definedExternally
     open fun getCollections(): Promise<Array<CollectionReference>> = definedExternally
     open fun create(data: DocumentData): Promise<WriteResult> = definedExternally
-    open fun set(data: DocumentData, options: SetOptions? = definedExternally /* null */): Promise<WriteResult> = definedExternally
-    open fun update(data: UpdateData, precondition: Precondition? = definedExternally /* null */): Promise<WriteResult> = definedExternally
+    open fun set(data: dynamic, options: SetOptions? = definedExternally /* null */): Promise<WriteResult> = definedExternally
+    open fun update(data: dynamic, precondition: Precondition? = definedExternally /* null */): Promise<WriteResult> = definedExternally
     open fun update(field: String, value: Any, vararg moreFieldsOrPrecondition: Any): Promise<WriteResult> = definedExternally
-    open fun update(field: FieldPath, value: Any, vararg moreFieldsOrPrecondition: Any): Promise<WriteResult> = definedExternally
+//    open fun update(field: FieldPath, value: Any, vararg moreFieldsOrPrecondition: Any): Promise<WriteResult> = definedExternally
     open fun delete(precondition: Precondition? = definedExternally /* null */): Promise<WriteResult> = definedExternally
     open fun get(): Promise<DocumentSnapshot> = definedExternally
     open fun onSnapshot(onNext: (snapshot: DocumentSnapshot) -> Unit, onError: ((error: Error) -> Unit)? = definedExternally /* null */): () -> Unit = definedExternally

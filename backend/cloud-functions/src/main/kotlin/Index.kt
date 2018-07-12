@@ -17,11 +17,10 @@ val map: dynamic = object {}
 //val admin = require("firebase-admin")
 val functions = require("firebase-functions")
 val mapClient by lazy {
-    map["key"] = apiKey
+    map["key"] = ""
     map["Promise"] = Promise
     require("@google/maps").createClient(map)
 }
-
 
 
 fun main(args: Array<String>) {
@@ -29,147 +28,59 @@ fun main(args: Array<String>) {
     val db = Admin.firestore()
 
     exports.initCity = functions.https.onCall { data: LatLon, context: CallableContext ->
-        console.log(data)
-        console.log(context.auth)
-        val geocodeParams: dynamic = object {}
-        geocodeParams["latlng"] = "${data.lat},${data.lon}"
+        val uid = context.auth!!.uid
 
-        return@onCall promiseLocality(mapClient,geocodeParams).then { localityType ->
-            return@then localityType.locality
-        }.then { cityName ->
-            val userPromise = db
-                .collection(FirebaseConstants.USER)
-                .where(UserData.ID, "==", context.auth!!.uid)
-                .limit(1)
-                .get()
-            val cityPromise = db
-                .collection(FirebaseConstants.CITY)
-                .where(CityData.NAME, "==", cityName)
-                .limit(1)
-                .get()
-                Promise.all(arrayOf(userPromise, cityPromise)).then city@{ snapshots ->
-                    val userSnapshot = snapshots[0]
-                    val citySnapshot = snapshots[1]
-                    val userRef = userSnapshot.docs.first().ref
+        return@onCall promiseLocality(mapClient, generateGeocodeParams(data)).then { cityName ->
+            val userPromise = db.findUserByUid(uid)
+            val cityPromise = db.findCityByName(cityName)
 
-                    if (citySnapshot.empty){
-                        val timezoneParams: dynamic = object {}
-                        timezoneParams["location"] = "${data.lat},${data.lon}"
-                        return@city promiseTimezone(mapClient, timezoneParams).then snapshot@{ timezoneType ->
-                            val zoneId = timezoneType.zoneId
-                            val cityRef = db.collection(FirebaseConstants.CITY).doc()
-                            val cityData = CityData(cityRef.id, cityName, zoneId) as DocumentData
+            Promise.all(arrayOf(userPromise, cityPromise)).then city@{ snapshots ->
+                val userSnapshot = snapshots[0]
+                val citySnapshot = snapshots[1]
+                val userRef = userSnapshot.docs.first().ref
 
-                            val batch = db.batch()
-                            batch.set(cityRef, JSON.parse(JSON.stringify(cityData)))
-                            batch.update(userRef, UserData.CITY_NAME, cityName, js("{merge: true}"))
-                            return@snapshot Promise.all(arrayOf(Promise.resolve(cityData), batch.commit()))
-                        }.then save@{
-                            console.log(it)
-                            return@save JSON.parse<CityData>(JSON.stringify(it[0]))
-                        }
-                    }else {
-                        val documentData = citySnapshot.docs.first().data()
-                        console.log(documentData)
-                        val cityData = JSON.parse<CityData>(JSON.stringify(documentData))
-                        console.log(cityData)
+                if (citySnapshot.empty) return@city promiseTimezone(mapClient, generateTimezoneParams(data))
+                    .then snapshot@{ zoneId ->
+                        val cityRef = db.collection(FirebaseConstants.CITY).doc()
+                        val cityData = CityData(cityRef.id, cityName, zoneId)
 
-                        return@city userRef.update(UserData.CITY_NAME, cityName, js("{merge: true}"))
-                            .then save@{
-                                console.log(it)
-                                return@save cityData
-                            }
+                        val batch = db.batch()
+                        batch.set(cityRef, JSON.parse(cityData.toString()))
+                        batch.update(userRef, UserData.CITY_NAME, cityName, js("{merge: true}"))
+
+                        return@snapshot batch.commit().returnValue(cityData)
                     }
-                }
+                val cityData = citySnapshot.docs.first().parse<CityData>()
+                return@city userRef.updateAndReturn(cityData, UserData.CITY_NAME, cityName)
+            }
 
-        }.catch { err ->
-            throw err
-        }
+        }.catch(::logError)
     }
 
     exports.initUser = functions.https.onCall { data: Any, context: CallableContext ->
         val uid = context.auth!!.uid
-        return@onCall db
-            .collection(FirebaseConstants.USER)
-            .where(UserData.ID, "==", uid)
-            .limit(1)
-            .get()
-            .then user@{ snapshot: QuerySnapshot ->
-                if (snapshot.empty){
-                    val userRef = db
-                        .collection(FirebaseConstants.USER)
-                        .doc()
-                    val newUser = UserData(uid, userRef.id, displayedName = context.auth?.token?.get("name") as String)
-                    return@user userRef.set(JSON.parse(JSON.stringify(newUser as DocumentData)))
-                        .then result@{
-                            return@result newUser
-                        }
-                }else{
-                    val documentData = snapshot.docs.first().data()
-                    console.log(documentData)
-                    val userData = JSON.parse<UserData>(JSON.stringify(documentData))
-                    console.log(userData)
-                    return@user userData
-                }
-            }.catch { err ->
-                console.log(err)
-                throw err
-            }
+        val userName = context.auth?.token?.get("name") as String
+
+        return@onCall db.findUserByUid(uid).then user@{ snapshot: QuerySnapshot ->
+                if (!snapshot.empty) return@user snapshot.docs.first().parse<UserData>()
+
+                val userRef = db.collection(FirebaseConstants.USER).doc()
+                val user = UserData(uid, userRef.id, displayedName = userName)
+                return@user userRef.setAndReturn(user)
+            }.catch(::logError)
+
     }
 
     exports.test = functions.https.onRequest { req, resp ->
-        val userData = UserData()
+        val ref = db.collection(FirebaseConstants.USER).doc()
+        val userData = UserData(ref.id)
         console.log(userData.toString())
-        console.log(JSON.stringify(userData))
         console.log(JSON.parse(userData.toString()))
-        resp.send("ok")
+        ref.set(JSON.parse(userData.toString())).then {
+            ref.updateAndReturn(Unit, UserData.DISPLAYED_NAME, "lol", UserData.CITY_NAME, "myrs")
+            resp.send("ok")
+        }
+        Unit
     }
-
-//    exports.helloWorld = functions.https.onRequest { req, resp ->
-//        val cit = CityData("res", "sd", "sd") as DocumentData
-//        console.log("Here")
-//        val params: dynamic = object {} //js("({ address: '$t'})")
-//        params["location"] = "52.52008,13.404954"
-//        params["timeout"] = 100000
-//
-//
-//        val p0 = mapClient.timezone(params).asPromise().then { response ->
-////            console.log(response.json.timeZoneId)
-//            return@then response.json.timeZoneId
-//        }
-//        val params1: dynamic = object {}
-//        params1["latlng"] = "52.52008,13.404954"
-//        val p1 = mapClient.reverseGeocode(params1).asPromise().then { response ->
-//            val t = JSON.parse<Res>(JSON.stringify(response.json))
-//            for (item in t.results) {
-//                for (address in item.address_components) {
-//                    for (type in address.types) {
-//                        if (type.equals("locality")) {
-////                            console.log(item)
-////                            console.log(address)
-//                            return@then address.long_name
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        Promise.all<Any>(arrayOf(promiseLocality(mapClient, params1), promiseTimezone(mapClient, params),db.collection(FirebaseConstants.USER).get())).then {
-////            console.log(it[0])
-////            console.log(it[1])
-//            console.log(it[2])
-//            val t = it[2] as QuerySnapshot
-//            for( temp in t.docs){
-//                console.log(temp.data())
-//            }
-//            resp.send("ok")
-//
-//        }.catch { err ->
-//            console.log(err)
-//            resp.send("ok")
-//        }
-//
-//        Unit
-//    }
-
 }
 
