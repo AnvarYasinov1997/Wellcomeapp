@@ -2,9 +2,7 @@
 
 package com.wellcomeapp.main.domain.auth
 
-import android.content.Context
 import android.util.Log
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -29,7 +27,6 @@ interface AuthService {
 }
 
 class GoogleAuthService(
-        private val context: Context,
         private val cache: Cache,
         private val locationService: LocationService,
         private val api: Api

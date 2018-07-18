@@ -5,7 +5,6 @@ import com.wellcome.core.ui.PerFragment
 import dagger.Module
 import dagger.Provides
 
-@PerFragment
 @Module
 class WallModule {
 

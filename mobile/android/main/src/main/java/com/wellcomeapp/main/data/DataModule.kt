@@ -15,10 +15,6 @@ import com.wellcome.core.service.WellcomeStoryService
 import com.wellcomeapp.main.BuildConfig
 import com.wellcomeapp.main.data.location.RxLocation
 import com.wellcomeapp.main.data.location.RxLocationImpl
-import com.wellcomeapp.main.data.repository.EventRepository
-import com.wellcomeapp.main.data.repository.EventRepositoryImpl
-import com.wellcomeapp.main.data.repository.UserRepository
-import com.wellcomeapp.main.data.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -28,29 +24,22 @@ import retrofit2.converter.gson.GsonConverterFactory
 import wellcome.common.location.CoroutineLocation
 import wellcome.common.location.LocationService
 import wellcome.common.location.LocationServiceImpl
+import wellcome.common.repository.EventRepository
+import wellcome.common.repository.UserRepository
 import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-@Singleton
 @Module
 class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideUserRepositoryOld(cacheData: CacheData, context: Context): UserRepository = UserRepositoryImpl(cacheData, context)
+    fun provideUserRepository(cache: Cache): UserRepository = UserRepository(cache)
 
     @Singleton
     @Provides
-    fun providePostRepository(cacheData: CacheData): EventRepository = EventRepositoryImpl(cacheData)
-
-    @Singleton
-    @Provides
-    fun provideUserRepository(cache: Cache): wellcome.common.repository.UserRepository = wellcome.common.repository.UserRepository(cache)
-
-    @Singleton
-    @Provides
-    fun provideEventRepository(cache: Cache): wellcome.common.repository.EventRepository = wellcome.common.repository.EventRepository(cache)
+    fun provideEventRepository(cache: Cache): EventRepository = EventRepository(cache)
 
     @Singleton
     @Provides
@@ -62,7 +51,6 @@ class RepositoryModule {
     fun provideCoroutineLocation(fusedLocationProviderClient: FusedLocationProviderClient, geocoder: Geocoder): CoroutineLocation = CoroutineLocation(fusedLocationProviderClient, geocoder)
 }
 
-@Singleton
 @Module
 class DataModule(private val storyDao: StoryDao) {
 
@@ -73,10 +61,6 @@ class DataModule(private val storyDao: StoryDao) {
     @Singleton
     @Provides
     fun provideRxLocation(fusedLocationProviderClient: FusedLocationProviderClient, geocoder: Geocoder): RxLocation = RxLocationImpl(fusedLocationProviderClient, geocoder)
-
-    @Singleton
-    @Provides
-    fun provideCacheData(preferences: SharedPreferences): CacheData = CacheDataImp(preferences)
 
     @Singleton
     @Provides

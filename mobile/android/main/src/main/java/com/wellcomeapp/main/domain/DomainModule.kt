@@ -8,7 +8,6 @@ import wellcome.common.location.LocationService
 import wellcome.common.repository.EventRepository
 import javax.inject.Singleton
 
-@Singleton
 @Module
 class InteractorModule {
 

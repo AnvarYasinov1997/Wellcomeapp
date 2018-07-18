@@ -32,44 +32,48 @@ kotlin {
 }
 
 dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesCoreVersion"
 
     implementation project(":common-core")
     expectedBy project(":common-core")
 
-    implementation "com.google.firebase:firebase-auth:$firebaseAuthVersion"
-    implementation "com.google.firebase:firebase-storage:$firebaseStorageVersion"
-    implementation "com.google.firebase:firebase-firestore:$firebaseFirestoreVersion"
-    implementation "com.google.firebase:firebase-functions:$firebaseFunctionsVersion"
+    implementation dep.appcompat
+    implementation dep.design
+    implementation dep.moxy
+    implementation dep.moxy_appcompat
+    kapt dep.moxy_compiler
+    implementation dep.cicerone
+
+    implementation dep.kotlin_stdlib_jdk
+    implementation dep.coroutines_core
+    implementation dep.coroutines_android
+
+    implementation dep.dagger
+    implementation dep.dagger_android
+    kapt dep.dagger_processor
+    kapt dep.dagger_compiler
+
+    implementation dep.firebase_auth
+    implementation dep.firebase_storage
+    implementation dep.firebase_firestore
+
+    api dep.room_runtime
+    kapt dep.room_compiler
+
+    implementation dep.okhttp
+    implementation dep.okhttp_logging_interceptor
+    implementation dep.retrofit
+    implementation dep.retrofit_converter_gson
+
+    testImplementation dep.junit
+    androidTestImplementation dep.test_runner
+    androidTestImplementation dep.espresso_core
 
 
-    api "android.arch.persistence.room:runtime:$roomVersion"
-    kapt "android.arch.persistence.room:compiler:$roomVersion"
-
-    implementation "com.arello-mobile:moxy:$moxyVersion"
-    implementation "com.arello-mobile:moxy-app-compat:$moxyVersion"
-    kapt "com.arello-mobile:moxy-compiler:$moxyVersion"
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    implementation 'ru.terrakok.cicerone:cicerone:3.0.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-
-    implementation "com.android.support:appcompat-v7:$supportLibVersion"
-    implementation "com.android.support:design:$supportLibVersion"
-
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 repositories {
     mavenCentral()
