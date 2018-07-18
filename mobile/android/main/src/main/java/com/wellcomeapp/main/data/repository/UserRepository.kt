@@ -31,7 +31,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
         UserRepository {
     override fun getUserReference(): String = cacheData.getString(CacheData.USER_REF)
 
-    override fun findPhoto(data: Uri): Single<String> = Single.create<String>({ emitter ->
+    override fun findPhoto(data: Uri): Single<String> = Single.create<String> { emitter ->
         val filePathColumns = arrayOf(MediaStore.Images.Media.DATA)
         val cursor: Cursor? = context.contentResolver.query(data, filePathColumns, null, null, null)
         cursor?.use {
@@ -40,7 +40,7 @@ class UserRepositoryImpl(private val cacheData: CacheData, private val context: 
             val path = it.getString(columnIndex)
             emitter.onSuccess(path)
         } ?: emitter.onError(Exception("cannot find photo with path $data"))
-    })
+    }
             .doOnSuccess { cacheData.cacheString(CacheData.USER_PHOTO, it) }
             .subscribeOn(Schedulers.computation())
 

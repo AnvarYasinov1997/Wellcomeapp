@@ -4,7 +4,6 @@ import android.Manifest
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.firebase.functions.FirebaseFunctions
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wellcome.core.Cache
 import com.wellcome.core.retrofit.Api
@@ -15,6 +14,7 @@ import com.wellcome.core.ui.Screen
 import com.wellcomeapp.main.data.auth.RxAuth
 import com.wellcomeapp.main.domain.auth.AuthService
 import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.joinAll
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router
 import wellcome.common.core.CacheConst
@@ -31,44 +31,25 @@ class MainActivityPresenter @Inject constructor(
         private val authService: AuthService,
         private val storyService: StoryService,
         private val router: Router,
-        private val cache: Cache,
-        private val testApi: Api
-) : BasePresenter<MainActivityView>() {
+        private val cache: Cache)
+    : BasePresenter<MainActivityView>() {
 
     override fun onFirstViewAttach() {
-        launch {
-            val city = cache.getString(CacheConst.USER_CITY, "")
-            Log.e(TAG, city)
-        }
+        Log.e(TAG, cache.getString(CacheConst.USER_CITY, "city is empty"))
         launch(UI) {
-            val isAuth = authService.isAuthenticated()
-            if (!isAuth) {
-                val account = auth()
-                val firebaseUser = authService.signInWithGoogle(account).await()
-                authService.bindUser(firebaseUser).join()
-            }
+            val account = auth()
+            val firebaseUser = authService.signInWithGoogle(account).await()
+            authService.bindUser(firebaseUser).join()
 
-            val isGranted =
-                    rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
+            val isGranted = rxPermissions.get().isGranted(Manifest.permission.ACCESS_COARSE_LOCATION)
             if (isGranted || requestAccess()) {
-                listOf(authService.bindToCity(), storyService.fetchStoriesIfNotExists()).forEach { it.join() }
+                joinAll(authService.bindToCity(), storyService.fetchStoriesIfNotExists())
                 Log.e(TAG, "yeah")
                 storyService.startListen()
                 viewState.initUi()
                 router.newRootScreen(Screen.WALL)
             }
         }
-//        launch {
-//            //            val city = testApi.helloWorld("52.520008,13.404954", "Berlin").await()
-////            Log.e("citytest",city.toString())
-//            val map = mapOf("lat" to 52.52008, "lon" to 13.404954, "name" to "Berlin")
-//            FirebaseFunctions.getInstance().getHttpsCallable("initCity")
-//                    .call(map)
-//                    .continueWith { task ->
-//                        if (task.isSuccessful) Log.e("tast", task.result.data.toString() + "suk")
-//                        else Log.e("err", task.exception?.message)
-//                    }
-//        }
     }
 
     private suspend fun requestAccess() = suspendCoroutine<Boolean> { cont ->

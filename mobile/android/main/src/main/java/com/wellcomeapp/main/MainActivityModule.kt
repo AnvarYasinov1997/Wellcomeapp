@@ -28,20 +28,6 @@ class MainActivityModule {
     fun provideRxAuth(activity: MainActivity): RxAuth = RxAuth(activity)
 
     @Provides
-    fun provideAuthService(context: Context, cache: Cache, locationService: LocationService): AuthService = GoogleAuthService(context, cache, locationService)
+    fun provideAuthService(context: Context, cache: Cache, locationService: LocationService, api: Api): AuthService = GoogleAuthService(context, cache, locationService, api)
 
-    @Provides
-    fun provideApiTest(): Api {
-        val client = OkHttpClient.Builder()
-                .connectTimeout(100, TimeUnit.SECONDS)
-                .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-                .build()
-        val retrofit = Retrofit.Builder()
-                .addCallAdapterFactory(CoroutineCallAdapterFactory())
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl("https://us-central1-wellcomeapp-cc11e.cloudfunctions.net")
-                .client(client)
-                .build()
-        return retrofit.create(Api::class.java)
-    }
 }

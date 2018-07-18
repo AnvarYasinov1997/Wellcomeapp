@@ -10,6 +10,7 @@ object CacheConst {
     const val TMP_LAT = "tmp_lat"
     const val TMP_LON = "tmp_lon"
     const val TMP_PICTURE = "tmp_picture"
+    const val FIREBASE_TOKEN = "firebase_token"
 }
 object FirebaseConstants {
     const val USER = "user"

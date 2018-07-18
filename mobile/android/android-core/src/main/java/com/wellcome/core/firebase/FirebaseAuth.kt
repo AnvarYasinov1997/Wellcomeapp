@@ -1,10 +1,7 @@
 package com.wellcome.core.firebase
 
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.*
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
@@ -23,4 +20,14 @@ suspend fun FirebaseAuth.signIn(credential: AuthCredential) : Deferred<FirebaseU
 
 fun FirebaseAuth.signOutJob() : Job = launch {
     this@signOutJob.signOut()
+}
+
+fun FirebaseUser.getFirebaseToken(): Deferred<GetTokenResult> = async {
+    suspendCoroutine<GetTokenResult> { cont ->
+        this@getFirebaseToken.getIdToken(true).addOnSuccessListener { token ->
+            cont.resume(token)
+        }.addOnFailureListener { err ->
+            cont.resumeWithException(err)
+        }
+    }
 }

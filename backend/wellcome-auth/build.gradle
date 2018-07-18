@@ -4,6 +4,9 @@ subprojects {
         ext.kotlin_version = '1.2.51'
         ext.coroutinesCoreVersion = '0.23.0'
         ext.ktor_version = '0.9.3'
+        ext.slf4j_version = '1.7.25'
+        ext.koin_version = '0.9.3'
+        ext.map_version = '0.2.9'
 
         repositories {
             mavenCentral()

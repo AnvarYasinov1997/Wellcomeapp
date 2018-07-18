@@ -15,7 +15,19 @@ appengine {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "io.ktor:ktor-server-servlet:$ktor_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
+
+    implementation "io.ktor:ktor-server-servlet:$ktor_version"
+    implementation "io.ktor:ktor-gson:$ktor_version"
+    implementation "io.ktor:ktor-auth:$ktor_version"
+    implementation "org.slf4j:slf4j-jdk14:$slf4j_version"
+    implementation "org.koin:koin-ktor:$koin_version"
+
+    implementation "com.google.maps:google-maps-services:$map_version"
+    implementation 'org.slf4j:slf4j-nop:1.7.25'
+
+    implementation 'com.google.firebase:firebase-admin:6.2.0'
+
 
     providedCompile 'com.google.appengine:appengine:+'
     expectedBy project(":common-core")
@@ -29,3 +41,4 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+task run(dependsOn: appengineRun)

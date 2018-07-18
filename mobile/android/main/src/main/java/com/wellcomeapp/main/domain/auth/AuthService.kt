@@ -3,21 +3,21 @@
 package com.wellcomeapp.main.domain.auth
 
 import android.content.Context
+import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.functions.FirebaseFunctions
 import com.wellcome.core.Cache
-import com.wellcome.core.firebase.*
+import com.wellcome.core.firebase.getFirebaseToken
+import com.wellcome.core.firebase.signIn
+import com.wellcome.core.retrofit.Api
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.launch
 import wellcome.common.core.CacheConst
-import wellcome.common.core.FirebaseConstants
 import wellcome.common.entity.CityData
 import wellcome.common.entity.UserData
 import wellcome.common.location.LocationService
@@ -25,14 +25,14 @@ import wellcome.common.location.LocationService
 interface AuthService {
     suspend fun signInWithGoogle(account: GoogleSignInAccount): Deferred<FirebaseUser>
     suspend fun bindToCity(): Job
-    fun isAuthenticated(): Boolean
     fun bindUser(firebaseUser: FirebaseUser): Job
 }
 
 class GoogleAuthService(
         private val context: Context,
         private val cache: Cache,
-        private val locationService: LocationService
+        private val locationService: LocationService,
+        private val api: Api
 ) : AuthService {
     override suspend fun signInWithGoogle(account: GoogleSignInAccount) = async {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
@@ -40,25 +40,20 @@ class GoogleAuthService(
     }
 
     override fun bindUser(firebaseUser: FirebaseUser): Job = launch {
-        val user = FirebaseFunctions.getInstance()
-                .getHttpsCallable("initUser")
-                .request<UserData>().await()
+        val token = firebaseUser.getFirebaseToken().await()
+        Log.e("token", "${token.token} ${token.authTimestamp} ${token.expirationTimestamp} ${token.issuedAtTimestamp} ${token.signInProvider} ${token.claims}")
+        cache.cacheString(CacheConst.FIREBASE_TOKEN, token.token!!)
+
+        val user = api.initUser().await()
+        Log.e("user", "$user")
         cacheUserData(user)
     }
 
     override suspend fun bindToCity() = launch {
         val latLon = locationService.getLastKnownLocation()
-        val params = mapOf("lat" to latLon.lat, "lon" to latLon.lon)
-        val city = FirebaseFunctions.getInstance()
-                .getHttpsCallable("initCity")
-                .request<CityData>(params).await()
+        val city = api.initCity(latLon.lat, latLon.lon).await()
         cacheUserCity(city)
     }
-
-    override fun isAuthenticated(): Boolean =
-            cache.getString(CacheConst.USER_REF, "").isNotEmpty()
-                    && FirebaseAuth.getInstance().currentUser != null
-                    && GoogleSignIn.getLastSignedInAccount(context) != null
 
 
     private fun cacheUserData(userData: UserData) {
@@ -72,7 +67,7 @@ class GoogleAuthService(
             cache.cacheString(CacheConst.USER_PHOTO, photoUrl)
     }
 
-    private fun cacheUserCity(cityData: CityData){
+    private fun cacheUserCity(cityData: CityData) {
         cache.cacheString(CacheConst.USER_CITY, cityData.name)
         cache.cacheString(CacheConst.USER_CITY_REF, cityData.ref)
     }

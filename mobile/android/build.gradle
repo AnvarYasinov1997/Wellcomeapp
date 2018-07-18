@@ -2,7 +2,7 @@
 
 buildscript {
     ext{
-        kotlin_version = '1.2.50'
+        kotlin_version = '1.2.51'
         daggerVersion = '2.14.1'
         supportLibVersion = '27.1.1'
         playServicesVersion = '15.0.0'
@@ -10,13 +10,14 @@ buildscript {
         firebaseStorageVersion = '15.0.0'
         firebaseAuthVersion = '15.0.0'
         firebaseFunctionsVersion = '15.0.0'
-        coroutinesCoreVersion = '0.22.5'
+        coroutinesCoreVersion = '0.23.0'
         moxyVersion = '1.5.3'
         roomVersion = '1.1.1'
         okhttpVersion = '3.10.0'
         compileSdk = 27
         minSdk = 21
         retrofitVersion = '2.4.0'
+        picassoVersion = '2.5.2'
     }
 
     repositories {
