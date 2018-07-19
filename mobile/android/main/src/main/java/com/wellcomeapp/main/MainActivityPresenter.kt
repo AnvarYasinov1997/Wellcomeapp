@@ -6,13 +6,12 @@ import com.arellomobile.mvp.InjectViewState
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.tbruyelle.rxpermissions2.RxPermissions
 import com.wellcome.core.Cache
-import com.wellcome.core.retrofit.Api
 import com.wellcome.core.service.StoryService
-import com.wellcome.core.ui.BasePresenter
-import com.wellcome.core.ui.PerActivity
-import com.wellcome.core.ui.Screen
 import com.wellcomeapp.main.data.auth.RxAuth
 import com.wellcomeapp.main.domain.auth.AuthService
+import com.wellcomeapp.ui_core.BasePresenter
+import com.wellcomeapp.ui_core.PerActivity
+import com.wellcomeapp.ui_core.Screen
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.joinAll
 import kotlinx.coroutines.experimental.launch

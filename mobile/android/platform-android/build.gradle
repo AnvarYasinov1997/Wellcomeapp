@@ -32,7 +32,7 @@ dependencies {
     Map<String, String> dep = rootProject.ext.wellcomeDependencies
 
     expectedBy project(':common-core')
-    implementation project(':android-core')
+    implementation project(':core')
 
     implementation dep.appcompat
 

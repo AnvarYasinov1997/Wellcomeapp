@@ -1,11 +1,11 @@
 package com.mistreckless.support.wellcomeapp.app
 
-import com.wellcome.core.ui.PerFragment
 import com.wellcome.event.Wall
 import com.wellcome.event.WallModule
 import com.wellcome.share.picture.PictureSettings
 import com.wellcome.share.preview.Preview
 import com.wellcome.share.share.Share
+import com.wellcomeapp.ui_core.PerFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

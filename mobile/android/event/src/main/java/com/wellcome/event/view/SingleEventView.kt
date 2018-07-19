@@ -5,10 +5,9 @@ import android.support.annotation.LayoutRes
 import android.util.Log
 import android.view.ViewGroup
 import com.squareup.picasso.Picasso
-import com.wellcome.core.ui.RealTimeViewHolder
-import com.wellcome.core.ui.setDelayedClickListener
-import com.wellcome.core.ui.toTime
-import com.wellcome.event.R
+import com.wellcomeapp.ui_core.RealTimeViewHolder
+import com.wellcomeapp.ui_core.setDelayedClickListener
+import com.wellcomeapp.ui_core.toTime
 import kotlinx.android.synthetic.main.view_single_event.view.*
 import wellcome.common.entity.Event
 import wellcome.common.entity.UserData

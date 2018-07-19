@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
-import com.wellcome.core.ui.*
 import com.wellcome.event.view.SingleEventPresenterProvider
+import com.wellcomeapp.ui_core.*
 import kotlinx.android.synthetic.main.fragment_wall.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
@@ -32,7 +32,7 @@ class Wall : BaseFragment<WallPresenter>(), WallView {
 
     private val adapter by lazy {
         WallAdapter(
-            RealTimeAdapterDelegate(lifecycle),
+                RealTimeAdapterDelegate(lifecycle),
             singlePresenterProvider,
             viewModel
         )

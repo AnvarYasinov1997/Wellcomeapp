@@ -4,14 +4,14 @@ import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
 import com.wellcome.event.view.SingleEventPresenterProvider
 import com.wellcome.event.view.SingleEventViewHolder
-import com.wellcome.core.ui.RealTimeAdapter
-import com.wellcome.core.ui.RealTimeViewHolder
+import com.wellcomeapp.ui_core.RealTimeAdapter
+import com.wellcomeapp.ui_core.RealTimeViewHolder
 
 @Suppress("DELEGATED_MEMBER_HIDES_SUPERTYPE_OVERRIDE")
 class WallAdapter(
-    private val realTimeAdapter: RealTimeAdapter<RealTimeViewHolder<*, *, *>>,
-    private val singlePresenterProvider: SingleEventPresenterProvider,
-    private val viewModel: WallViewModel
+        private val realTimeAdapter: RealTimeAdapter<RealTimeViewHolder<*, *, *>>,
+        private val singlePresenterProvider: SingleEventPresenterProvider,
+        private val viewModel: WallViewModel
 ) : RecyclerView.Adapter<RealTimeViewHolder<*, *, *>>(),
     RealTimeAdapter<RealTimeViewHolder<*, *, *>> by realTimeAdapter {
 

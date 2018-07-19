@@ -5,8 +5,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
 import com.tbruyelle.rxpermissions2.RxPermissions
-import com.wellcome.core.ui.BasePresenter
-import com.wellcome.core.ui.PerFragment
+import com.wellcomeapp.ui_core.BasePresenter
+import com.wellcomeapp.ui_core.PerFragment
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelAndJoin
@@ -21,6 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.coroutines.experimental.coroutineContext
 import kotlin.coroutines.experimental.suspendCoroutine
 
 @SuppressLint("SimpleDateFormat")
@@ -70,7 +71,7 @@ class SharePresenter @Inject constructor(
                 addressLine, descLine,
                 sdf.parse(fromTimeLine.substring(fromTimeLine.indexOf("\n") + 1)).time,
                 sdf.parse(tillTimeLine.substring(tillTimeLine.indexOf("\n") + 1)).time,
-                coroutineContext,
+                    coroutineContext,
                 job
             )
             producer.consumeEach {

@@ -1,10 +1,9 @@
 package com.wellcome.share.picture
 
 import com.arellomobile.mvp.InjectViewState
-import com.wellcome.share.share.Share
-import com.wellcome.core.ui.BasePresenter
-import com.wellcome.core.ui.PerFragment
-import com.wellcome.core.ui.Screen
+import com.wellcomeapp.ui_core.BasePresenter
+import com.wellcomeapp.ui_core.PerFragment
+import com.wellcomeapp.ui_core.Screen
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import ru.terrakok.cicerone.Router

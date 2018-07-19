@@ -3,7 +3,6 @@ package com.mistreckless.support.wellcomeapp.app
 import android.app.Application
 import android.content.Context
 import com.mistreckless.support.wellcomeapp.navigation.NavigationModule
-import com.wellcome.core.ui.PerActivity
 import com.wellcome.share.CameraActivity
 import com.wellcome.share.CameraModule
 import com.wellcomeapp.main.MainActivity
@@ -11,6 +10,7 @@ import com.wellcomeapp.main.MainActivityModule
 import com.wellcomeapp.main.data.DataModule
 import com.wellcomeapp.main.data.RepositoryModule
 import com.wellcomeapp.main.domain.InteractorModule
+import com.wellcomeapp.ui_core.PerActivity
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module

@@ -4,8 +4,8 @@ import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.otaliastudios.cameraview.CameraListener
 import com.wellcome.share.R
-import com.wellcome.core.ui.BaseFragment
-import com.wellcome.core.ui.BaseFragmentView
+import com.wellcomeapp.ui_core.BaseFragment
+import com.wellcomeapp.ui_core.BaseFragmentView
 import kotlinx.android.synthetic.main.fragment_preview.*
 
 /**

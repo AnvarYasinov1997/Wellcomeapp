@@ -4,9 +4,9 @@ import android.view.View
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.wellcome.core.navigation.NavigatorProvider
-import com.wellcome.core.ui.BaseActivity
-import com.wellcome.core.ui.BaseActivityView
-import com.wellcome.core.ui.ParentContainer
+import com.wellcomeapp.ui_core.BaseActivity
+import com.wellcomeapp.ui_core.BaseActivityView
+import com.wellcomeapp.ui_core.ParentContainer
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.terrakok.cicerone.android.SupportAppNavigator
 

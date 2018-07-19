@@ -1,10 +1,9 @@
 package com.wellcome.share
 
 import com.arellomobile.mvp.InjectViewState
-import com.wellcome.share.preview.Preview
-import com.wellcome.core.ui.BasePresenter
-import com.wellcome.core.ui.PerActivity
-import com.wellcome.core.ui.Screen
+import com.wellcomeapp.ui_core.BasePresenter
+import com.wellcomeapp.ui_core.PerActivity
+import com.wellcomeapp.ui_core.Screen
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 

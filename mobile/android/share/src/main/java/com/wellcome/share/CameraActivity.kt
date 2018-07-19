@@ -3,8 +3,8 @@ package com.wellcome.share
 import com.arellomobile.mvp.presenter.InjectPresenter
 import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.wellcome.core.navigation.NavigatorProvider
-import com.wellcome.core.ui.BaseActivity
-import com.wellcome.core.ui.BaseActivityView
+import com.wellcomeapp.ui_core.BaseActivity
+import com.wellcomeapp.ui_core.BaseActivityView
 import ru.terrakok.cicerone.android.SupportAppNavigator
 
 class CameraActivity : BaseActivity<CameraPresenter>(),

@@ -56,8 +56,7 @@
         </android.support.constraint.ConstraintLayout>
 
 
-
-        <com.wellcome.core.ui.custom.SquareFrameLayout
+        <com.wellcomeapp.ui_core.custom.SquareFrameLayout
             android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -71,7 +70,7 @@
                 android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </com.wellcome.core.ui.custom.SquareFrameLayout>
+        </com.wellcomeapp.ui_core.custom.SquareFrameLayout>
 
         <TextView
             android:id="@+id/txtDesc"

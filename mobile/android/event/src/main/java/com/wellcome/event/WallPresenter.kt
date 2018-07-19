@@ -2,9 +2,9 @@ package com.wellcome.event
 
 import android.util.Log
 import com.arellomobile.mvp.InjectViewState
-import com.wellcome.core.ui.BasePresenter
-import com.wellcome.core.ui.PerFragment
-import com.wellcome.core.ui.Screen
+import com.wellcomeapp.ui_core.BasePresenter
+import com.wellcomeapp.ui_core.PerFragment
+import com.wellcomeapp.ui_core.Screen
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelChildren
@@ -15,6 +15,7 @@ import ru.terrakok.cicerone.Router
 import wellcome.common.entity.EventState
 import wellcome.common.interactor.EventInteractor
 import javax.inject.Inject
+import kotlin.coroutines.experimental.coroutineContext
 
 @PerFragment
 @InjectViewState

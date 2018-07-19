@@ -1,9 +1,9 @@
 package com.wellcome.event.view
 
 import android.util.Log
-import com.wellcome.core.ui.BaseRealTimePresenterProvider
-import com.wellcome.core.ui.RealTimePresenter
 import com.wellcome.event.WallViewModel
+import com.wellcomeapp.ui_core.BaseRealTimePresenterProvider
+import com.wellcomeapp.ui_core.RealTimePresenter
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.cancelChildren
@@ -16,6 +16,7 @@ import wellcome.common.interactor.EventInteractor
 import wellcome.common.interactor.UserInteractor
 import java.util.*
 import javax.inject.Inject
+import kotlin.coroutines.experimental.coroutineContext
 
 class SingleEventPresenter(
     private val view: SingleEventView,
@@ -108,7 +109,7 @@ class SingleEventPresenterProvider @Inject constructor(
     private val userInteractor: UserInteractor,
     private val wallViewModel: WallViewModel
 ) :
-    BaseRealTimePresenterProvider<SingleEventPresenter, SingleEventView> {
+        BaseRealTimePresenterProvider<SingleEventPresenter, SingleEventView> {
     override fun providePresenter(view: SingleEventView): SingleEventPresenter =
         SingleEventPresenter(view, eventInteractor, userInteractor, wallViewModel)
 }

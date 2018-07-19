@@ -35,9 +35,11 @@ android {
 dependencies {
     Map<String, String> dep = rootProject.ext.wellcomeDependencies
 
-    implementation project(':android-core')
+    implementation project(':core')
     implementation project(':common-core')
     implementation project(':platform-android')
+    implementation project(':ui_core')
+
 
     implementation dep.appcompat
     implementation dep.design
