@@ -1,0 +1,68 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-platform-android'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion compileSdk
+
+
+
+    defaultConfig {
+        minSdkVersion minSdk
+        targetSdkVersion compileSdk
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
+    expectedBy project(':well_common_core')
+    implementation project(':well_common_mpp_core')
+    expectedBy project(':well_common_mpp_core')
+    implementation project(':well_utils')
+
+    implementation dep.appcompat
+
+    implementation dep.kotlin_stdlib_jdk
+    implementation dep.coroutines_core
+    implementation dep.coroutines_android
+
+    implementation dep.dagger
+    implementation dep.dagger_android
+    kapt dep.dagger_processor
+    kapt dep.dagger_compiler
+
+    implementation dep.okhttp
+    implementation dep.okhttp_logging_interceptor
+    implementation dep.retrofit
+    implementation dep.retrofit_converter_gson
+
+    implementation dep.play_services_location
+    implementation dep.firebase_firestore
+    implementation dep.firebase_storage
+
+    api dep.room_runtime
+    kapt dep.room_compiler
+
+    testImplementation dep.junit
+
+}
+
