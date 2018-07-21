@@ -1,4 +1,4 @@
-package com.wellcome.event;
+package wellcome.common.event;
 
 import org.junit.Test;
 

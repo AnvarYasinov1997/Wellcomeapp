@@ -1,18 +1,13 @@
 package com.wellcome.auth.service
 
 import com.google.firebase.auth.FirebaseToken
-import com.google.firebase.cloud.FirestoreClient
 import com.wellcome.auth.repository.AuthRepository
-import com.wellcome.auth.setValue
-import com.wellcome.auth.updateFields
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.joinAll
 import org.slf4j.Logger
-import wellcome.common.core.FirebaseConstants
-import wellcome.common.entity.CityData
-import wellcome.common.entity.LatLon
-import wellcome.common.entity.UserData
+import wellcome.common.mpp.entity.CityData
+import wellcome.common.mpp.entity.LatLon
+import wellcome.common.mpp.entity.UserData
 
 
 interface AuthService {

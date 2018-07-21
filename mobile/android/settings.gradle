@@ -1,3 +1,3 @@
-include ':app', ':well_common_mpp_core', ':well_core', ':well_share', ':well_event', ':well_main', ':well_profile', ':well_ui_core', ':well_utils', ':well_common_core', ':well_android_core', ':well_common_event', ':well_common_share'
+include ':app', ':well_common_mpp_core', ':well_navigation_core', ':well_share', ':well_event', ':well_main', ':well_profile', ':well_ui_core', ':well_utils', ':well_common_core', ':well_android_core', ':well_common_event', ':well_common_share', ':well_android_event', ':well_android_share'
 
 project(':well_common_mpp_core').projectDir = new File(settingsDir, "../../common/well_common_mpp_core")

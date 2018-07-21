@@ -15,10 +15,10 @@ import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
 import org.slf4j.Logger
-import wellcome.common.core.FirebaseConstants
-import wellcome.common.entity.CityData
-import wellcome.common.entity.LatLon
-import wellcome.common.entity.UserData
+import wellcome.common.mpp.core.FirebaseConstants
+import wellcome.common.mpp.entity.CityData
+import wellcome.common.mpp.entity.LatLon
+import wellcome.common.mpp.entity.UserData
 
 interface AuthRepository {
 

@@ -16,7 +16,7 @@ import io.ktor.routing.get
 import io.ktor.routing.routing
 import org.koin.ktor.ext.inject
 import org.koin.standalone.StandAloneContext.startKoin
-import wellcome.common.entity.LatLon
+import wellcome.common.mpp.entity.LatLon
 
 
 fun Application.auth() {

@@ -1,11 +1,9 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-platform-android'
+
 
 android {
     compileSdkVersion compileSdk
-
-
 
     defaultConfig {
         minSdkVersion minSdk
@@ -23,27 +21,16 @@ android {
     }
 
 }
-kotlin {
-    experimental {
-        coroutines "enable"
-    }
-}
 
 dependencies {
     Map<String, String> dep = rootProject.ext.wellcomeDependencies
 
-    implementation dep.appcompat
-    implementation dep.design
+    implementation project(':well_common_event')
+    expectedBy project(':well_common_event')
+    implementation project(':well_android_core')
 
     implementation dep.kotlin_stdlib_jdk
     implementation dep.coroutines_core
     implementation dep.coroutines_android
 
-    implementation dep.firebase_auth
-    implementation dep.firebase_storage
-    implementation dep.firebase_firestore
-
-    testImplementation dep.junit
-    androidTestImplementation dep.test_runner
-    androidTestImplementation dep.espresso_core
 }

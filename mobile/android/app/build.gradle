@@ -61,13 +61,15 @@ dependencies {
     Map<String, String> dep = rootProject.ext.wellcomeDependencies
 
     implementation project(':well_common_mpp_core')
-    implementation project(':well_core')
+    implementation project(':well_navigation_core')
     implementation project(':well_ui_core')
     implementation project(':well_share')
     implementation project(':well_event')
     implementation project(':well_profile')
     implementation project(':well_main')
     implementation project(':well_android_core')
+    implementation project(':well_android_event')
+    implementation project(':well_android_share')
 
 
     implementation dep.appcompat

@@ -10,6 +10,8 @@ import com.wellcome.ui.core.BaseFragment
 import com.wellcome.ui.core.BaseFragmentView
 import com.wellcome.ui.core.ParentContainer
 import com.wellcome.ui.core.RealTimeAdapterDelegate
+import com.wellcome.utils.observeScroll
+import kotlinx.android.synthetic.main.fragment_wall.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.launch
 import javax.inject.Inject

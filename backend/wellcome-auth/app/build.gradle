@@ -30,8 +30,8 @@ dependencies {
 
 
     providedCompile 'com.google.appengine:appengine:+'
-    expectedBy project(":common-core")
-    implementation project(":common-core")
+    expectedBy project(":well_common_mpp_core")
+    implementation project(":well_common_mpp_core")
 }
 kotlin.experimental.coroutines = 'enable'
 

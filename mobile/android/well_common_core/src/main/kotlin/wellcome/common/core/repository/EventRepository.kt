@@ -26,7 +26,6 @@ interface EventRepository {
                      job: Job): ReceiveChannel<EntityState<EventData>>
 
     fun observeAddedEvents(timestamp: Long,
-                           parentContext: CoroutineContext,
                            job: Job): ReceiveChannel<EntityState<EventData>>
 
     fun saveTmpPicture(bytes: ByteArray): Job

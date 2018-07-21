@@ -32,23 +32,12 @@ kotlin {
 dependencies {
     Map<String, String> dep = rootProject.ext.wellcomeDependencies
 
-    implementation project(':well_common_mpp_core')
-    expectedBy project(':well_common_mpp_core')
-
     implementation dep.appcompat
     implementation dep.cicerone
 
     implementation dep.kotlin_stdlib_jdk
     implementation dep.coroutines_core
     implementation dep.coroutines_android
-
-    api dep.room_runtime
-    kapt dep.room_compiler
-
-    implementation dep.okhttp
-    implementation dep.okhttp_logging_interceptor
-    implementation dep.retrofit
-    implementation dep.retrofit_converter_gson
 
     testImplementation dep.junit
     androidTestImplementation dep.test_runner

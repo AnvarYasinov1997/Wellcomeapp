@@ -6,22 +6,23 @@ import com.arellomobile.mvp.presenter.ProvidePresenter
 import com.wellcome.share.R
 import com.wellcome.ui.core.BaseFragment
 import com.wellcome.ui.core.BaseFragmentView
+import kotlinx.android.synthetic.main.fragment_picture_settings.*
 
 /**
  * Created by @mistreckless on 08.10.2017. !
  */
-class PictureSettings : BaseFragment<PictureSettingsPresenter>(),
-    PictureSettingsView {
+class PictureSettings : BaseFragment<PictureSettingsPresenter>(), PictureSettingsView {
     override val layoutId: Int
         get() = R.layout.fragment_picture_settings
 
     @InjectPresenter
-    override lateinit var presenter : PictureSettingsPresenter
+    override lateinit var presenter: PictureSettingsPresenter
+
     @ProvidePresenter
-    fun providePresenter()=presenterProvider.get()
+    fun providePresenter() = presenterProvider.get()
 
     override fun initUi(bytes: ByteArray) {
-        imgPicture.setImageBitmap(BitmapFactory.decodeByteArray(bytes,0,bytes.size))
+        imgPicture.setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.size))
         btnNext.setOnClickListener { presenter.nextClicked() }
 
     }

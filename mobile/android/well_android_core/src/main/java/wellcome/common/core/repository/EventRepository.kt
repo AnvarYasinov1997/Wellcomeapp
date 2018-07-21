@@ -92,17 +92,15 @@ class EventRepositoryImpl(private val cache: Cache) : EventRepository {
         }
 
     override fun observeAddedEvents(timestamp: Long,
-                                    parentContext: CoroutineContext,
                                     job: Job): ReceiveChannel<EntityState<EventData>> =
-        produce(parentContext) {
+        produce(parent = job) {
             val producer = FirebaseFirestore.getInstance().collection(FirebaseConstants.CITY)
                     .document(cache.getString(CacheConst.USER_CITY_REF, ""))
                     .collection(FirebaseConstants.EVENT)
                     .orderBy(EventData.TIMESTAMP, Query.Direction.DESCENDING)
                     .whereGreaterThan(EventData.TIMESTAMP, timestamp)
                     .observeAddedValues(EventData::class.java,
-                        QueryListenOptions().includeQueryMetadataChanges(),
-                        parentContext,
+                        QueryListenOptions().includeQueryMetadataChanges(), coroutineContext,
                         job)
 
             producer.consumeEach { state ->

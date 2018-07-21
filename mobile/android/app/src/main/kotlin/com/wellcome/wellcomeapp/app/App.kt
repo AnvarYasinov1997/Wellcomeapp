@@ -38,7 +38,7 @@ class App : Application(), HasActivityInjector, NavigatorProvider {
                 .build()
                 .inject(this)
         initPicasso()
-//        initFirebase()
+        initFirebase()
     }
 
     override fun activityInjector() = activityDispatchAndroidInjector

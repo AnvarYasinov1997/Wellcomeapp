@@ -1,54 +1,52 @@
 package wellcome.common.event
 
 import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.channels.ReceiveChannel
-import kotlinx.coroutines.experimental.channels.consumeEach
-import kotlinx.coroutines.experimental.channels.distinct
-import kotlinx.coroutines.experimental.channels.produce
+import kotlinx.coroutines.experimental.NonCancellable.isActive
+import kotlinx.coroutines.experimental.cancelChildren
+import kotlinx.coroutines.experimental.channels.*
 import kotlinx.coroutines.experimental.launch
-import wellcome.common.core.Story
 import wellcome.common.core.repository.EventRepository
 import wellcome.common.core.repository.UserRepository
 import wellcome.common.core.service.StoryService
 import wellcome.common.mpp.core.EntityAdded
 import wellcome.common.mpp.core.EntityModified
 import wellcome.common.mpp.core.EntityRemoved
+import wellcome.common.mpp.core.EntityState
 import wellcome.common.mpp.entity.Event
+import wellcome.common.mpp.entity.EventData
 import kotlin.coroutines.experimental.CoroutineContext
 
 interface EventInteractor {
-    fun controlPagination(receiveChannel: ReceiveChannel<Int>, job: Job): ReceiveChannel<EventState>
-
     fun controlEventChanges(event: Event,
                             context: CoroutineContext,
                             job: Job): ReceiveChannel<EventState>
 
-    fun controlAddedEvents(timestamp: Long,
-                           context: CoroutineContext,
-                           job: Job): ReceiveChannel<EventState>
+    fun controlEvents(job: Job, receiveChannel: ReceiveChannel<Int>): ReceiveChannel<EventState>
 }
 
 
 class EventInteractorImpl(private val eventRepository: EventRepository,
                           private val userRepository: UserRepository,
                           private val storyService: StoryService) : EventInteractor {
-    override fun controlPagination(receiveChannel: ReceiveChannel<Int>,
-                                   job: Job): ReceiveChannel<EventState> = produce(parent = job) {
-        var timestamp = 0L
-        job.invokeOnCompletion {
-            receiveChannel.cancel()
-        }
-        receiveChannel.distinct().consumeEach {
-            val dataList = eventRepository.fetchEvents(timestamp).await()
-            timestamp = dataList.lastOrNull()?.timestamp ?: timestamp
-            val stories = mutableListOf<Story>()
-            for (data in dataList) stories.add(storyService.getStory(data.ref).await())
-            val events = List(dataList.size) {
-                Event(dataList[it], stories[it].isLiked, stories[it].isWillcomed)
+    override fun controlEvents(job: Job,
+                               receiveChannel: ReceiveChannel<Int>): ReceiveChannel<EventState> =
+        produce(parent = job) {
+            var lastTimestamp = 0L
+            job.invokeOnCompletion {
+                receiveChannel.cancel()
+                job.cancelChildren()
             }
-            send(EventsPaginated(events))
+            receiveChannel.distinct().consumeEachIndexed { index ->
+                val dataList = eventRepository.fetchEvents(lastTimestamp).await()
+                lastTimestamp = dataList.lastOrNull()?.timestamp ?: lastTimestamp
+                val events = convertDataToEvents(dataList)
+                send(EventsPaginated(events))
+
+                if (index.index == 1) {
+                    observeAddedEvents(job, dataList.firstOrNull()?.timestamp ?: 0L, channel)
+                }
+            }
         }
-    }
 
     override fun controlEventChanges(event: Event,
                                      context: CoroutineContext,
@@ -78,24 +76,51 @@ class EventInteractorImpl(private val eventRepository: EventRepository,
                     is EntityModified -> send(UserModified(event.data.ref, state.data))
                     else              -> send(StateError(state.toString()))
                 }
-
             }
         }
-
     }
 
-    override fun controlAddedEvents(timestamp: Long,
-                                    context: CoroutineContext,
-                                    job: Job): ReceiveChannel<EventState> = produce {
-        val producer = eventRepository.observeAddedEvents(timestamp, context, job)
-        job.invokeOnCompletion {
-            producer.cancel()
+    private suspend fun convertDataToEvents(dataList: List<EventData>): List<Event> {
+        val stories = List(dataList.size) { i ->
+            storyService.getStory(dataList[i].ref).await()
         }
-        producer.consumeEach { state ->
-            when (state) {
-                is EntityAdded -> {
-                    val story = storyService.getStory(state.data.ref).await()
-                    send(EventAdded(Event(state.data, story.isLiked, story.isWillcomed)))
+        return List(dataList.size) { i ->
+            Event(dataList[i], stories[i].isLiked, stories[i].isWillcomed)
+        }
+    }
+
+    private suspend fun observeAddedEvents(job: Job,
+                                           timestamp: Long,
+                                           channel: SendChannel<EventState>) {
+        var firstTimestamp = timestamp
+        var tmpTimestamp = -1L
+        var addedJob = Job(parent = job)
+        var producer: ReceiveChannel<EntityState<EventData>>? = null
+        addedJob.invokeOnCompletion {
+            producer?.cancel()
+        }
+
+        while (isActive) {
+            if (tmpTimestamp < firstTimestamp) {
+                addedJob.cancelChildren()
+                addedJob.cancel()
+                addedJob = Job(parent = job)
+
+                producer = eventRepository.observeAddedEvents(firstTimestamp, job)
+                launch(parent = addedJob) {
+                    producer.consumeEach { state ->
+                        when (state) {
+                            is EntityAdded -> {
+                                tmpTimestamp = firstTimestamp
+                                firstTimestamp = state.data.timestamp
+                                val story = storyService.getStory(state.data.ref).await()
+                                channel.send(EventAdded(Event(state.data,
+                                    story.isLiked,
+                                    story.isWillcomed)))
+                            }
+                            else           -> channel.send(StateError("unexpected state"))
+                        }
+                    }
                 }
             }
         }

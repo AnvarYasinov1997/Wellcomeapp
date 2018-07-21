@@ -1,10 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
-apply plugin: 'kotlin-platform-android'
 
 androidExtensions {
     experimental = true
@@ -37,7 +34,7 @@ android {
 dependencies {
     Map<String, String> dep = rootProject.ext.wellcomeDependencies
 
-    implementation project(':well_core')
+    implementation project(':well_navigation_core')
     implementation project(':well_android_core')
     implementation project(':well_common_mpp_core')
     implementation project(':well_ui_core')

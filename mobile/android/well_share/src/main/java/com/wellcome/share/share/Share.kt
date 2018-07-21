@@ -11,6 +11,7 @@ import com.otaliastudios.cameraview.CameraUtils
 import com.wellcome.share.R
 import com.wellcome.ui.core.BaseFragment
 import com.wellcome.ui.core.BaseFragmentView
+import kotlinx.android.synthetic.main.fragment_share.*
 
 
 /**
@@ -28,7 +29,10 @@ class Share : BaseFragment<SharePresenter>(),
 
     override fun initUi(bytes: ByteArray) {
         initAppBar(bytes)
-        txtTillTime.setOnClickListener { TimePickerDialog.newInstance({ h, m->presenter.timePicked(h,m)}).show(childFragmentManager,"timePicker") }
+        txtTillTime.setOnClickListener {
+            TimePickerDialog.newInstance { h, m -> presenter.timePicked(h, m) }
+                    .show(childFragmentManager, "timePicker")
+        }
         btnShare.setOnClickListener { if (it.isEnabled) presenter.shareClicked(txtAddress.text.toString(),edtDesc.text.toString(),txtFromTime.text.toString(),txtTillTime.text.toString()) }
     }
 
@@ -66,9 +70,9 @@ class Share : BaseFragment<SharePresenter>(),
         lp.height = size
         lp.width = size
 
-        CameraUtils.decodeBitmap(bytes, {
+        CameraUtils.decodeBitmap(bytes) {
             imgPicture.setImageBitmap(it)
-        })
+        }
     }
 
 

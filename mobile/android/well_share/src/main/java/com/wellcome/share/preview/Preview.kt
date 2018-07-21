@@ -6,6 +6,7 @@ import com.otaliastudios.cameraview.CameraListener
 import com.wellcome.share.R
 import com.wellcome.ui.core.BaseFragment
 import com.wellcome.ui.core.BaseFragmentView
+import kotlinx.android.synthetic.main.fragment_preview.*
 
 /**
  * Created by @mistreckless on 10.09.2017. !
