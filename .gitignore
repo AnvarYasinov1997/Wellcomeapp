@@ -57,4 +57,12 @@ freeline_project_description.json
 Wellcomeapp.iml
 app/build/
 binaryprefs/binaryprefs.iml
-binaryprefs/build/
+binaryprefs/build/android-utils/libs/
+app/src/androidTest/java/com/mistreckless/support/wellcomeapp/dataList/
+Backend/firestore
+event/libs/
+event/src/main/res/drawable/
+platform-android/libs/
+platform-android/src/main/res/drawable/
+share/libs/
+share/src/main/res/drawable/

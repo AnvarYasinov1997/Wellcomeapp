@@ -1,0 +1,39 @@
+buildscript {
+    ext.kotlin_version = '1.2.50'
+
+    repositories {
+        mavenCentral()
+        maven { url "https://kotlin.bintray.com/js-externals" }
+
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+group 'com.wellcomeapp'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'kotlin2js'
+apply plugin: 'kotlin-platform-js'
+
+allprojects {
+    repositories {
+        mavenCentral()
+        maven { url "https://kotlin.bintray.com/js-externals" }
+    }
+}
+dependencies {
+    implementation project(':common-core')
+    expectedBy project(":common-core")
+    implementation project('kotlin-namespace')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    testImplementation "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+
+
+}
+
+compileKotlin2Js.kotlinOptions {
+    moduleKind = "commonjs"
+    outputFile = "functions/index.js"
+}

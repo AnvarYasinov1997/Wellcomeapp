@@ -1,0 +1,120 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+androidExtensions {
+    experimental = true
+}
+
+apply plugin: 'maven'
+
+
+android {
+    compileSdkVersion compileSdk
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "com.mistreckless.support.wellcomeapp"
+        minSdkVersion minSdk
+        targetSdkVersion compileSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+        javaCompileOptions {
+
+            annotationProcessorOptions {
+                includeCompileClasspath false
+            }
+        }
+    }
+//    packagingOptions{
+//        exclude 'plugin.xml'
+//    }
+    packagingOptions {
+        pickFirst 'META-INF/main.kotlin_module'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    defaultPublishConfig "debug"
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
+    implementation project(':well_common_mpp_core')
+    implementation project(':well_navigation_core')
+    implementation project(':well_ui_core')
+    implementation project(':well_share')
+    implementation project(':well_event')
+    implementation project(':well_profile')
+    implementation project(':well_main')
+    implementation project(':well_android_core')
+    implementation project(':well_android_event')
+    implementation project(':well_android_share')
+
+
+    implementation dep.appcompat
+    implementation dep.design
+    implementation dep.moxy
+    implementation dep.moxy_appcompat
+    kapt dep.moxy_compiler
+    implementation dep.cicerone
+    implementation dep.picasso
+    implementation dep.picasso_downloader
+    implementation dep.arch_lifecycle_ext
+
+    implementation dep.kotlin_stdlib_jdk
+    implementation dep.coroutines_core
+    implementation dep.coroutines_android
+
+    kapt dep.room_runtime
+    kapt dep.room_compiler
+
+    implementation dep.dagger
+    implementation dep.dagger_android
+    kapt dep.dagger_processor
+    kapt dep.dagger_compiler
+
+    implementation dep.play_services_auth
+    implementation dep.play_services_location
+    implementation dep.firebase_auth
+    implementation dep.firebase_storage
+    implementation dep.firebase_firestore
+
+    implementation dep.okhttp
+    implementation dep.okhttp_logging_interceptor
+    implementation dep.retrofit
+    implementation dep.retrofit_converter_gson
+
+    androidTestImplementation dep.test_runner
+    androidTestImplementation dep.espresso_core
+
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+
+}
+
+apply plugin: 'com.google.gms.google-services'
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

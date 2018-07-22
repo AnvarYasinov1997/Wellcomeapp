@@ -1,0 +1,83 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+androidExtensions {
+    experimental = true
+}
+
+android {
+    compileSdkVersion compileSdk
+
+
+
+    defaultConfig {
+        minSdkVersion minSdk
+        targetSdkVersion compileSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
+    implementation project(':well_navigation_core')
+    implementation project(':well_android_core')
+    implementation project(':well_common_mpp_core')
+    implementation project(':well_ui_core')
+    implementation project(':well_utils')
+
+    implementation dep.appcompat
+    implementation dep.design
+    implementation dep.moxy
+    implementation dep.moxy_appcompat
+    kapt dep.moxy_compiler
+    implementation dep.cicerone
+
+    implementation dep.kotlin_stdlib_jdk
+    implementation dep.coroutines_core
+    implementation dep.coroutines_android
+
+    implementation dep.dagger
+    implementation dep.dagger_android
+    kapt dep.dagger_processor
+    kapt dep.dagger_compiler
+
+    implementation dep.play_services_auth
+    implementation dep.play_services_location
+    implementation dep.firebase_auth
+    implementation dep.firebase_storage
+    implementation dep.firebase_firestore
+
+    implementation dep.okhttp
+    implementation dep.okhttp_logging_interceptor
+    implementation dep.retrofit
+    implementation dep.retrofit_converter_gson
+
+    testImplementation dep.junit
+    androidTestImplementation dep.test_runner
+    androidTestImplementation dep.espresso_core
+
+
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+}
+
+kapt {
+    arguments {
+        arg("moxyReflectorPackage", "com.wellcome.main")
+    }
+}

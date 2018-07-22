@@ -1,0 +1,19 @@
+apply plugin: 'kotlin-platform-common'
+
+dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
+    implementation project(':well_common_mpp_core')
+    implementation project(':well_common_core')
+
+    implementation dep.kotlin_stdlib
+    implementation dep.kotlin_stdlib_common
+    implementation dep.coroutines_core
+
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

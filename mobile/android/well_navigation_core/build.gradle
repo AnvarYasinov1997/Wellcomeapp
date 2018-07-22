@@ -1,0 +1,48 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-platform-android'
+
+
+android {
+    compileSdkVersion compileSdk
+
+    defaultConfig {
+        minSdkVersion minSdk
+        targetSdkVersion compileSdk
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
+
+dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
+    implementation dep.appcompat
+    implementation dep.cicerone
+
+    implementation dep.kotlin_stdlib_jdk
+    implementation dep.coroutines_core
+    implementation dep.coroutines_android
+
+    testImplementation dep.junit
+    androidTestImplementation dep.test_runner
+    androidTestImplementation dep.espresso_core
+}
+repositories {
+    mavenCentral()
+}

@@ -1,0 +1,26 @@
+subprojects {
+    buildscript {
+        ext.kotlin_version = '1.2.51'
+        ext.coroutinesCoreVersion = '0.23.0'
+
+        repositories {
+            mavenCentral()
+            jcenter()
+            maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
+            maven { url "https://kotlin.bintray.com/kotlinx" }
+
+
+        }
+        dependencies {
+            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+            classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:0.7-dev-1613"
+        }
+    }
+
+    repositories {
+
+        mavenCentral()
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+}

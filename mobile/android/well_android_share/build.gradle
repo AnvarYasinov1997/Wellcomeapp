@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-platform-android'
+
+
+android {
+    compileSdkVersion compileSdk
+
+    defaultConfig {
+        minSdkVersion minSdk
+        targetSdkVersion compileSdk
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    Map<String, String> dep = rootProject.ext.wellcomeDependencies
+
+    implementation project(':well_common_share')
+    expectedBy project(':well_common_share')
+    implementation project(':well_android_core')
+
+    implementation dep.kotlin_stdlib_jdk
+    implementation dep.coroutines_core
+    implementation dep.coroutines_android
+
+}
