@@ -67,6 +67,7 @@ dependencies {
     implementation project(':well_event')
     implementation project(':well_profile')
     implementation project(':well_main')
+    implementation project(':well_utils')
     implementation project(':well_android_core')
     implementation project(':well_android_event')
     implementation project(':well_android_share')

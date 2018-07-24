@@ -57,23 +57,11 @@ dependencies {
     kapt dep.dagger_compiler
 
     implementation dep.play_services_auth
-    implementation dep.play_services_location
     implementation dep.firebase_auth
-    implementation dep.firebase_storage
-    implementation dep.firebase_firestore
-
-    implementation dep.okhttp
-    implementation dep.okhttp_logging_interceptor
-    implementation dep.retrofit
-    implementation dep.retrofit_converter_gson
 
     testImplementation dep.junit
     androidTestImplementation dep.test_runner
     androidTestImplementation dep.espresso_core
-
-
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
-    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 }
 
 kapt {

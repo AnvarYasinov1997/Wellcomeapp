@@ -11,12 +11,15 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.gson.GsonConverter
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.routing
+import kotlinx.coroutines.experimental.launch
 import org.koin.ktor.ext.inject
 import org.koin.standalone.StandAloneContext.startKoin
 import wellcome.common.mpp.entity.LatLon
+import wellcome.common.mpp.entity.UserData
 
 
 fun Application.auth() {

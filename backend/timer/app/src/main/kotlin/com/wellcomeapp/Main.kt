@@ -5,13 +5,9 @@ package com.wellcomeapp
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
-import com.google.firebase.cloud.FirestoreClient
 import kotlinx.coroutines.experimental.runBlocking
-import wellcome.common.core.FirebaseConstants
-import wellcome.common.entity.CityData
 import java.util.logging.FileHandler
 import java.util.logging.Logger
-import java.util.logging.SimpleFormatter
 
 val fileHandler by lazy {
     FileHandler("Logs.txt").apply { formatter = JsonFormatter()}

@@ -8,10 +8,6 @@ import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.launch
-import wellcome.common.core.FirebaseConstants
-import wellcome.common.entity.CityData
-import wellcome.common.entity.EventData
-import java.util.logging.Level
 import java.util.logging.Logger
 
 private val logger by lazy {

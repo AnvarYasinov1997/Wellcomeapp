@@ -1,9 +1,11 @@
 package com.wellcome.main
 
-import com.tbruyelle.rxpermissions2.RxPermissions
-import com.wellcome.main.data.auth.RxAuth
 import com.wellcome.main.domain.auth.AuthService
 import com.wellcome.main.domain.auth.GoogleAuthService
+import com.wellcome.utils.RationaleDialog
+import com.wellcome.utils.auth.GoogleAuth
+import com.wellcome.utils.permission.AppSettingsPage
+import com.wellcome.utils.permission.AsyncPermissions
 import dagger.Module
 import dagger.Provides
 import wellcome.common.core.Cache
@@ -14,10 +16,17 @@ import wellcome.common.core.service.LocationService
 class MainActivityModule {
 
     @Provides
-    fun provideRxPermissions(activity: MainActivity): RxPermissions = RxPermissions(activity)
+    fun providePermissions(activity: MainActivity): AsyncPermissions = AsyncPermissions(activity)
 
     @Provides
-    fun provideRxAuth(activity: MainActivity): RxAuth = RxAuth(activity)
+    fun provideGoogleAuth(activity: MainActivity): GoogleAuth = GoogleAuth(activity)
+
+    @Provides
+    fun provideRationaleDialog(activity: MainActivity): RationaleDialog =
+        RationaleDialog(activity.supportFragmentManager)
+
+    @Provides
+    fun provideAppSettingsPage(activity: MainActivity): AppSettingsPage = AppSettingsPage(activity)
 
     @Provides
     fun provideAuthService(cache: Cache,
