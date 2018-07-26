@@ -1,0 +1,6 @@
+rootProject.name = 'backend'
+
+include ':well_auth', ':well_common_mpp_core', ':well_timer'
+
+project(':well_common_mpp_core').projectDir = new File(settingsDir,"../common/well_common_mpp_core")
+

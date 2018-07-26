@@ -5,14 +5,13 @@ apply plugin: 'application'
 mainClassName = 'com.wellcomeapp.MainKt'
 
 dependencies {
-    expectedBy project(":common-core")
-    compile project(":common-core")
-    compile "org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version"
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
-    compile ('com.google.firebase:firebase-admin:6.2.0'){
-        exclude group: 'com.google.guava', module: 'guava-jdk5'
-    }
+    expectedBy project(":well_common_mpp_core")
+    implementation project(":well_common_mpp_core")
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
+    implementation 'com.google.firebase:firebase-admin:6.2.0'
+
 
 }
 

@@ -1,7 +1,0 @@
-rootProject.name = 'cloud-functions'
-
-include ':common-core'
-
-project(':common-core').projectDir = new File(settingsDir,"../../common/common-core")
-include 'kotlin-namespace'
-
