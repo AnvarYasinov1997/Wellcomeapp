@@ -8,6 +8,7 @@ version '1.0-SNAPSHOT'
 mainClassName = "com.wellcome.rest.MainKt"
 
 dependencies {
+    implementation project(':well_microservices_dto')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
 
