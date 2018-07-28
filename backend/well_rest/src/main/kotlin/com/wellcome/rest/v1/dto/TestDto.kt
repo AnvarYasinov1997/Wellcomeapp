@@ -1,4 +1,4 @@
-package com.wellcome.v1.dto
+package com.wellcome.rest.v1.dto
 
 import java.io.Serializable
 
