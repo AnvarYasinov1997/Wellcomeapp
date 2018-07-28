@@ -8,6 +8,9 @@ import kotlinx.coroutines.experimental.channels.Channel
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.launch
+import wellcome.common.mpp.core.FirebaseConstants
+import wellcome.common.mpp.entity.CityData
+import wellcome.common.mpp.entity.EventData
 import java.util.logging.Logger
 
 private val logger by lazy {
@@ -98,7 +101,7 @@ private suspend fun CollectionReference.listenEvents(parentJob: Job) = produce(p
                         DocumentChange.Type.ADDED -> {
                             val event = change.document.toObject(EventData::class.java)
                             logger.info("event $event")
-                            channel.send(EventAdded(change.document.reference.path, event.contents.last().deleteTime))
+                            channel.send(EventAdded(change.document.reference.path, event.content.deleteTime))
                         }
                         DocumentChange.Type.REMOVED -> {
                             val event = change.document.toObject(EventData::class.java)
