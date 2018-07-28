@@ -1,4 +1,4 @@
-package com.wellcome.rest
+package com.wellcome.security
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException

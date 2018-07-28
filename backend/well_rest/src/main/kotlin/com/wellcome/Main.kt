@@ -1,4 +1,4 @@
-package com.wellcome.rest
+package com.wellcome
 
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
@@ -24,7 +24,7 @@ fun main(args: Array<String>){
 }
 
 fun Application.rest(){
-    install(TokenVerification)
+//    install(TokenVerification)
     install(CallLogging)
     install(ContentNegotiation){
         register(ContentType.Application.Json, GsonConverter())
