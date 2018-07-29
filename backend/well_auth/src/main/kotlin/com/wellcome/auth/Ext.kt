@@ -29,7 +29,7 @@ fun initFirebaseApp(log: Logger) {
 
 fun initGoogleMaps(log: Logger): GeoApiContext {
     val props = Properties()
-    props.load(Application::class.java.classLoader.getResourceAsStream("wellcome.properties"))
+    props.load(Application::class.java.classLoader.getResourceAsStream("wellcome.property"))
     val key = props.getProperty("googleMapsKey")
     val context = GeoApiContext.Builder().apiKey(key).build()
     log.info("google maps initialized")

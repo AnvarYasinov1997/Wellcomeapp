@@ -1,4 +1,4 @@
-package com.wellcome.rest
+package com.wellcome.rest.security
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
@@ -21,7 +21,8 @@ class TokenVerification {
         val firebaseTokenKey: AttributeKey<FirebaseToken> = AttributeKey("firebaseToken")
 
         override fun install(pipeline: ApplicationCallPipeline, configure: Nothing.() -> Unit): TokenVerification {
-            pipeline.insertPhaseAfter(ApplicationCallPipeline.Infrastructure, tokenVerificationPhase)
+            pipeline.insertPhaseAfter(ApplicationCallPipeline.Infrastructure,
+                tokenVerificationPhase)
             pipeline.intercept(tokenVerificationPhase) {
                 context.application.log.info("verification token")
                 val headers = call.request.headers
