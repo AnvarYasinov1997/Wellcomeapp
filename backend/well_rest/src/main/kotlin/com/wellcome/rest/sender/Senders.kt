@@ -2,8 +2,7 @@ package com.wellcome.rest.sender
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.ConnectionFactory
-import com.wellcome.dto.auth.AuthDto
-import com.wellcome.rest.property.SenderProperty
+import com.wellcome.configuration.property.SenderProperty
 
 interface Sender<T> {
     fun send(dto: T)

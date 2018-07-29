@@ -6,6 +6,9 @@ subprojects {
         ext.slf4j_version = '1.7.25'
         ext.koin_version = '0.9.3'
         ext.map_version = '0.2.9'
+        ext.rabbitmq_version = '5.3.0'
+        ext.jackson_version = '2.9.6'
+        ext.firebase_admin_version = '6.2.0'
 
         repositories {
             mavenCentral()

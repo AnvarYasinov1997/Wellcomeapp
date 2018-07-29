@@ -1,4 +1,4 @@
-package com.wellcome.rest.property
+package com.wellcome.configuration.property
 
 import io.ktor.application.Application
 import java.util.*
