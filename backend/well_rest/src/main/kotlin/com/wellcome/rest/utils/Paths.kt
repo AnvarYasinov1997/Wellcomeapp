@@ -3,7 +3,7 @@ package com.wellcome.rest.utils
 import com.wellcome.rest.utils.Paths.API
 
 object Paths {
-    const val API = "/API"
+    const val API = "/api"
 }
 
 object PathsV1 {

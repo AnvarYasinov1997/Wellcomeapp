@@ -9,11 +9,11 @@ interface Sender<T> {
     fun send(dto: T)
 }
 
-class AuthSender(private val objectMapper: ObjectMapper,
-                 private val senderProperty: SenderProperty,
-                 private val connectionFactory: ConnectionFactory) : Sender<AuthDto> {
+class SenderImpl<T>(private val objectMapper: ObjectMapper,
+                    private val senderProperty: SenderProperty,
+                    private val connectionFactory: ConnectionFactory) : Sender<T> {
 
-    override fun send(dto: AuthDto) {
+    override fun send(dto: T) {
         val connection = connectionFactory.newConnection()
 
         val channel = connection.createChannel()
