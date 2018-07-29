@@ -1,9 +1,9 @@
 package com.wellcome.rest.handlers
 
 import com.google.firebase.auth.FirebaseToken
-import com.wellcome.dto.auth.AuthDto
-import com.wellcome.dto.auth.InitCityDto
-import com.wellcome.dto.auth.InitUserDto
+import com.wellcome.configuration.dto.auth.AuthDto
+import com.wellcome.configuration.dto.auth.InitCityDto
+import com.wellcome.configuration.dto.auth.InitUserDto
 import com.wellcome.rest.sender.Sender
 
 class InitUserAuthHandler(private val sender: Sender<AuthDto>) {
