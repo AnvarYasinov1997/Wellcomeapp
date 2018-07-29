@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>) {
     initFirebaseApp(LoggerFactory.getLogger("main"))
-    startKoin(listOf(propertyModule(), handlerModule(), serializationModule(), rabbitmqModule()))
+    startKoin(listOf(propertyModule(), handlerModule(), serializationModule(), rabbitmqModule(), senderModule()))
     embeddedServer(Netty, commandLineEnvironment(args)).start()
 }
 

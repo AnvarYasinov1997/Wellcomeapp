@@ -3,7 +3,8 @@ package com.wellcome.rest.configs
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.ConnectionFactory
 import com.wellcome.dto.auth.AuthDto
-import com.wellcome.rest.handlers.AuthHandler
+import com.wellcome.rest.handlers.InitCityAuthHandler
+import com.wellcome.rest.handlers.InitUserAuthHandler
 import com.wellcome.rest.property.createSenderProperty
 import com.wellcome.rest.sender.Sender
 import com.wellcome.rest.sender.SenderImpl
@@ -17,12 +18,13 @@ fun propertyModule() = applicationContext {
 
 fun handlerModule() = applicationContext {
     bean {
-        AuthHandler(
-            SenderImpl<AuthDto>(
-                objectMapper = get(),
-                senderProperty = get("auth"),
-                connectionFactory = get()
-            ) as Sender<AuthDto>
+        InitUserAuthHandler(
+            get()
+        )
+    }
+    bean {
+        InitCityAuthHandler(
+            get()
         )
     }
 }
@@ -33,4 +35,14 @@ fun serializationModule() = applicationContext {
 
 fun rabbitmqModule() = applicationContext {
     bean { ConnectionFactory() }
+}
+
+fun senderModule() = applicationContext {
+    bean {
+        SenderImpl<AuthDto>(
+            objectMapper = get(),
+            senderProperty = get("auth"),
+            connectionFactory = get()
+        ) as Sender<AuthDto>
+    }
 }
