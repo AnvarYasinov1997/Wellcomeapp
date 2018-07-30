@@ -1,4 +1,4 @@
-package com.wellcome.dto.auth
+package com.wellcome.configuration.dto.auth
 
 sealed class AuthDto
 data class InitUserDto(val uid: String) : AuthDto()

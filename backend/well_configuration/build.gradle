@@ -11,8 +11,10 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
     implementation "com.rabbitmq:amqp-client:$rabbitmq_version"
     implementation "com.google.firebase:firebase-admin:$firebase_admin_version"
+    implementation "com.google.maps:google-maps-services:$map_version"
 
 }
+kotlin.experimental.coroutines = 'enable'
 
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"

@@ -25,7 +25,7 @@ fun senderModule() = applicationContext {
         SenderImpl<AuthDto>(
             objectMapper = get(),
             senderProperty = get("auth"),
-            connectionFactory = get()
+            channel = get()
         ) as Sender<AuthDto>
     }
 }
