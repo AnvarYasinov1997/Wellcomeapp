@@ -17,7 +17,6 @@ dependencies {
 
     implementation "org.slf4j:slf4j-jdk14:$slf4j_version"
     implementation "org.koin:koin-core:$koin_version"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
 
     implementation "com.google.maps:google-maps-services:$map_version"
     implementation "com.google.firebase:firebase-admin:$firebase_admin_version"

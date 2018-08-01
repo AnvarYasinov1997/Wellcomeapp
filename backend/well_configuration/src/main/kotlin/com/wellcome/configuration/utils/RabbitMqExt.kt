@@ -1,11 +1,11 @@
 package com.wellcome.configuration.utils
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.*
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.serialization.json.JSON
 
 
 sealed class MessageState<T>
@@ -22,7 +22,7 @@ data class CancelOkState<T>(val consumerTag: String) : MessageState<T>()
 data class ErrorState<T>(val exception: Exception) : MessageState<T>()
 
 
-fun <T> Channel.consume(job: Job, objectMapper: ObjectMapper, clazz: Class<T>, queueName: String, autoAck: Boolean = false) = produce<MessageState<T>> {
+inline fun <reified T : Any> Channel.consume(job: Job, queueName: String, autoAck: Boolean = false) = produce {
     val coroutineChannel = kotlinx.coroutines.experimental.channels.Channel<MessageState<T>>()
     job.invokeOnCompletion {
         coroutineChannel.close()
@@ -34,7 +34,7 @@ fun <T> Channel.consume(job: Job, objectMapper: ObjectMapper, clazz: Class<T>, q
                                     properties: AMQP.BasicProperties?,
                                     body: ByteArray) = runBlocking {
             try {
-                val message = objectMapper.readValue(body, clazz)
+                val message = JSON.parse<T>(String(body))
                 coroutineChannel.send(DeliveryState(consumerTag, envelope, properties, message))
             } catch (e: Exception) {
                 coroutineChannel.send(ErrorState(e))

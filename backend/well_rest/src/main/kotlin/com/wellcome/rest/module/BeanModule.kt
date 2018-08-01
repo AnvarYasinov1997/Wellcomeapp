@@ -1,31 +1,25 @@
 package com.wellcome.rest.module
 
-import com.wellcome.configuration.dto.auth.AuthDto
+import com.wellcome.configuration.sender.Sender
 import com.wellcome.rest.handlers.InitCityAuthHandler
 import com.wellcome.rest.handlers.InitUserAuthHandler
-import com.wellcome.rest.sender.Sender
-import com.wellcome.rest.sender.SenderImpl
 import org.koin.dsl.module.applicationContext
 
 fun handlerModule() = applicationContext {
     bean {
         InitUserAuthHandler(
-            get()
+            get("auth")
         )
     }
     bean {
         InitCityAuthHandler(
-            get()
+            get("auth")
         )
     }
 }
 
 fun senderModule() = applicationContext {
-    bean {
-        SenderImpl<AuthDto>(
-            objectMapper = get(),
-            senderProperty = get("auth"),
-            channel = get()
-        ) as Sender<AuthDto>
+    bean("auth") {
+        Sender(get("auth"), get("auth"))
     }
 }
