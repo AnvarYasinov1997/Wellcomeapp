@@ -5,7 +5,7 @@ apply plugin: 'application'
 group 'well_log'
 version '1.0-SNAPSHOT'
 
-mainClassName = "com.wellcome.auth.MainKt"
+mainClassName = "com.wellcome.logger.MainKt"
 
 dependencies {
     expectedBy project(':well_common_mpp_core')

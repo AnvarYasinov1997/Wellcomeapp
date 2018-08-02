@@ -1,6 +1,7 @@
 package com.wellcome.rest
 
 import com.wellcome.configuration.bean.authRabbitMqModule
+import com.wellcome.configuration.bean.loggerRabbitMqModule
 import com.wellcome.configuration.bean.toolsModule
 import com.wellcome.configuration.initFirebaseApp
 import com.wellcome.configuration.utils.inject
@@ -11,10 +12,10 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.koin.standalone.StandAloneContext.startKoin
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 fun main(args: Array<String>) {
     startKoin(listOf(authRabbitMqModule(),
+        loggerRabbitMqModule(),
         handlerModule(),
         toolsModule("well_rest"),
         senderModule()))
