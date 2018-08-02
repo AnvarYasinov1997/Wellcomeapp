@@ -27,4 +27,15 @@ fun authRabbitMqModule() = applicationContext {
         }
     }
 }
+fun loggerRabbitMqModule() = applicationContext {
+    bean("logger") {
+        createServiceProperty("logger-exchanger", "logger-routing-key")
+    }
+    bean("logger") {
+        val property = get<ServiceProperty>("logger")
+        ConnectionFactory().newConnection().createChannel().apply {
+            exchangeDeclare(property.exchanger, BuiltinExchangeType.FANOUT)
+        }
+    }
+}
 

@@ -1,4 +1,4 @@
-package com.wellcome.rest.handlers
+package com.wellcome.rest.handler
 
 import com.google.firebase.auth.FirebaseToken
 import com.wellcome.configuration.dto.auth.AuthDtoWrapper

@@ -1,7 +1,8 @@
 package com.wellcome.rest.v1.endpoint
 
-import com.wellcome.rest.handlers.InitCityAuthHandler
-import com.wellcome.rest.handlers.InitUserAuthHandler
+import com.wellcome.rest.handler.InitCityAuthHandler
+import com.wellcome.rest.handler.InitUserAuthHandler
+import com.wellcome.rest.handler.LoggerHandler
 import com.wellcome.rest.security.TestTokenVerification
 import com.wellcome.rest.security.TokenVerification
 import com.wellcome.rest.utils.PathsV1
