@@ -51,7 +51,7 @@ class AuthRepositoryImpl(private val logger: Logger, private val geoContext: Geo
         batch.set(cityRef, newCity)
 
         val userDoc = db.collection(FirebaseConstants.USER).document(userRef)
-        batch.update(userDoc,mapOf(UserData.CITY_NAME to cityName) )
+        batch.update(userDoc, mapOf(UserData.CITY_NAME to cityName))
 
         batch.commitOperations().join()
 

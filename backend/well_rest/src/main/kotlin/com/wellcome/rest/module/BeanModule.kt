@@ -1,8 +1,8 @@
 package com.wellcome.rest.module
 
 import com.wellcome.configuration.sender.Sender
-import com.wellcome.rest.handlers.InitCityAuthHandler
-import com.wellcome.rest.handlers.InitUserAuthHandler
+import com.wellcome.rest.handler.InitCityAuthHandler
+import com.wellcome.rest.handler.InitUserAuthHandler
 import org.koin.dsl.module.applicationContext
 
 fun handlerModule() = applicationContext {
