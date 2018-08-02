@@ -12,3 +12,10 @@ enum class LogType(private val id: Int) : Dictionary {
 
     override fun getId(): Int = id
 }
+
+enum class MicroserviceName(private val id: Int) : Dictionary {
+
+    AUTH(0);
+
+    override fun getId(): Int = id
+}
