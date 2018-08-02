@@ -19,7 +19,6 @@ dependencies {
     implementation "org.koin:koin-ktor:$koin_version"
     implementation "org.koin:koin-core:$koin_version"
     implementation "com.google.firebase:firebase-admin:$firebase_admin_version"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version"
     implementation "com.rabbitmq:amqp-client:$rabbitmq_version"
 }
 

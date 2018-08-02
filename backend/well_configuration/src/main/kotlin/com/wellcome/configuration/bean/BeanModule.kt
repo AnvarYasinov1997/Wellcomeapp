@@ -1,20 +1,30 @@
 package com.wellcome.configuration.bean
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.ConnectionFactory
-import com.wellcome.configuration.property.createSenderProperty
+import com.wellcome.configuration.initGoogleMaps
+import com.wellcome.configuration.sender.ServiceProperty
+import com.wellcome.configuration.sender.createServiceProperty
 import org.koin.dsl.module.applicationContext
+import org.slf4j.LoggerFactory
 
-fun authPropertyModule() = applicationContext {
+fun googleMapsModule() = applicationContext {
+    bean { initGoogleMaps(get()) }
+}
+
+fun toolsModule(loggerName: String) = applicationContext {
+    bean { LoggerFactory.getLogger(loggerName) }
+}
+
+fun authRabbitMqModule() = applicationContext {
     bean("auth") {
-        createSenderProperty("microservice.properties", "auth-exchanger", "auth-routing-key")
+        createServiceProperty("auth-exchanger", "auth-routing-key")
+    }
+    bean("auth") {
+        val property = get<ServiceProperty>("auth")
+        ConnectionFactory().newConnection().createChannel().apply {
+            exchangeDeclare(property.exchanger, BuiltinExchangeType.FANOUT)
+        }
     }
 }
 
-fun serializationModule() = applicationContext {
-    bean { ObjectMapper() }
-}
-
-fun rabbitmqModule() = applicationContext {
-    bean { ConnectionFactory() }
-}

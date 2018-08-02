@@ -7,8 +7,8 @@ subprojects {
         ext.koin_version = '0.9.3'
         ext.map_version = '0.2.9'
         ext.rabbitmq_version = '5.3.0'
-        ext.jackson_version = '2.9.6'
         ext.firebase_admin_version = '6.2.0'
+        ext.serialization_version = '0.6.0'
 
         repositories {
             mavenCentral()
@@ -21,7 +21,8 @@ subprojects {
         dependencies {
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
             classpath "org.jetbrains.kotlin:kotlin-native-gradle-plugin:0.7-dev-1613"
-            classpath 'com.google.cloud.tools:appengine-gradle-plugin:+'
+            classpath "org.jetbrains.kotlinx:kotlinx-gradle-serialization-plugin:$serialization_version"
+
         }
     }
 
@@ -30,6 +31,7 @@ subprojects {
         mavenCentral()
         jcenter()
         maven { url "https://jitpack.io" }
+        maven { url "https://kotlin.bintray.com/kotlinx" }
         maven { url "https://kotlin.bintray.com/ktor" }
     }
 }

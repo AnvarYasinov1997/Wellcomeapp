@@ -14,11 +14,10 @@ import io.ktor.util.AttributeKey
 class TokenVerification {
 
     companion object Feature : ApplicationFeature<ApplicationCallPipeline, Nothing, TokenVerification> {
-        private val tokenVerificationPhase = PipelinePhase("TokenVerification")
-        override val key: AttributeKey<TokenVerification>
-            get() = AttributeKey("tokenVerification")
+        override val key: AttributeKey<TokenVerification> = AttributeKey("tokenVerification")
 
         val firebaseTokenKey: AttributeKey<FirebaseToken> = AttributeKey("firebaseToken")
+        val tokenVerificationPhase = PipelinePhase("TokenVerification")
 
         override fun install(pipeline: ApplicationCallPipeline, configure: Nothing.() -> Unit): TokenVerification {
             pipeline.insertPhaseAfter(ApplicationCallPipeline.Infrastructure,

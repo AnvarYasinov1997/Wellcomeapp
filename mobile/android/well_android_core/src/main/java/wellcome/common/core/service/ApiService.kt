@@ -8,10 +8,10 @@ import wellcome.common.mpp.entity.UserData
 
 actual interface ApiService {
 
-    @GET("/auth/initUser")
+    @GET("/api/v1/auth/initUser")
     actual fun initUser(): Deferred<UserData>
 
-    @GET("/auth/initCity")
+    @GET("/api/v1/auth/initCity")
     actual fun initCity(@Query("lat") lat: Double, @Query("lon") lon: Double): Deferred<CityData>
 
 }

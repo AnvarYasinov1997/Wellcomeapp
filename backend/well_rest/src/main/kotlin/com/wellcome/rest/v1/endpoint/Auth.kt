@@ -2,6 +2,7 @@ package com.wellcome.rest.v1.endpoint
 
 import com.wellcome.rest.handlers.InitCityAuthHandler
 import com.wellcome.rest.handlers.InitUserAuthHandler
+import com.wellcome.rest.security.TestTokenVerification
 import com.wellcome.rest.security.TokenVerification
 import com.wellcome.rest.utils.PathsV1
 import io.ktor.application.Application
@@ -18,7 +19,7 @@ import org.koin.ktor.ext.inject
 
 fun Application.auth() {
     install(CallLogging)
-    install(TokenVerification)
+    install(TestTokenVerification)
     install(ContentNegotiation) {
         register(ContentType.Application.Json, GsonConverter())
     }

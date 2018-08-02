@@ -9,7 +9,6 @@ import wellcome.common.mpp.entity.CityData
 import wellcome.common.mpp.entity.LatLon
 import wellcome.common.mpp.entity.UserData
 
-
 interface AuthService {
     fun initUser(firebaseToken: FirebaseToken): Deferred<UserData>
     fun initCity(firebaseToken: FirebaseToken, latLon: LatLon): Deferred<CityData>
