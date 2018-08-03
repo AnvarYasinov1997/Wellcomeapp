@@ -7,7 +7,6 @@ import kotlinx.coroutines.experimental.channels.produce
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.serialization.json.JSON
 
-
 sealed class MessageState<T>
 data class DeliveryState<T>(val consumerTag: String,
                             val envelope: Envelope,
@@ -20,7 +19,6 @@ data class ShutdownSignalState<T>(val consumerTag: String, val sig: ShutdownSign
 data class CancelState<T>(val consumerTag: String) : MessageState<T>()
 data class CancelOkState<T>(val consumerTag: String) : MessageState<T>()
 data class ErrorState<T>(val exception: Exception) : MessageState<T>()
-
 
 inline fun <reified T : Any> Channel.consume(job: Job, queueName: String, autoAck: Boolean = false) = produce {
     val coroutineChannel = kotlinx.coroutines.experimental.channels.Channel<MessageState<T>>()
