@@ -3,10 +3,10 @@ package com.wellcome.logger
 import com.rabbitmq.client.Channel
 import com.wellcome.configuration.bean.loggerRabbitMqModule
 import com.wellcome.configuration.bean.rabbitMqModule
-import com.wellcome.configuration.bean.toolsModule
 import com.wellcome.configuration.dto.log.LogDto
 import com.wellcome.configuration.property.DirectProperty
 import com.wellcome.configuration.utils.DeliveryState
+import com.wellcome.configuration.utils.MicroserviceName
 import com.wellcome.configuration.utils.consume
 import com.wellcome.configuration.utils.inject
 import com.wellcome.logger.module.loggerModule
@@ -19,8 +19,7 @@ import org.slf4j.Logger
 
 fun main(args: Array<String>) = runBlocking {
     startKoin(listOf(rabbitMqModule(),
-        loggerRabbitMqModule(),
-        toolsModule("well_log"),
+        loggerRabbitMqModule(MicroserviceName.LOGGER),
         loggerModule()))
     val logger by inject<Logger>()
     val channel by inject<Channel>()
