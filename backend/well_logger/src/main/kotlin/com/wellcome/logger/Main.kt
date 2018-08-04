@@ -2,9 +2,10 @@ package com.wellcome.logger
 
 import com.rabbitmq.client.Channel
 import com.wellcome.configuration.bean.loggerRabbitMqModule
+import com.wellcome.configuration.bean.rabbitMqModule
 import com.wellcome.configuration.bean.toolsModule
 import com.wellcome.configuration.dto.log.LogDto
-import com.wellcome.configuration.sender.ServiceProperty
+import com.wellcome.configuration.property.DirectProperty
 import com.wellcome.configuration.utils.DeliveryState
 import com.wellcome.configuration.utils.consume
 import com.wellcome.configuration.utils.inject
@@ -17,12 +18,13 @@ import org.koin.standalone.StandAloneContext.startKoin
 import org.slf4j.Logger
 
 fun main(args: Array<String>) = runBlocking {
-    startKoin(listOf(loggerRabbitMqModule(),
+    startKoin(listOf(rabbitMqModule(),
+        loggerRabbitMqModule(),
         toolsModule("well_log"),
         loggerModule()))
     val logger by inject<Logger>()
     val channel by inject<Channel>()
-    val property by inject<ServiceProperty>("logger")
+    val property by inject<DirectProperty>("logger")
     val logHandler by inject<LogService>()
     val queue = channel.queueDeclare().queue
     channel.queueBind(queue, property.exchanger, property.routingKey)

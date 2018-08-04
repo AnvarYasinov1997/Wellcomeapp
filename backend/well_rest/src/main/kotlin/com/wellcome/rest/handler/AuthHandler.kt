@@ -1,23 +1,29 @@
 package com.wellcome.rest.handler
 
 import com.google.firebase.auth.FirebaseToken
+import com.rabbitmq.client.Channel
 import com.wellcome.configuration.dto.auth.AuthDtoWrapper
 import com.wellcome.configuration.dto.auth.InitCityDto
 import com.wellcome.configuration.dto.auth.InitUserDto
-import com.wellcome.configuration.sender.Sender
+import com.wellcome.configuration.property.SimpleQueueProperty
+import com.wellcome.configuration.utils.sendRpc
+import org.slf4j.LoggerFactory
 
-class InitUserAuthHandler(private val sender: Sender) {
+class InitUserAuthHandler(private val channel: Channel,
+                          private val property: SimpleQueueProperty) {
 
-    fun handle(param: FirebaseToken) {
+    suspend fun handle(param: FirebaseToken) {
         val dto = InitUserDto(
             uid = param.uid
         )
-        sender.send(AuthDtoWrapper(dto))
+        val result = channel.sendRpc<AuthDtoWrapper, AuthDtoWrapper>(AuthDtoWrapper(dto), property).await()
+        LoggerFactory.getLogger("test").info(result.toString())
     }
 
 }
 
-class InitCityAuthHandler(private val sender: Sender) {
+class InitCityAuthHandler(private val channel: Channel,
+                          private val property: SimpleQueueProperty) {
 
     fun handle(param: FirebaseToken, lat: Double, lon: Double) {
         val dto = InitCityDto(
@@ -25,7 +31,7 @@ class InitCityAuthHandler(private val sender: Sender) {
             lat = lat,
             lon = lon
         )
-        sender.send(AuthDtoWrapper(dto))
+        channel.sendRpc<AuthDtoWrapper, String>(AuthDtoWrapper(dto), property)
     }
 
 }

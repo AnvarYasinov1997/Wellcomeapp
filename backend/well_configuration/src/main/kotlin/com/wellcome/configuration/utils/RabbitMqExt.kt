@@ -1,24 +1,16 @@
 package com.wellcome.configuration.utils
 
 import com.rabbitmq.client.*
+import com.wellcome.configuration.property.DirectProperty
+import com.wellcome.configuration.property.SimpleQueueProperty
 import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.channels.consumeEach
 import kotlinx.coroutines.experimental.channels.produce
+import kotlinx.coroutines.experimental.launch
 import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.serialization.json.JSON
-
-sealed class MessageState<T>
-data class DeliveryState<T>(val consumerTag: String,
-                            val envelope: Envelope,
-                            val properties: AMQP.BasicProperties?,
-                            val message: T) : MessageState<T>()
-
-data class RecoverOkState<T>(val consumerTag: String) : MessageState<T>()
-data class ConsumeOkState<T>(val consumerTag: String) : MessageState<T>()
-data class ShutdownSignalState<T>(val consumerTag: String, val sig: ShutdownSignalException) : MessageState<T>()
-data class CancelState<T>(val consumerTag: String) : MessageState<T>()
-data class CancelOkState<T>(val consumerTag: String) : MessageState<T>()
-data class ErrorState<T>(val exception: Exception) : MessageState<T>()
+import kotlin.coroutines.experimental.suspendCoroutine
 
 inline fun <reified T : Any> Channel.consume(job: Job, queueName: String, autoAck: Boolean = false) = produce {
     val coroutineChannel = kotlinx.coroutines.experimental.channels.Channel<MessageState<T>>()
@@ -66,3 +58,44 @@ inline fun <reified T : Any> Channel.consume(job: Job, queueName: String, autoAc
         send(it)
     }
 }
+
+inline fun <reified T : Any> Channel.send(message: T, property: DirectProperty) =
+    basicPublish(property.exchanger, property.routingKey, null, JSON.stringify(message).toByteArray())
+
+inline fun <reified T : Any, reified R : Any> Channel.sendRpc(message: T, property: SimpleQueueProperty) = async {
+    val rpcClient = RpcClient(this@sendRpc, "", property.queue)
+    val result = suspendCoroutine<RPCState<R>> { cont ->
+        try {
+            val bytes = rpcClient.primitiveCall(JSON.stringify(message).toByteArray())
+            val result = JSON.parse<R>(String(bytes))
+            cont.resume(RPCResultState(result))
+        } catch (e: Exception) {
+            cont.resume(RPCErrorState(e))
+        }
+    }
+    rpcClient.close()
+    rpcClient.channel.close()
+    return@async result
+}
+
+inline fun <reified T : Any, reified R : Any> Channel.receiveRpc(job: Job,
+                                                                 property: SimpleQueueProperty,
+                                                                 crossinline handleCast: (bytes: ByteArray?) -> Unit = {},
+                                                                 crossinline handleMessage: (message: T) -> R) =
+    launch(job) {
+        val rpcServer = object : RpcServer(this@receiveRpc, property.queue) {
+            override fun handleCall(requestBody: ByteArray, replyProperties: AMQP.BasicProperties): ByteArray {
+                val request = JSON.parse<T>(String(requestBody))
+                return JSON.stringify(handleMessage(request)).toByteArray()
+            }
+
+            override fun handleCast(requestBody: ByteArray?) {
+                handleCast(requestBody)
+            }
+        }
+        job.invokeOnCompletion {
+            rpcServer.terminateMainloop()
+            rpcServer.channel.close()
+        }
+        rpcServer.mainloop()
+    }
