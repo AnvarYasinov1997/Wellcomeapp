@@ -20,6 +20,10 @@ fun createSimpleQueueProperty(queueName: String): SimpleQueueProperty {
     return SimpleQueueProperty(prop.getProperty(queueName))
 }
 
+fun createFanoutProperty(exchangerName: String): FanoutProperty {
+    val prop = getProp()
+    return FanoutProperty(prop.getProperty(exchangerName))
+}
 
 private fun getProp(): Properties {
     val stream = Application::class.java.classLoader.getResourceAsStream("rabbit.properties")

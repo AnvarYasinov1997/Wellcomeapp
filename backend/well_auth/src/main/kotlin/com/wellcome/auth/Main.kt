@@ -3,12 +3,13 @@ package com.wellcome.auth
 import com.rabbitmq.client.Channel
 import com.wellcome.configuration.bean.authRabbitMqModule
 import com.wellcome.configuration.bean.googleMapsModule
+import com.wellcome.configuration.bean.loggerRabbitMqModule
 import com.wellcome.configuration.bean.rabbitMqModule
-import com.wellcome.configuration.bean.toolsModule
 import com.wellcome.configuration.dto.auth.AuthDtoWrapper
 import com.wellcome.configuration.dto.auth.InitUserDto
 import com.wellcome.configuration.initFirebaseApp
 import com.wellcome.configuration.property.SimpleQueueProperty
+import com.wellcome.configuration.utils.MicroserviceName
 import com.wellcome.configuration.utils.inject
 import com.wellcome.configuration.utils.receiveRpc
 import kotlinx.coroutines.experimental.Job
@@ -18,8 +19,8 @@ import org.slf4j.Logger
 
 fun main(args: Array<String>) = runBlocking<Unit> {
     startKoin(listOf(rabbitMqModule(),
+        loggerRabbitMqModule(MicroserviceName.AUTH),
         authRabbitMqModule(),
-        toolsModule("well_auth"),
         googleMapsModule(),
         authModule()))
     val logger by inject<Logger>()
