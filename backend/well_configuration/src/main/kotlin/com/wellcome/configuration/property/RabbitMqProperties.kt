@@ -20,9 +20,9 @@ fun createSimpleQueueProperty(queueName: String): SimpleQueueProperty {
     return SimpleQueueProperty(prop.getProperty(queueName))
 }
 
-fun createFanoutProperty(queueName: String): FanoutProperty {
+fun createFanoutProperty(exchangerName: String): FanoutProperty {
     val prop = getProp()
-    return FanoutProperty(prop.getProperty(queueName))
+    return FanoutProperty(prop.getProperty(exchangerName))
 }
 
 private fun getProp(): Properties {
