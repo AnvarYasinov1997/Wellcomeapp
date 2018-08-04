@@ -4,19 +4,16 @@ import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
 import com.wellcome.configuration.initGoogleMaps
-import com.wellcome.configuration.property.DirectProperty
+import com.wellcome.configuration.property.FanoutProperty
 import com.wellcome.configuration.property.SimpleQueueProperty
-import com.wellcome.configuration.property.createDirectProperty
+import com.wellcome.configuration.property.createFanoutProperty
 import com.wellcome.configuration.property.createSimpleQueueProperty
+import com.wellcome.configuration.utils.LoggerHandler
+import com.wellcome.configuration.utils.MicroserviceName
 import org.koin.dsl.module.applicationContext
-import org.slf4j.LoggerFactory
 
 fun googleMapsModule() = applicationContext {
     bean { initGoogleMaps(get()) }
-}
-
-fun toolsModule(loggerName: String) = applicationContext {
-    bean { LoggerFactory.getLogger(loggerName) }
 }
 
 fun rabbitMqModule() = applicationContext {
@@ -34,19 +31,21 @@ fun authRabbitMqModule() = applicationContext {
             queueDeclare(property.queue, false, false, false, null)
         }
     }
-    loggerRabbitMqModule()
 }
 
-fun loggerRabbitMqModule() = applicationContext {
+fun loggerRabbitMqModule(microserviceName: MicroserviceName) = applicationContext {
     bean("logger") {
-        createDirectProperty("logger-exchanger", "logger-routing-key")
+        createFanoutProperty("logger-exchanger")
     }
     bean("logger") {
-        val property = get<DirectProperty>("logger")
+        val property = get<FanoutProperty>("logger")
         val connection = get<Connection>()
         connection.createChannel().apply {
             exchangeDeclare(property.exchanger, BuiltinExchangeType.FANOUT)
         }
+    }
+    bean {
+        LoggerHandler(get("logger"), get("logger"), microserviceName)
     }
 }
 

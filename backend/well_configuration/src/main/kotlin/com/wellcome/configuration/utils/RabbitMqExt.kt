@@ -2,6 +2,7 @@ package com.wellcome.configuration.utils
 
 import com.rabbitmq.client.*
 import com.wellcome.configuration.property.DirectProperty
+import com.wellcome.configuration.property.FanoutProperty
 import com.wellcome.configuration.property.SimpleQueueProperty
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async
@@ -61,6 +62,9 @@ inline fun <reified T : Any> Channel.consume(job: Job, queueName: String, autoAc
 
 inline fun <reified T : Any> Channel.send(message: T, property: DirectProperty) =
     basicPublish(property.exchanger, property.routingKey, null, JSON.stringify(message).toByteArray())
+
+inline fun <reified T : Any> Channel.send(message: T, property: FanoutProperty) =
+    basicPublish(property.exchanger, "", null, JSON.stringify(message).toByteArray())
 
 inline fun <reified T : Any, reified R : Any> Channel.sendRpc(message: T, property: SimpleQueueProperty) = async {
     val rpcClient = RpcClient(this@sendRpc, "", property.queue)

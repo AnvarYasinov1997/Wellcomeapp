@@ -2,7 +2,7 @@ package com.wellcome.rest.module
 
 import com.wellcome.rest.handler.InitCityAuthHandler
 import com.wellcome.rest.handler.InitUserAuthHandler
-import com.wellcome.rest.handler.LoggerHandler
+import com.wellcome.configuration.utils.LoggerHandler
 import org.koin.dsl.module.applicationContext
 
 fun handlerModule() = applicationContext {
@@ -15,8 +15,5 @@ fun handlerModule() = applicationContext {
         InitCityAuthHandler(
             get("auth"), get("auth")
         )
-    }
-    bean {
-        LoggerHandler()
     }
 }
