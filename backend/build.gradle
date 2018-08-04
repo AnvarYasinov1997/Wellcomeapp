@@ -1,6 +1,6 @@
 subprojects {
     buildscript {
-        ext.kotlin_version = '1.2.51'
+        ext.kotlin_version = '1.2.60'
         ext.coroutinesCoreVersion = '0.23.0'
         ext.ktor_version = '0.9.3'
         ext.slf4j_version = '1.7.25'
@@ -8,7 +8,7 @@ subprojects {
         ext.map_version = '0.2.9'
         ext.rabbitmq_version = '5.3.0'
         ext.firebase_admin_version = '6.2.0'
-        ext.serialization_version = '0.6.0'
+        ext.serialization_version = '0.6.1-SNAPSHOT'
 
         repositories {
             mavenCentral()

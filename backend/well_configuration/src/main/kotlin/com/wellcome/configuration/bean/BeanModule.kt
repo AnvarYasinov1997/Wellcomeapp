@@ -1,10 +1,13 @@
 package com.wellcome.configuration.bean
 
 import com.rabbitmq.client.BuiltinExchangeType
+import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
 import com.wellcome.configuration.initGoogleMaps
-import com.wellcome.configuration.sender.ServiceProperty
-import com.wellcome.configuration.sender.createServiceProperty
+import com.wellcome.configuration.property.DirectProperty
+import com.wellcome.configuration.property.SimpleQueueProperty
+import com.wellcome.configuration.property.createDirectProperty
+import com.wellcome.configuration.property.createSimpleQueueProperty
 import org.koin.dsl.module.applicationContext
 import org.slf4j.LoggerFactory
 
@@ -16,24 +19,32 @@ fun toolsModule(loggerName: String) = applicationContext {
     bean { LoggerFactory.getLogger(loggerName) }
 }
 
+fun rabbitMqModule() = applicationContext {
+    bean { ConnectionFactory().newConnection() }
+}
+
 fun authRabbitMqModule() = applicationContext {
     bean("auth") {
-        createServiceProperty("auth-exchanger", "auth-routing-key")
+        createSimpleQueueProperty("auth-queue")
     }
-    bean("auth") {
-        val property = get<ServiceProperty>("auth")
-        ConnectionFactory().newConnection().createChannel().apply {
-            exchangeDeclare(property.exchanger, BuiltinExchangeType.FANOUT)
+    factory("auth") {
+        val property = get<SimpleQueueProperty>("auth")
+        val connection = get<Connection>()
+        connection.createChannel().apply {
+            queueDeclare(property.queue, false, false, false, null)
         }
     }
+    loggerRabbitMqModule()
 }
+
 fun loggerRabbitMqModule() = applicationContext {
     bean("logger") {
-        createServiceProperty("logger-exchanger", "logger-routing-key")
+        createDirectProperty("logger-exchanger", "logger-routing-key")
     }
     bean("logger") {
-        val property = get<ServiceProperty>("logger")
-        ConnectionFactory().newConnection().createChannel().apply {
+        val property = get<DirectProperty>("logger")
+        val connection = get<Connection>()
+        connection.createChannel().apply {
             exchangeDeclare(property.exchanger, BuiltinExchangeType.FANOUT)
         }
     }
