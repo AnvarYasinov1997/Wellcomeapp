@@ -29,6 +29,7 @@ interface AuthService {
 class GoogleAuthService(private val cache: Cache,
                         private val locationService: LocationService,
                         private val apiService: ApiService) : AuthService {
+
     override suspend fun signInWithGoogle(account: GoogleSignInAccount) = async {
         val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         FirebaseAuth.getInstance().signIn(credential).await()

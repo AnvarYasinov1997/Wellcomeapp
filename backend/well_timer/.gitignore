@@ -1,0 +1,12 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea
+.gradle
+/build
+app/build
+app/out
+src/main/resources/wellcomeapp-cc11e-30f446861838.json
+app/Logs.txt
+
+Logs.txt
+src/main/java/
+src/test/java/

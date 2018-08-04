@@ -1,0 +1,16 @@
+# Created by .ignore support plugin (hsz.mobi)
+/.idea
+.gradle
+well_auth/.idea
+well_auth/build
+gradlew
+gradlew.bat
+
+well_rest/build
+well_timer/.DS_Store
+
+well_rest/src/main/resources/wellcome.properties
+well_rest/src/main/resources/wellcomeapp-cc11e-firebase-adminsdk-qoxy4-310b8e400c.json
+
+/well_configuration/src/main/resources/wellcome.properties
+/well_configuration/src/main/resources/wellcomeapp-cc11e-firebase-adminsdk-qoxy4-310b8e400c.json
