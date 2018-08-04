@@ -11,7 +11,4 @@ object PathsV1 {
     const val APPLICATION_VERSION = "$API/v1"
 
     const val INIT_USER = "$APPLICATION_VERSION/auth/initUser"
-
-    const val INIT_SITY = "$APPLICATION_VERSION/auth/initCity"
-
 }

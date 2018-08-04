@@ -4,11 +4,12 @@ import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.maps.GeoApiContext
+import com.wellcome.configuration.utils.LoggerHandler
 import io.ktor.application.Application
 import org.slf4j.Logger
 import java.util.*
 
-fun initFirebaseApp(log: Logger) {
+fun initFirebaseApp(logger: LoggerHandler) {
     val databaseUrl = "https://wellcomeapp-cc11e.firebaseio.com"
     val serviceAccount = "wellcomeapp-cc11e-firebase-adminsdk-qoxy4-310b8e400c.json"
     val options = FirebaseOptions.Builder()
@@ -17,7 +18,7 @@ fun initFirebaseApp(log: Logger) {
         .setDatabaseUrl(databaseUrl)
         .build()
     FirebaseApp.initializeApp(options)
-    log.info("firebase initialized")
+    logger.info("firebase initialized")
 }
 
 fun initGoogleMaps(log: Logger): GeoApiContext {

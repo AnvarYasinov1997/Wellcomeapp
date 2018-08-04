@@ -9,6 +9,8 @@ subprojects {
         ext.rabbitmq_version = '5.3.0'
         ext.firebase_admin_version = '6.2.0'
         ext.serialization_version = '0.6.1-SNAPSHOT'
+        ext.kotlin_exposed_version = '0.10.4'
+        ext.postgres_version = '42.2.2'
 
         repositories {
             mavenCentral()
@@ -16,6 +18,7 @@ subprojects {
             maven { url "https://dl.bintray.com/jetbrains/kotlin-native-dependencies" }
             maven { url "https://kotlin.bintray.com/kotlinx" }
             maven { url 'https://maven-central.storage.googleapis.com' }
+            maven { url  "https://dl.bintray.com/kotlin/exposed" }
         }
 
         dependencies {
@@ -33,5 +36,6 @@ subprojects {
         maven { url "https://jitpack.io" }
         maven { url "https://kotlin.bintray.com/kotlinx" }
         maven { url "https://kotlin.bintray.com/ktor" }
+        maven { url  "https://dl.bintray.com/kotlin/exposed" }
     }
 }

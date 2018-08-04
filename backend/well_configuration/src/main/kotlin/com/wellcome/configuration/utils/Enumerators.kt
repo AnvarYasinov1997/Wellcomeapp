@@ -8,6 +8,6 @@ enum class LogType {
 
 enum class MicroserviceName {
     REST,
-    AUTH,
+    MAIN,
     LOGGER;
 }

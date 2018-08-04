@@ -1,4 +1,4 @@
-package com.wellcome.auth
+package com.wellcome.main
 
 import com.google.cloud.firestore.DocumentReference
 import com.google.cloud.firestore.Query
