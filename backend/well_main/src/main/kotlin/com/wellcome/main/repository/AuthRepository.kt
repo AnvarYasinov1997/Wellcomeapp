@@ -1,4 +1,4 @@
-package com.wellcome.auth.repository
+package com.wellcome.main.repository
 
 import com.google.firebase.cloud.FirestoreClient
 import com.google.maps.GeoApiContext
@@ -7,10 +7,10 @@ import com.google.maps.TimeZoneApi
 import com.google.maps.model.AddressComponentType
 import com.google.maps.model.AddressType
 import com.google.maps.model.LatLng
-import com.wellcome.auth.commitOperations
-import com.wellcome.auth.getValues
-import com.wellcome.auth.setValue
-import com.wellcome.auth.updateFields
+import com.wellcome.main.commitOperations
+import com.wellcome.main.getValues
+import com.wellcome.main.setValue
+import com.wellcome.main.updateFields
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.Job
 import kotlinx.coroutines.experimental.async

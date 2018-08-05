@@ -20,12 +20,12 @@ fun rabbitMqModule() = applicationContext {
     bean { ConnectionFactory().newConnection() }
 }
 
-fun authRabbitMqModule() = applicationContext {
-    bean("auth") {
-        createSimpleQueueProperty("auth-queue")
+fun mainRabbitMqModule() = applicationContext {
+    bean("main") {
+        createSimpleQueueProperty("main-queue")
     }
-    factory("auth") {
-        val property = get<SimpleQueueProperty>("auth")
+    factory("main") {
+        val property = get<SimpleQueueProperty>("main")
         val connection = get<Connection>()
         connection.createChannel().apply {
             queueDeclare(property.queue, false, false, false, null)

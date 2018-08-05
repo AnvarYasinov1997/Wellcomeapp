@@ -1,7 +1,7 @@
-package com.wellcome.auth.service
+package com.wellcome.main.service
 
 import com.google.firebase.auth.FirebaseToken
-import com.wellcome.auth.repository.AuthRepository
+import com.wellcome.main.repository.AuthRepository
 import kotlinx.coroutines.experimental.Deferred
 import kotlinx.coroutines.experimental.async
 import org.slf4j.Logger
@@ -32,7 +32,7 @@ class AuthServiceImpl(private val logger: Logger, private val authRepository: Au
 
         if (city != null) {
             authRepository.updateUserCityName(user.ref, locality).join()
-            return@async city!!
+            return@async city
         }
 
         return@async with(authRepository) {
