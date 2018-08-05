@@ -9,20 +9,18 @@ mainClassName = "com.wellcome.main.MainKt"
 
 dependencies {
     expectedBy project(':well_common_mpp_core')
-    implementation project(':well_common_mpp_core')
     implementation project(':well_configuration')
+    implementation project(':well_common_mpp_core')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
-
-    implementation "org.slf4j:slf4j-jdk14:$slf4j_version"
     implementation "org.koin:koin-core:$koin_version"
-    implementation "org.jetbrains.exposed:exposed:$kotlin_exposed_version"
-    implementation "org.postgresql:postgresql:$postgres_version"
-
-    implementation "com.google.maps:google-maps-services:$map_version"
-    implementation "com.google.firebase:firebase-admin:$firebase_admin_version"
+    implementation "org.slf4j:slf4j-jdk14:$slf4j_version"
     implementation "com.rabbitmq:amqp-client:$rabbitmq_version"
+    implementation "org.postgresql:postgresql:$postgres_version"
+    implementation "com.google.maps:google-maps-services:$map_version"
+    implementation "org.jetbrains.exposed:exposed:$kotlin_exposed_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "com.google.firebase:firebase-admin:$firebase_admin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesCoreVersion"
 }
 kotlin.experimental.coroutines = 'enable'
 

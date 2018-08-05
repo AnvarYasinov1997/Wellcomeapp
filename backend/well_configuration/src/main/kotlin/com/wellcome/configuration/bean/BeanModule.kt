@@ -4,12 +4,10 @@ import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
 import com.wellcome.configuration.initGoogleMaps
-import com.wellcome.configuration.property.FanoutProperty
-import com.wellcome.configuration.property.SimpleQueueProperty
-import com.wellcome.configuration.property.createFanoutProperty
-import com.wellcome.configuration.property.createSimpleQueueProperty
+import com.wellcome.configuration.property.*
 import com.wellcome.configuration.utils.LoggerHandler
 import com.wellcome.configuration.utils.MicroserviceName
+import org.jetbrains.exposed.sql.Database
 import org.koin.dsl.module.applicationContext
 
 fun googleMapsModule() = applicationContext {
@@ -48,4 +46,3 @@ fun loggerRabbitMqModule(microserviceName: MicroserviceName) = applicationContex
         LoggerHandler(get("logger"), get("logger"), microserviceName)
     }
 }
-

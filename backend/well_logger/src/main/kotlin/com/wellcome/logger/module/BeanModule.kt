@@ -6,7 +6,5 @@ import org.slf4j.LoggerFactory
 
 fun loggerModule() = applicationContext {
     bean { LoggerFactory.getLogger("logger") }
-    bean {
-        LogService(get())
-    }
+    bean { LogService(get()) }
 }
