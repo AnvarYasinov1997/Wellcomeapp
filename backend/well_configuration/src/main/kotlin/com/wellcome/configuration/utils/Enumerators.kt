@@ -9,5 +9,6 @@ enum class LogType {
 enum class MicroserviceName {
     REST,
     MAIN,
+    MAPS,
     LOGGER;
 }
