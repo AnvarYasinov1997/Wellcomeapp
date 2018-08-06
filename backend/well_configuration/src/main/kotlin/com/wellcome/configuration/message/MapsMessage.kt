@@ -16,8 +16,8 @@ data class FindLocalityMessage(val lat: Double, val lon: Double) : MapsSendMessa
 
 sealed class MapsReturnMessage
 @Serializable
-data class LocalityFindedMessage(val locality: String,
-                                 val timezoneId: String) : MapsReturnMessage()
+data class LocalityFoundMessage(val locality: String,
+                                val timezoneId: String) : MapsReturnMessage()
 
 @Serializable
-data class LocalityNotFinded(val reason: String) : MapsReturnMessage()
+data class LocalityNotFoundMessage(val reason: String) : MapsReturnMessage()
