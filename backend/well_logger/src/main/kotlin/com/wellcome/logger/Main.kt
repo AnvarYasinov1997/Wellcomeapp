@@ -18,14 +18,14 @@ fun main(args: Array<String>) = runBlocking {
     startKoin(listOf(rabbitMqModule(),
         loggerRabbitMqModule(MicroserviceName.LOGGER),
         loggerModule()))
-    val channel by inject<Channel>()
+    val channel by inject<Channel>("logger")
     val property by inject<FanoutProperty>("logger")
     val logService by inject<LogService>()
     val queue = channel.queueDeclare().queue
     channel.queueBind(queue, property.exchanger, "", null)
 
     val job = Job()
-    val messageProducer = channel.consume<LogDto>(job, queue)
+    val messageProducer = channel.receive<LogDto>(job, queue)
     job.invokeOnCompletion {
         messageProducer.cancel()
     }

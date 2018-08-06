@@ -1,7 +1,6 @@
 package com.wellcome.main
 
 import com.rabbitmq.client.Channel
-import com.wellcome.configuration.bean.googleMapsModule
 import com.wellcome.configuration.bean.loggerRabbitMqModule
 import com.wellcome.configuration.bean.mainRabbitMqModule
 import com.wellcome.configuration.bean.rabbitMqModule
@@ -28,7 +27,6 @@ fun main(args: Array<String>) = runBlocking {
     startKoin(listOf(rabbitMqModule(),
         loggerRabbitMqModule(MicroserviceName.MAIN),
         mainRabbitMqModule(),
-        googleMapsModule(),
         mainModule()))
 
     val messageHandler by inject<MessageHandler>()

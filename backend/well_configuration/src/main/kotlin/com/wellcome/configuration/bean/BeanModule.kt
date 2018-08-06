@@ -1,23 +1,36 @@
 package com.wellcome.configuration.bean
 
+import com.google.auth.oauth2.GoogleCredentials
+import com.google.firebase.FirebaseApp
+import com.google.firebase.FirebaseOptions
 import com.rabbitmq.client.BuiltinExchangeType
 import com.rabbitmq.client.Connection
 import com.rabbitmq.client.ConnectionFactory
-import com.wellcome.configuration.initGoogleMaps
-import com.wellcome.configuration.property.FanoutProperty
-import com.wellcome.configuration.property.SimpleQueueProperty
-import com.wellcome.configuration.property.createFanoutProperty
-import com.wellcome.configuration.property.createSimpleQueueProperty
+import com.wellcome.configuration.property.*
 import com.wellcome.configuration.utils.LoggerHandler
 import com.wellcome.configuration.utils.MicroserviceName
+import com.wellcome.configuration.utils.inject
+import io.ktor.application.Application
 import org.koin.dsl.module.applicationContext
-
-fun googleMapsModule() = applicationContext {
-    bean { initGoogleMaps(get()) }
-}
 
 fun rabbitMqModule() = applicationContext {
     bean { ConnectionFactory().newConnection() }
+}
+
+fun firebaseAppModule() = applicationContext {
+    bean {
+        val logger by inject<LoggerHandler>()
+        val databaseUrl = "https://wellcomeapp-cc11e.firebaseio.com"
+        val serviceAccount = "wellcomeapp-cc11e-firebase-adminsdk-qoxy4-310b8e400c.json"
+        val options = FirebaseOptions.Builder()
+            .setCredentials(GoogleCredentials.fromStream(Application::class.java.classLoader.getResourceAsStream(
+                serviceAccount)))
+            .setDatabaseUrl(databaseUrl)
+            .build()
+        FirebaseApp.initializeApp(options).also { _ ->
+            logger.info("firebase app initialized")
+        }
+    }
 }
 
 fun mainRabbitMqModule() = applicationContext {
@@ -58,6 +71,30 @@ fun mapsRabbitMqModule() = applicationContext {
         val connection = get<Connection>()
         connection.createChannel().apply {
             queueDeclare(property.queue, false, false, false, null)
+        }
+    }
+}
+
+fun firestoreRabbitMqModule() = applicationContext {
+    bean("firestore-rpc") {
+        createSimpleQueueProperty("firestore-rpc-queue")
+    }
+    factory("firestore-rpc") {
+        val property = get<SimpleQueueProperty>("firestore-rpc")
+        val connection = get<Connection>()
+        connection.createChannel().apply {
+            queueDeclare(property.queue, false, false, false, null)
+        }
+    }
+    bean("firestore") {
+        createDurableFanoutProperty("firestore-queue", "firestore-exchanger")
+    }
+    bean("firestore") {
+        val property = get<DurableFanoutProperty>("firestore")
+        val connection = get<Connection>()
+        connection.createChannel().apply {
+            queueDeclare(property.queue, true, false, false, null)
+            exchangeDeclare(property.exchanger, BuiltinExchangeType.FANOUT, true)
         }
     }
 }

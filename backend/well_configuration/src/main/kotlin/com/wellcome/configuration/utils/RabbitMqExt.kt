@@ -13,13 +13,14 @@ import kotlinx.coroutines.experimental.runBlocking
 import kotlinx.serialization.json.JSON
 import kotlin.coroutines.experimental.suspendCoroutine
 
-inline fun <reified T : Any> Channel.consume(job: Job, queueName: String, autoAck: Boolean = false) = produce {
+inline fun <reified T : Any> Channel.receive(job: Job, queueName: String, autoAck: Boolean = false) = produce {
     val coroutineChannel = kotlinx.coroutines.experimental.channels.Channel<MessageState<T>>()
     job.invokeOnCompletion {
         coroutineChannel.close()
+        close()
     }
 
-    val queueConsumer = object : DefaultConsumer(this@consume) {
+    val queueConsumer = object : DefaultConsumer(this@receive) {
         override fun handleDelivery(consumerTag: String,
                                     envelope: Envelope,
                                     properties: AMQP.BasicProperties?,

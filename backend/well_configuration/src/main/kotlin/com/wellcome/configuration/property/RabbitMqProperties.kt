@@ -9,6 +9,8 @@ data class FanoutProperty(val exchanger: String)
 
 data class SimpleQueueProperty(val queue: String)
 
+data class DurableFanoutProperty(val queue: String, val exchanger: String)
+
 
 fun createDirectProperty(exchangerName: String, routingKeyName: String): DirectProperty {
     val prop = getProp()
@@ -23,6 +25,11 @@ fun createSimpleQueueProperty(queueName: String): SimpleQueueProperty {
 fun createFanoutProperty(exchangerName: String): FanoutProperty {
     val prop = getProp()
     return FanoutProperty(prop.getProperty(exchangerName))
+}
+
+fun createDurableFanoutProperty(queueName: String, exchangerName: String): DurableFanoutProperty {
+    val prop = getProp()
+    return DurableFanoutProperty(prop.getProperty(queueName), prop.getProperty(exchangerName))
 }
 
 private fun getProp(): Properties {

@@ -10,5 +10,6 @@ enum class MicroserviceName {
     REST,
     MAIN,
     MAPS,
+    FIRESTORE,
     LOGGER;
 }
