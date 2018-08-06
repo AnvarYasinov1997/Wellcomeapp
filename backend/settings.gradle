@@ -1,6 +1,7 @@
 rootProject.name = 'backend'
 
-include ':well_main', ':well_common_mpp_core', ':well_timer', ':well_rest', ':well_configuration', ':well_logger'
+include ':well_main', ':well_common_mpp_core', ':well_timer', ':well_rest', ':well_configuration', ':well_logger', ':well_maps'
 
 project(':well_common_mpp_core').projectDir = new File(settingsDir,"../common/well_common_mpp_core")
+
 

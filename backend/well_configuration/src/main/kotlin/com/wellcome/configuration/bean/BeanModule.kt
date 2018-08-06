@@ -46,3 +46,17 @@ fun loggerRabbitMqModule(microserviceName: MicroserviceName) = applicationContex
         LoggerHandler(get("logger"), get("logger"), microserviceName)
     }
 }
+
+fun mapsRabbitMqModule() = applicationContext {
+    bean("maps") {
+        createSimpleQueueProperty("maps-queue")
+    }
+    factory("maps") {
+        val property = get<SimpleQueueProperty>("maps")
+        val connection = get<Connection>()
+        connection.createChannel().apply {
+            queueDeclare(property.queue, false, false, false, null)
+        }
+    }
+}
+
