@@ -14,7 +14,7 @@ object CacheConst {
 }
 object FirebaseConstants {
     const val USER = "user"
-    const val CITY = "city"
+    const val LOCALITY = "locality"
     const val EVENT = "event"
     const val LIKE = "like"
     const val STORY = "story"

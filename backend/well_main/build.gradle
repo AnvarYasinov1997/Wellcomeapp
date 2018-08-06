@@ -1,5 +1,4 @@
 apply plugin: 'kotlin'
-apply plugin: 'kotlin-platform-jvm'
 apply plugin: 'application'
 
 group 'well_main'
@@ -8,8 +7,6 @@ version '1.0-SNAPSHOT'
 mainClassName = "com.wellcome.main.MainKt"
 
 dependencies {
-    expectedBy project(':well_common_mpp_core')
-    implementation project(':well_common_mpp_core')
     implementation project(':well_configuration')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
@@ -19,9 +16,6 @@ dependencies {
     implementation "org.koin:koin-core:$koin_version"
     implementation "org.jetbrains.exposed:exposed:$kotlin_exposed_version"
     implementation "org.postgresql:postgresql:$postgres_version"
-
-    implementation "com.google.maps:google-maps-services:$map_version"
-    implementation "com.google.firebase:firebase-admin:$firebase_admin_version"
     implementation "com.rabbitmq:amqp-client:$rabbitmq_version"
 }
 kotlin.experimental.coroutines = 'enable'

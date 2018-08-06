@@ -12,7 +12,6 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serialization_version"
     implementation "com.rabbitmq:amqp-client:$rabbitmq_version"
     implementation "com.google.firebase:firebase-admin:$firebase_admin_version"
-    implementation "com.google.maps:google-maps-services:$map_version"
 
 }
 kotlin.experimental.coroutines = 'enable'

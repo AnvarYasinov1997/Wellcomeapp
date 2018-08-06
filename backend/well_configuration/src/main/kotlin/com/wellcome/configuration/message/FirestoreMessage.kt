@@ -15,14 +15,31 @@ data class FirestoreMessageWrapper(@Serializable(with = PolymorphicSerializer::c
 sealed class FirestoreRpcSendMessage
 
 @Serializable
-data class CreateUserMessage(val googleUid: String) : FirestoreRpcSendMessage() //todo
+data class CreateLocalityMessage(val firestoreRef: String,
+                                 val name: String,
+                                 val timezoneId: String) : FirestoreRpcSendMessage()
+
+@Serializable
+data class CreateUserMessage(val googleUid: String,
+                             val firestoreRef: String,
+                             val name: String,
+                             val photoUrl: String,
+                             val email: String,
+                             val localityFirestoreRef: String,
+                             val localityName: String) : FirestoreRpcSendMessage()
 
 sealed class FirestoreRpcReturnMessage
 
 @Serializable
-object UserCreatedMessage : FirestoreRpcReturnMessage() //todo
+object LocalityCreatedMessage : FirestoreRpcReturnMessage()
 
 @Serializable
-data class UserNotCreatedMessage(val reason: String) : FirestoreRpcReturnMessage() //todo
+object LocalityNotCreatedMessage : FirestoreRpcReturnMessage()
+
+@Serializable
+object UserCreatedMessage : FirestoreRpcReturnMessage()
+
+@Serializable
+object UserNotCreatedMessage : FirestoreRpcReturnMessage()
 
 sealed class FirestoreMessage

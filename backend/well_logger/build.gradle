@@ -1,5 +1,4 @@
 apply plugin: 'kotlin'
-apply plugin: 'kotlin-platform-jvm'
 apply plugin: 'application'
 
 group 'well_log'
@@ -8,8 +7,6 @@ version '1.0-SNAPSHOT'
 mainClassName = "com.wellcome.logger.MainKt"
 
 dependencies {
-    expectedBy project(':well_common_mpp_core')
-    implementation project(':well_common_mpp_core')
     implementation project(':well_configuration')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"

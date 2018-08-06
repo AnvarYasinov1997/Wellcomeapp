@@ -1,5 +1,4 @@
 apply plugin: 'kotlin'
-apply plugin: 'kotlin-platform-jvm'
 apply plugin: 'application'
 
 group 'well_rest'

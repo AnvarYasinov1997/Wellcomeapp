@@ -1,6 +1,8 @@
 package com.wellcome.firestore
 
+import com.google.firebase.cloud.FirestoreClient
 import com.rabbitmq.client.Channel
+import com.wellcome.configuration.bean.firebaseAppModule
 import com.wellcome.configuration.bean.firestoreRabbitMqModule
 import com.wellcome.configuration.bean.loggerRabbitMqModule
 import com.wellcome.configuration.bean.rabbitMqModule
@@ -21,6 +23,7 @@ import org.koin.standalone.StandAloneContext.startKoin
 
 fun main(args: Array<String>) = runBlocking<Unit> {
     startKoin(listOf(firestoreModule(),
+        firebaseAppModule(),
         rabbitMqModule(),
         firestoreRabbitMqModule(),
         loggerRabbitMqModule(MicroserviceName.FIRESTORE)))
@@ -51,6 +54,8 @@ fun main(args: Array<String>) = runBlocking<Unit> {
 }
 
 fun firestoreModule() = applicationContext {
-    bean { RpcMessageHandler(get()) }
+    bean { FirestoreClient.getFirestore(get()) }
+    bean { FirestoreServiceImpl(get(), get()) as FirestoreService }
+    bean { RpcMessageHandler(get(), get()) }
     bean { MessageHandler(get()) }
 }

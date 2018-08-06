@@ -5,14 +5,17 @@ import com.wellcome.configuration.utils.LoggerHandler
 import com.wellcome.configuration.utils.MessageState
 import kotlinx.coroutines.experimental.runBlocking
 
-class RpcMessageHandler(private val logger: LoggerHandler) {
+class RpcMessageHandler(private val logger: LoggerHandler,
+                        private val firestoreService: FirestoreService) {
 
     fun handleMessage(messageWrapper: FirestoreRpcSendMessageWrapper): FirestoreRpcReturnMessageWrapper = runBlocking {
         val message = messageWrapper.message
         return@runBlocking FirestoreRpcReturnMessageWrapper(
             when (message) {
-                is CreateUserMessage -> UserNotCreatedMessage("test")
+                is CreateUserMessage     -> firestoreService.saveNewUser(message)
+                is CreateLocalityMessage -> firestoreService.saveNewLocality(message)
             })
+
     }
 
     fun handleCast(bytes: ByteArray?) {
